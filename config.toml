@@ -1,0 +1,18 @@
+baseURL = 'https://artisanbox.github.io'
+languageCode = 'en-us'
+title = 'Gen 的学习笔记'
+theme = 'hugo-theme-learn'
+themeVariant = "blue"
+[markup.goldmark.renderer]
+  unsafe = true # Allow HTML in md files
+[params]
+  # Change default color scheme with a variant one. Can be "red", "blue", "green".
+  themeVariant = "green"
+  # index home button
+  disableLandingPage = false
+  landingPageURL = "/"
+  landingPageName = "<i class='fas fa-home'></i> Gen 的学习笔记"
+
+  # disableShortcutsTitle = false
+  # order by title
+  ordersectionsby = "title"
