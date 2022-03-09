@@ -5,7 +5,7 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>Tags :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
+<title>30_答疑文章（二）：用动态的观点看加锁 :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
 <link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
 <link href=/css/hybrid.css?1646789669 rel=stylesheet>
 <link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
@@ -17,7 +17,7 @@
 <link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
 <link href=/css/theme-green.css?1646789669 rel=stylesheet>
 <script src=/js/jquery-3.3.1.min.js?1646789669></script>
-<style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/tags/>
+<style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/30/>
 <nav id=sidebar>
 <div id=header-wrapper>
 <div id=header>
@@ -37,7 +37,8 @@
 <a class=padding href=/><i class="fas fa-home"></i> Gen 的学习笔记</a>
 </li></ul></section><div class=highlightable>
 <ul class=topics>
-<li data-nav-id=/1/ title=MySQL实战45讲 class=dd-item>
+<li data-nav-id=/1/ title=MySQL实战45讲 class="dd-item
+parent">
 <a href=/1/>
 MySQL实战45讲
 </a>
@@ -158,7 +159,7 @@ MySQL实战45讲
 <a href=/1/29/>
 29_如何判断一个数据库是不是出问题了？
 </a>
-</li><li data-nav-id=/1/30/ title=30_答疑文章（二）：用动态的观点看加锁 class=dd-item>
+</li><li data-nav-id=/1/30/ title=30_答疑文章（二）：用动态的观点看加锁 class="dd-item active">
 <a href=/1/30/>
 30_答疑文章（二）：用动态的观点看加锁
 </a>
@@ -251,19 +252,191 @@ MySQL实战45讲
 </span>
 <span id=toc-menu><i class="fas fa-list-alt"></i></span>
 <span class=links>
-<a href=/>Gen 的学习笔记</a> > Tags
+<a href=/>Gen 的学习笔记</a> > <a href=/1/>MySQL实战45讲</a> > 30_答疑文章（二）：用动态的观点看加锁
 </span>
 </div><div class=progress>
 <div class=wrapper>
-</div></div></div></div><div id=head-tags>
+<nav id=TableOfContents></nav></div></div></div></div><div id=head-tags>
 </div><div id=body-inner>
 <h1>
-tag ::
-Tags
-</h1><ul>
-</ul><footer class=footline>
+30_答疑文章（二）：用动态的观点看加锁
+</h1><p><audio title="30 _ 答疑文章（二）：用动态的观点看加锁" src=https://static001.geekbang.org/resource/audio/8e/15/8e8a19b7170ae07e4bd4ddbc309aee15.mp3 controls></audio></p><p>在第<a href=https://time.geekbang.org/column/article/75173>20</a>和<a href=https://time.geekbang.org/column/article/75659>21</a>篇文章中，我和你介绍了InnoDB的间隙锁、next-key lock，以及加锁规则。在这两篇文章的评论区，出现了很多高质量的留言。我觉得通过分析这些问题，可以帮助你加深对加锁规则的理解。</p><p>所以，我就从中挑选了几个有代表性的问题，构成了今天这篇答疑文章的主题，即：用动态的观点看加锁。</p><p><strong>为了方便你理解，我们再一起复习一下加锁规则。这个规则中，包含了两个“原则”、两个“优化”和一个“bug”：</strong></p><ul>
+<li>原则1：加锁的基本单位是next-key lock。希望你还记得，next-key lock是前开后闭区间。</li><li>原则2：查找过程中访问到的对象才会加锁。</li><li>优化1：索引上的等值查询，给唯一索引加锁的时候，next-key lock退化为行锁。</li><li>优化2：索引上的等值查询，向右遍历时且最后一个值不满足等值条件的时候，next-key lock退化为间隙锁。</li><li>一个bug：唯一索引上的范围查询会访问到不满足条件的第一个值为止。</li></ul><p>接下来，我们的讨论还是基于下面这个表t：</p><pre><code>CREATE TABLE `t` (
+  `id` int(11) NOT NULL,
+  `c` int(11) DEFAULT NULL,
+  `d` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `c` (`c`)
+) ENGINE=InnoDB;
+<p>insert into t values(0,0,0),(5,5,5),
+(10,10,10),(15,15,15),(20,20,20),(25,25,25);
+</code></pre><h1>不等号条件里的等值查询</h1><p>有同学对“等值查询”提出了疑问：等值查询和“遍历”有什么区别？为什么我们文章的例子里面，where条件是不等号，这个过程里也有等值查询？</p>&lt;!&ndash; [[[read_end]]] &ndash;><p>我们一起来看下这个例子，分析一下这条查询语句的加锁范围：</p><pre><code>begin;
+select * from t where id&gt;9 and id&lt;12 order by id desc for update;
+</code></pre><p>利用上面的加锁规则，我们知道这个语句的加锁范围是主键索引上的 (0,5]、(5,10]和(10, 15)。也就是说，id=15这一行，并没有被加上行锁。为什么呢？</p><p>我们说加锁单位是next-key lock，都是前开后闭区间，但是这里用到了优化2，即索引上的等值查询，向右遍历的时候id=15不满足条件，所以next-key lock退化为了间隙锁 (10, 15)。</p><p>但是，我们的查询语句中where条件是大于号和小于号，这里的“等值查询”又是从哪里来的呢？</p><p>要知道，加锁动作是发生在语句执行过程中的，所以你在分析加锁行为的时候，要从索引上的数据结构开始。这里，我再把这个过程拆解一下。</p><p>如图1所示，是这个表的索引id的示意图。</p><p><img src=https://static001.geekbang.org/resource/image/ac/bb/ac1aa07860c565b907b32c5f75c4f2bb.png alt></p><center><span class=reference>图1 索引id示意图</span></center><ol></p><li>
+<p>首先这个查询语句的语义是order by id desc，要拿到满足条件的所有行，优化器必须先找到“第一个id&lt;12的值”。</p></li><li>
+<p>这个过程是通过索引树的搜索过程得到的，在引擎内部，其实是要找到id=12的这个值，只是最终没找到，但找到了(10,15)这个间隙。</p></li><li>
+<p>然后向左遍历，在遍历过程中，就不是等值查询了，会扫描到id=5这一行，所以会加一个next-key lock (0,5]。</p></li></ol><p>也就是说，在执行过程中，通过树搜索的方式定位记录的时候，用的是“等值查询”的方法。</p><h1>等值查询的过程</h1><p>与上面这个例子对应的，是@发条橙子同学提出的问题：下面这个语句的加锁范围是什么？</p><pre><code>begin;
+select id from t where c in(5,20,10) lock in share mode;
+</code></pre><p>这条查询语句里用的是in，我们先来看这条语句的explain结果。<br>
+<img src=https://static001.geekbang.org/resource/image/8a/b3/8a089159c82c1458b26e2756583347b3.png alt></p><center><span class=reference>图2 in语句的explain结果</span></center><p>可以看到，这条in语句使用了索引c并且rows=3，说明这三个值都是通过B+树搜索定位的。</p><p>在查找c=5的时候，先锁住了(0,5]。但是因为c不是唯一索引，为了确认还有没有别的记录c=5，就要向右遍历，找到c=10才确认没有了，这个过程满足优化2，所以加了间隙锁(5,10)。</p><p>同样的，执行c=10这个逻辑的时候，加锁的范围是(5,10] 和 (10,15)；执行c=20这个逻辑的时候，加锁的范围是(15,20] 和 (20,25)。</p><p>通过这个分析，我们可以知道，这条语句在索引c上加的三个记录锁的顺序是：先加c=5的记录锁，再加c=10的记录锁，最后加c=20的记录锁。</p><p>你可能会说，这个加锁范围，不就是从(5,25)中去掉c=15的行锁吗？为什么这么麻烦地分段说呢？</p><p>因为我要跟你强调这个过程：这些锁是“在执行过程中一个一个加的”，而不是一次性加上去的。</p><p>理解了这个加锁过程之后，我们就可以来分析下面例子中的死锁问题了。</p><p>如果同时有另外一个语句，是这么写的：</p><pre><code>select id from t where c in(5,20,10) order by c desc for update;
+</code></pre><p>此时的加锁范围，又是什么呢？</p><p>我们现在都知道间隙锁是不互锁的，但是这两条语句都会在索引c上的c=5、10、20这三行记录上加记录锁。</p><p>这里你需要注意一下，由于语句里面是order by c desc， 这三个记录锁的加锁顺序，是先锁c=20，然后c=10，最后是c=5。</p><p>也就是说，这两条语句要加锁相同的资源，但是加锁顺序相反。当这两条语句并发执行的时候，就可能出现死锁。</p><p>关于死锁的信息，MySQL只保留了最后一个死锁的现场，但这个现场还是不完备的。</p><p>有同学在评论区留言到，希望我能展开一下怎么看死锁。现在，我就来简单分析一下上面这个例子的死锁现场。</p><h1>怎么看死锁？</h1><p>图3是在出现死锁后，执行show engine innodb status命令得到的部分输出。这个命令会输出很多信息，有一节LATESTDETECTED DEADLOCK，就是记录的最后一次死锁信息。<br>
+<img src=https://static001.geekbang.org/resource/image/a7/f6/a7dccb91bc17d12746703eb194775cf6.png alt></p><center><span class=reference>图3 死锁现场</span></center><p>我们来看看这图中的几个关键信息。</p><ol>
+<li>
+<p>这个结果分成三部分：</p><ul>
+<li>(1) TRANSACTION，是第一个事务的信息；</li><li>(2) TRANSACTION，是第二个事务的信息；</li><li>WE ROLL BACK TRANSACTION (1)，是最终的处理结果，表示回滚了第一个事务。</li></ul></li><li>
+<p>第一个事务的信息中：</p><ul>
+<li>WAITING FOR THIS LOCK TO BE GRANTED，表示的是这个事务在等待的锁信息；</li><li>index c of table `test`.`t`，说明在等的是表t的索引c上面的锁；</li><li>lock mode S waiting 表示这个语句要自己加一个读锁，当前的状态是等待中；</li><li>Record lock说明这是一个记录锁；</li><li>n_fields 2表示这个记录是两列，也就是字段c和主键字段id；</li><li>0: len 4; hex 0000000a; asc ;;是第一个字段，也就是c。值是十六进制a，也就是10；</li><li>1: len 4; hex 0000000a; asc ;;是第二个字段，也就是主键id，值也是10；</li><li>这两行里面的asc表示的是，接下来要打印出值里面的“可打印字符”，但10不是可打印字符，因此就显示空格。</li><li>第一个事务信息就只显示出了等锁的状态，在等待(c=10,id=10)这一行的锁。</li><li>当然你是知道的，既然出现死锁了，就表示这个事务也占有别的锁，但是没有显示出来。别着急，我们从第二个事务的信息中推导出来。</li></ul></li><li>
+<p>第二个事务显示的信息要多一些：</p><ul>
+<li>“ HOLDS THE LOCK(S)”用来显示这个事务持有哪些锁；</li><li>index c of table `test`.`t` 表示锁是在表t的索引c上；</li><li>hex 0000000a和hex 00000014表示这个事务持有c=10和c=20这两个记录锁；</li><li>WAITING FOR THIS LOCK TO BE GRANTED，表示在等(c=5,id=5)这个记录锁。</li></ul></li></ol><p>从上面这些信息中，我们就知道：</p><ol>
+<li>
+<p>“lock in share mode”的这条语句，持有c=5的记录锁，在等c=10的锁；</p></li><li>
+<p>“for update”这个语句，持有c=20和c=10的记录锁，在等c=5的记录锁。</p></li></ol><p>因此导致了死锁。这里，我们可以得到两个结论：</p><ol>
+<li>
+<p>由于锁是一个个加的，要避免死锁，对同一组资源，要按照尽量相同的顺序访问；</p></li><li>
+<p>在发生死锁的时刻，for update 这条语句占有的资源更多，回滚成本更大，所以InnoDB选择了回滚成本更小的lock in share mode语句，来回滚。</p></li></ol><h1>怎么看锁等待？</h1><p>看完死锁，我们再来看一个锁等待的例子。</p><p>在第21篇文章的评论区，@Geek_9ca34e 同学做了一个有趣验证，我把复现步骤列出来：</p><p><img src=https://static001.geekbang.org/resource/image/af/75/af3602b81aeb49e33577ba372d220a75.png alt></p><center><span class=reference>图4 delete导致间隙变化</span></center><p>可以看到，由于session A并没有锁住c=10这个记录，所以session B删除id=10这一行是可以的。但是之后，session B再想insert id=10这一行回去就不行了。</p><p>现在我们一起看一下此时show engine innodb status的结果，看看能不能给我们一些提示。锁信息是在这个命令输出结果的TRANSACTIONS这一节。你可以在文稿中看到这张图片<br>
+<img src=https://static001.geekbang.org/resource/image/c3/a6/c3744fb7b61df2a5b45b8eb1f2a853a6.png alt></p><center><span class=reference>图 5 锁等待信息</span></center><p>我们来看几个关键信息。</p><ol>
+<li>
+<p>index PRIMARY of table `test`.`t` ，表示这个语句被锁住是因为表t主键上的某个锁。</p></li><li>
+<p>lock_mode X locks gap before rec insert intention waiting 这里有几个信息：</p><ul>
+<li>insert intention表示当前线程准备插入一个记录，这是一个插入意向锁。为了便于理解，你可以认为它就是这个插入动作本身。</li><li>gap before rec 表示这是一个间隙锁，而不是记录锁。</li></ul></li><li>
+<p>那么这个gap是在哪个记录之前的呢？接下来的0~4这5行的内容就是这个记录的信息。</p></li><li>
+<p>n_fields 5也表示了，这一个记录有5列：</p><ul>
+<li>0: len 4; hex 0000000f; asc ;;第一列是主键id字段，十六进制f就是id=15。所以，这时我们就知道了，这个间隙就是id=15之前的，因为id=10已经不存在了，它表示的就是(5,15)。</li><li>1: len 6; hex 000000000513; asc ;;第二列是长度为6字节的事务id，表示最后修改这一行的是trx id为1299的事务。</li><li>2: len 7; hex b0000001250134; asc % 4;; 第三列长度为7字节的回滚段信息。可以看到，这里的acs后面有显示内容(%和4)，这是因为刚好这个字节是可打印字符。</li><li>后面两列是c和d的值，都是15。</li></ul></li></ol><p>因此，我们就知道了，由于delete操作把id=10这一行删掉了，原来的两个间隙(5,10)、(10,15）变成了一个(5,15)。</p><p>说到这里，你可以联合起来再思考一下这两个现象之间的关联：</p><ol>
+<li>
+<p>session A执行完select语句后，什么都没做，但它加锁的范围突然“变大”了；</p></li><li>
+<p>第21篇文章的课后思考题，当我们执行select * from t where c>=15 and c&lt;=20 order by c desc lock in share mode; 向左扫描到c=10的时候，要把(5, 10]锁起来。</p></li></ol><p>也就是说，所谓“间隙”，其实根本就是由“这个间隙右边的那个记录”定义的。</p><h1>update的例子</h1><p>看过了insert和delete的加锁例子，我们再来看一个update语句的案例。在留言区中@信信 同学做了这个试验：</p><p><img src=https://static001.geekbang.org/resource/image/61/a7/61c1ceea7b59201649c2514c9db864a7.png alt></p><center><span class=reference>图 6 update 的例子</span></center><p>你可以自己分析一下，session A的加锁范围是索引c上的 (5,10]、(10,15]、(15,20]、(20,25]和(25,supremum]。</p><blockquote>
+<p>注意：根据c>5查到的第一个记录是c=10，因此不会加(0,5]这个next-key lock。</p></blockquote><p>之后session B的第一个update语句，要把c=5改成c=1，你可以理解为两步：</p><ol>
+<li>
+<p>插入(c=1, id=5)这个记录；</p></li><li>
+<p>删除(c=5, id=5)这个记录。</p></li></ol><p>按照我们上一节说的，索引c上(5,10)间隙是由这个间隙右边的记录，也就是c=10定义的。所以通过这个操作，session A的加锁范围变成了图7所示的样子：<br>
+<img src=https://static001.geekbang.org/resource/image/d2/e9/d2f6a0c46dd8d12f6a90dacc466d53e9.png alt></p><center><span class=reference>图 7 session B修改后， session A的加锁范围</span></center><p>好，接下来session B要执行 update t set c = 5 where c = 1这个语句了，一样地可以拆成两步：</p><ol>
+<li>
+<p>插入(c=5, id=5)这个记录；</p></li><li>
+<p>删除(c=1, id=5)这个记录。</p></li></ol><p>第一步试图在已经加了间隙锁的(1,10)中插入数据，所以就被堵住了。</p><h1>小结</h1><p>今天这篇文章，我用前面<a href=https://time.geekbang.org/column/article/75173>第20</a>和<a href=https://time.geekbang.org/column/article/75659>第21篇</a>文章评论区的几个问题，再次跟你复习了加锁规则。并且，我和你重点说明了，分析加锁范围时，一定要配合语句执行逻辑来进行。</p><p>在我看来，每个想认真了解MySQL原理的同学，应该都要能够做到：通过explain的结果，就能够脑补出一个SQL语句的执行流程。达到这样的程度，才算是对索引组织表、索引、锁的概念有了比较清晰的认识。你同样也可以用这个方法，来验证自己对这些知识点的掌握程度。</p><p>在分析这些加锁规则的过程中，我也顺便跟你介绍了怎么看show engine innodb status输出结果中的事务信息和死锁信息，希望这些内容对你以后分析现场能有所帮助。</p><p>老规矩，即便是答疑文章，我也还是要留一个课后问题给你的。</p><p>上面我们提到一个很重要的点：所谓“间隙”，其实根本就是由“这个间隙右边的那个记录”定义的。</p><p>那么，一个空表有间隙吗？这个间隙是由谁定义的？你怎么验证这个结论呢？</p><p>你可以把你关于分析和验证方法写在留言区，我会在下一篇文章的末尾和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>我在上一篇文章最后留给的问题，是分享一下你关于业务监控的处理经验。</p><p>在这篇文章的评论区，很多同学都分享了不错的经验。这里，我就选择几个比较典型的留言，和你分享吧：</p><ul>
+<li>@老杨同志 回答得很详细。他的主要思路就是关于服务状态和服务质量的监控。其中，服务状态的监控，一般都可以用外部系统来实现；而服务的质量的监控，就要通过接口的响应时间来统计。</li><li>@Ryoma 同学，提到服务中使用了healthCheck来检测，其实跟我们文中提到的select 1的模式类似。</li><li>@强哥 同学，按照监控的对象，将监控分成了基础监控、服务监控和业务监控，并分享了每种监控需要关注的对象。</li></ul><p>这些都是很好的经验，你也可以根据具体的业务场景借鉴适合自己的方案。</p><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/40/5e/b8fada94.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>Ryoma</span>
+</div><div class=_2_QraFYR_0>删除数据，导致锁扩大的描述：“因此，我们就知道了，由于 delete 操作把 id=10 这一行删掉了，原来的两个间隙 (5,10)、(10,15）变成了一个 (5,15)。”<br>我觉得这个提到的(5, 10) 和 (10, 15)两个间隙会让人有点误解，实际上在删除之前间隙锁只有一个(10, 15)，删除了数据之后，导致间隙锁左侧扩张成了5，间隙锁成为了(5, 15)。</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 嗯 所以我这里特别小心地没有写“锁“这个字。<br><br>间隙 (5,10)、(10,15）是客观存在的。<br><br>你提得也很对，“锁”是执行过程中才加的，是一个动态的概念。<br>这个问题也能够让大家更了解我们标题的意思，置顶了哈 👍</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-22 10:48:27</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/5c/f4/88f107d9.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>令狐少侠</span>
+</div><div class=_2_QraFYR_0>有个问题想确认下，在死锁日志里，lock_mode X waiting是间隙锁+行锁，lock_mode X locks rec but not gap这种加but not gap才是行锁？<br>老师你后面能说下group by的原理吗，我看目录里面没有</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 对， 好问题<br>lock_mode X waiting表示next-key lock；<br>lock_mode X locks rec but not gap是只有行锁；<br>还有一种 “locks gap before rec”，就是只有间隙锁；<br></p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-22 15:18:55</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/d4/fd/43802282.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>IceGeek17</span>
+</div><div class=_2_QraFYR_0>老师，新年好，有几个问题：<br>问题一：<br>对于文中的第一个例子（不等号条件里的等值查询），当试图去找 “第一个id&lt;12的值"的时候，用的还是从左往右的遍历（因为用到了优化2），也就是说，当去找第一个等值的时候（通过树搜索去定位记录的时候），即使order by desc，但用的还是向右遍历，当找到了第一个等值的时候（例子中的id=15），然后根据order by desc，再向左遍历。<br>是不是这么理解？<br><br>问题二：<br>对于第21讲的思考题， select * from t where c>=15 and c&lt;=20 order by c desc lock in share mode， 老师已经给出了答案，我这里再详细理解一下：<br>先定位索引c上最右边c=20的行，所以第一个等值查询会扫描到c=25，然后通过优化2，next-key lock退化为间隙锁，则会加上间隙锁（20，25），紧接着再向左遍历，会加 next-key lock (15, 20], (10, 15], 因为要扫描到c=10才停下来，所以也会加next-key lock (5,10]<br>理解的是否正确？<br><br>问题三：<br>对于上面的问题二的sql，在索引c上，把（10，25）这段区间锁上就应该是完备的了，理论上（5，10]这段区间是否锁上对结果应该没有影响呀。<br>是不是说MySQL就是这么实现的，next-key lock前开后闭，因为扫到了c=10，所以会加next-key lock (5,10]，这里MySQL的实现扩大了锁的区间范围，其实没有这个必要？<br>另外，如果不加next-key lock (5,10]，是不是这里c=10还是应该要锁的，如果不锁可能被删除？<br><br></div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 1. 对的<br><br>2. 对的<br><br>3. “因为扫到了c=10，所以会加next-key lock (5,10]”， 对的。 <br> 第二个“如果”，实现上并不是这样的，所以没法回答😆<br></p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-02-11 21:36:24</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/fe/c1/6c99fff4.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>Jason_鹏</span>
+</div><div class=_2_QraFYR_0>最后一个update的例子，为没有加（0，5）的间隙呢？我理解应该是先拿c＝5去b+树搜索，按照间隙索最右原则，应该会加（0，5]的间隙，然后c＝5不满足大于5条件，根据优化2原则退化成（0，5）的间隙索，我是这样理解的</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 根据c>5查到的第一个记录是c=10，因此不会加(0,5]这个next-key lock。<br><br>你提醒得对，我应该多说明这句， 我加到文稿中啦👍</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-22 09:24:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e1/09/9483f537.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>☞</span>
+</div><div class=_2_QraFYR_0>老师好：<br> select * from t where c>=15 and c&lt;=20 order by c desc for update;<br> 为什么这种c=20就是用来查数据的就不是向右遍历<br> select * from t where c>=15 and c&lt;=20 这种就是向右遍历<br> 怎么去判断合适是查找数据，何时又是遍历呢，是因为第一个有order by desc，然后反向向左遍历了吗？所以只需要[20,25)来判断已经是最后一个20就可以了是吧</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 索引搜索就是 “找到第一个值，然后向左或向右遍历”，<br>order by desc 就是要用最大的值来找第一个；<br>order by就是要用做小的值来找第一个；<br><br>“所以只需要[20,25)来判断已经是最后一个20就可以了是吧”，<br>你描述的意思是对的，但是在MySQL里面不建议写这样的前闭后开区间哈，容易造成误解。<br>可以描述为：<br>“取第一个id=20后，向右遍历(25,25)这个间隙”^_^</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-22 10:24:50</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/05/d4/e06bf86d.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>长杰</span>
+</div><div class=_2_QraFYR_0>老师，之前讲这个例子时，select * from t where c>=15 and c&lt;=20 order by c desc in share mode;<br>最右边加的是 (20, 25)的间隙锁，<br>而这个例子select * from t where id>10 and id&lt;=15 for update中，最右边加的是(15,20]的next-key锁，<br>这两个查询为何最后边一个加的gap锁，一个加的next-key锁，他们都是&lt;=的等值范围查询，区别在哪里？</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: select * from t where c>=15 and c&lt;=20 order by c desc in share mode;<br><br>这个语句是根据 c=20 来查数据的，所以加锁(20,25]的时候，可以使用优化2；<br><br>select * from t where id>10 and id&lt;=15 for update；<br>这里的id=20，是用“向右遍历”的方式得到的，没有优化，按照“以next-key lock”为加锁单位来执行<br><br></p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-22 08:01:11</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/20/3a/90db6a24.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>Long</span>
+</div><div class=_2_QraFYR_0>感觉这篇文章以及前面加锁的文章，提升了自己的认知。还有，谢谢老师讲解了日志的对应细节……还愿了</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 😆 👍</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-28 03:52:37</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/1e/f5/96/e963b41b.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>Geek8819</span>
+</div><div class=_2_QraFYR_0>老师，我记得之前你有说过范围查询第一次定位时用的等值查找。那select * from t where id >10 and id &lt;= 15这条语句，首先用10去索引树查找。不应该加（5，10]这样一个记录锁么？</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2020-07-19 15:46:28</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/61/5f/b279daaf.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>索旭东</span>
+</div><div class=_2_QraFYR_0>select * from t where id>10 and id&lt;=15 for update;<br><br>select c from t where c>5 lock in share mode;<br><br>第一条的锁是(5,10),(10,15)<br>第二个语句的锁是（5,10]....<br>两个对比，感觉矛盾了呀，第二个语句给的理由是，大于5的第一个被访问到的记录是10，同样原理第一个语句访问的第一个记录不是应该是15吗？</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2020-03-04 16:47:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/da/ec/779c1a78.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>往事随风，顺其自然</span>
+</div><div class=_2_QraFYR_0>这么多加锁规则记不住</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 练着练着，规则就忘记了，然后直接脑补执行流程，上结论</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-06-19 09:03:00</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/05/d4/e06bf86d.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>长杰</span>
+</div><div class=_2_QraFYR_0>老师，还是select * from t where c>=15 and c&lt;=20 order by c desc in share mode与select * from t where id>10 and id&lt;=15 for update的问题，为何select * from t where id>10 and id&lt;=15 for update不能解释为：根据id=15来查数据，加锁(15, 20]的时候，可以使用优化2，<br>这个等值查询是根据什么规则来定的？ 如果select * from t where id>10 and id&lt;=15 for update加上order by id desc是否可以按照id=15等值查询，利用优化2？多谢指教。</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 1. 代码实现上，传入的就是id>10里面的这个10<br>2. 可以的，不过因为id是主键，而且id=15这一行存在，我觉得用优化1解释更好哦</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-22 19:57:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/05/d4/e06bf86d.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>长杰</span>
+</div><div class=_2_QraFYR_0>老师，select * from t where id>10 and id&lt;=15 for update;这个语句持有的锁不应该是（5,10）（10,15]（15,20）吗？</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 不是哦，这里第一个id>10找到的是(10,15)这个gap，并没有加（5,10）， <br>还有根据股则里面的“bug”，id=20也会被锁的，所以应该是（10,15]（15,20]</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-21 08:35:08</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/bf/e4/45758517.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>hal</span>
+</div><div class=_2_QraFYR_0>非常谢谢老师，专栏质量非常高，祝老师身体健康万事如意，因为内容写的太好了……很激动👍👍👍👍👍</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 🤝🤝🤝🤝🤝</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-06-01 16:47:31</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/ec/01/978d54af.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>Justin</span>
+</div><div class=_2_QraFYR_0>想咨询一下 普通索引 如果索引中包括的元素都相同 在索引中顺序是怎么排解的呢 是按主键排列的吗 比如(name ,age ) 索引 name age都一样 那索引中会按照主键排序吗？</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 会的</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-22 15:23:34</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqibSwKPg7hiapc49qoM4dibhM3fYANPjfltF2ibBZ3dHX2hibjg5EIIcziahrmjO5R2XrcRibvU39TQS7jg/132 class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>库淘淘</span>
+</div><div class=_2_QraFYR_0>对于问题 我理解是这样 <br>session 1：<br>delete from t;<br>begin; select * from t for update;<br>session 2:<br>insert into t values(1,1,1);发生等待<br>show engine innodb status\G; <br>.....<br>------- TRX HAS BEEN WAITING 5 SEC FOR THIS LOCK TO BE GRANTED:<br>RECORD LOCKS space id 75 page no 3 n bits 72 index PRIMARY of table `test`.`t` trx id 752090 lock_mode X insert intention waiting<br>Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0<br> 0: len 8; hex 73757072656d756d; asc supremum;;<br>其中申请插入意向锁与间隙锁 冲突，supremum这个能否理解为 间隙右边的那个记录</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 发现了👍🏿</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-21 16:18:14</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/62/81/ad80f427.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>Lane</span>
+</div><div class=_2_QraFYR_0>第一个例子<br>begin; select * from t where id>9 and id&lt;12 order by id desc for update; <br>为什么会有(0,5]，不理解，但是测试确实insert into t values (3,3,3);会卡主</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-05-21 19:11:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/ed/4e/ef406442.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>唯她命</span>
+</div><div class=_2_QraFYR_0>老师，update语句 mysql在执行过程中 ，都是先拆成 插入 和 删除的吗？不是直接修改？</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 修改索引值都会修改位置的😆<br></p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-04-03 16:47:17</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/19/59/b5/26d3c637.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>Yc</span>
+</div><div class=_2_QraFYR_0>老师你好，请问一下 图4的一个问题。。求解答<br><br>为啥，10不会被锁住呢？条件是id>10，查询规则是首先找到id=10的这行数据，然后根据这行数据进行向右遍历。按照加锁规则：原则 2：查找过程中访问到的对象才会加锁。<br>加锁的话 在根据优化1：优化 1：索引上的等值查询，给唯一索引加锁的时候，next-key lock 退化为行锁。 这个例子为啥ID=10不加锁！！！，求老师翻牌</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2021-04-11 17:13:45</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/03/f7/3a493bec.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>老杨同志</span>
+</div><div class=_2_QraFYR_0>先说结论：空表锁 (-supernum，supernum],老师提到过mysql的正无穷是supernum，在没有数据的情况下，next-key lock 应该是supernum前面的间隙加 supernum的行锁。但是前开后闭的区间，前面的值是什么我也不知道，就写了一个-supernum。<br>稍微验证一下<br>session 1）<br>begin;<br>select * from t where id>9 for update;<br>session 2）<br>begin;<br>insert into t values(0,0,0),(5,5,5);<br>（block）<br></div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 赞<br>show engine innodb status 有惊喜😆</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-01-21 14:29:59</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://wx.qlogo.cn/mmopen/vi_32/1mOvT5fApeicXppMP3zADG6XIPicNt5D9dL6y46SF5UUcH0hicG21LM6xSgHJj5oAdzCyeGtLZYHYmlvaFwecrGOA/132 class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>考拉出山</span>
+</div><div class=_2_QraFYR_0>第一个解释有误导，没说清楚。因为之前有例子说过 小于 大于 小于＜ ＞ 不是等值查询。现在又来解释等值查询。</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2020-09-11 09:11:46</div></div></div></div></li></ul><footer class=footline>
 </footer></div></div><div id=navigation>
-<a class="nav nav-next" href=/1/ title=MySQL实战45讲 style=margin-right:0><i class="fa fa-chevron-right"></i></a>
+<a class="nav nav-prev" href=/1/29/ title=29_如何判断一个数据库是不是出问题了？> <i class="fa fa-chevron-left"></i></a>
+<a class="nav nav-next" href=/1/31/ title=31_误删数据后除了跑路，还能怎么办？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
 <div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
 <script src=/js/perfect-scrollbar.min.js?1646789669></script>

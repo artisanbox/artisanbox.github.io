@@ -5,7 +5,7 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>Tags :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
+<title>03_事务隔离：为什么你改了我还看不见？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
 <link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
 <link href=/css/hybrid.css?1646789669 rel=stylesheet>
 <link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
@@ -17,7 +17,7 @@
 <link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
 <link href=/css/theme-green.css?1646789669 rel=stylesheet>
 <script src=/js/jquery-3.3.1.min.js?1646789669></script>
-<style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/tags/>
+<style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/3/>
 <nav id=sidebar>
 <div id=header-wrapper>
 <div id=header>
@@ -37,7 +37,8 @@
 <a class=padding href=/><i class="fas fa-home"></i> Gen 的学习笔记</a>
 </li></ul></section><div class=highlightable>
 <ul class=topics>
-<li data-nav-id=/1/ title=MySQL实战45讲 class=dd-item>
+<li data-nav-id=/1/ title=MySQL实战45讲 class="dd-item
+parent">
 <a href=/1/>
 MySQL实战45讲
 </a>
@@ -50,7 +51,7 @@ MySQL实战45讲
 <a href=/1/2/>
 02_日志系统：一条SQL更新语句是如何执行的？
 </a>
-</li><li data-nav-id=/1/3/ title=03_事务隔离：为什么你改了我还看不见？ class=dd-item>
+</li><li data-nav-id=/1/3/ title=03_事务隔离：为什么你改了我还看不见？ class="dd-item active">
 <a href=/1/3/>
 03_事务隔离：为什么你改了我还看不见？
 </a>
@@ -251,19 +252,153 @@ MySQL实战45讲
 </span>
 <span id=toc-menu><i class="fas fa-list-alt"></i></span>
 <span class=links>
-<a href=/>Gen 的学习笔记</a> > Tags
+<a href=/>Gen 的学习笔记</a> > <a href=/1/>MySQL实战45讲</a> > 03_事务隔离：为什么你改了我还看不见？
 </span>
 </div><div class=progress>
 <div class=wrapper>
-</div></div></div></div><div id=head-tags>
+<nav id=TableOfContents></nav></div></div></div></div><div id=head-tags>
 </div><div id=body-inner>
 <h1>
-tag ::
-Tags
-</h1><ul>
-</ul><footer class=footline>
+03_事务隔离：为什么你改了我还看不见？
+</h1><p><audio title="03 _ 事务隔离：为什么你改了我还看不见？" src=https://static001.geekbang.org/resource/audio/56/11/563a4dc0cd16f4ef1dc363838f41b011.mp3 controls></audio></p><p>提到事务，你肯定不陌生，和数据库打交道的时候，我们总是会用到事务。最经典的例子就是转账，你要给朋友小王转100块钱，而此时你的银行卡只有100块钱。</p><p>转账过程具体到程序里会有一系列的操作，比如查询余额、做加减法、更新余额等，这些操作必须保证是一体的，不然等程序查完之后，还没做减法之前，你这100块钱，完全可以借着这个时间差再查一次，然后再给另外一个朋友转账，如果银行这么整，不就乱了么？这时就要用到“事务”这个概念了。</p><p>简单来说，事务就是要保证一组数据库操作，要么全部成功，要么全部失败。在MySQL中，事务支持是在引擎层实现的。你现在知道，MySQL是一个支持多引擎的系统，但并不是所有的引擎都支持事务。比如MySQL原生的MyISAM引擎就不支持事务，这也是MyISAM被InnoDB取代的重要原因之一。</p><p>今天的文章里，我将会以InnoDB为例，剖析MySQL在事务支持方面的特定实现，并基于原理给出相应的实践建议，希望这些案例能加深你对MySQL事务原理的理解。</p><h1>隔离性与隔离级别</h1><p>提到事务，你肯定会想到ACID（Atomicity、Consistency、Isolation、Durability，即原子性、一致性、隔离性、持久性），今天我们就来说说其中I，也就是“隔离性”。</p><p>当数据库上有多个事务同时执行的时候，就可能出现脏读（dirty read）、不可重复读（non-repeatable read）、幻读（phantom read）的问题，为了解决这些问题，就有了“隔离级别”的概念。</p><p>在谈隔离级别之前，你首先要知道，你隔离得越严实，效率就会越低。因此很多时候，我们都要在二者之间寻找一个平衡点。SQL标准的事务隔离级别包括：读未提交（read uncommitted）、读提交（read committed）、可重复读（repeatable read）和串行化（serializable ）。下面我逐一为你解释：</p><ul>
+<li>读未提交是指，一个事务还没提交时，它做的变更就能被别的事务看到。</li><li>读提交是指，一个事务提交之后，它做的变更才会被其他事务看到。</li><li>可重复读是指，一个事务执行过程中看到的数据，总是跟这个事务在启动时看到的数据是一致的。当然在可重复读隔离级别下，未提交变更对其他事务也是不可见的。</li><li>串行化，顾名思义是对于同一行记录，“写”会加“写锁”，“读”会加“读锁”。当出现读写锁冲突的时候，后访问的事务必须等前一个事务执行完成，才能继续执行。</li></ul><p>其中“读提交”和“可重复读”比较难理解，所以我用一个例子说明这几种隔离级别。假设数据表T中只有一列，其中一行的值为1，下面是按照时间顺序执行两个事务的行为。</p><pre><code>mysql&gt; create table T(c int) engine=InnoDB;
+insert into T(c) values(1);
+</code></pre><p><img src=https://static001.geekbang.org/resource/image/7d/f8/7dea45932a6b722eb069d2264d0066f8.png alt><br>
+我们来看看在不同的隔离级别下，事务A会有哪些不同的返回结果，也就是图里面V1、V2、V3的返回值分别是什么。</p><ul>
+<li>若隔离级别是“读未提交”， 则V1的值就是2。这时候事务B虽然还没有提交，但是结果已经被A看到了。因此，V2、V3也都是2。</li><li>若隔离级别是“读提交”，则V1是1，V2的值是2。事务B的更新在提交后才能被A看到。所以， V3的值也是2。</li><li>若隔离级别是“可重复读”，则V1、V2是1，V3是2。之所以V2还是1，遵循的就是这个要求：事务在执行期间看到的数据前后必须是一致的。</li><li>若隔离级别是“串行化”，则在事务B执行“将1改成2”的时候，会被锁住。直到事务A提交后，事务B才可以继续执行。所以从A的角度看， V1、V2值是1，V3的值是2。</li></ul><p>在实现上，数据库里面会创建一个视图，访问的时候以视图的逻辑结果为准。在“可重复读”隔离级别下，这个视图是在事务启动时创建的，整个事务存在期间都用这个视图。在“读提交”隔离级别下，这个视图是在每个SQL语句开始执行的时候创建的。这里需要注意的是，“读未提交”隔离级别下直接返回记录上的最新值，没有视图概念；而“串行化”隔离级别下直接用加锁的方式来避免并行访问。</p><p>我们可以看到在不同的隔离级别下，数据库行为是有所不同的。Oracle数据库的默认隔离级别其实就是“读提交”，因此对于一些从Oracle迁移到MySQL的应用，为保证数据库隔离级别的一致，你一定要记得将MySQL的隔离级别设置为“读提交”。</p><p>配置的方式是，将启动参数transaction-isolation的值设置成READ-COMMITTED。你可以用show variables来查看当前的值。</p><pre><code>mysql&gt; show variables like 'transaction_isolation';
+<p>+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;-+</p>
+<p>| Variable_name | Value |</p>
+<p>+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;-+</p>
+<p>| transaction_isolation | READ-COMMITTED |</p>
+<p>+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;-+
+</code></pre><p>总结来说，存在即合理，每种隔离级别都有自己的使用场景，你要根据自己的业务情况来定。我想<strong>你可能会问那什么时候需要“可重复读”的场景呢</strong>？我们来看一个数据校对逻辑的案例。</p><p>假设你在管理一个个人银行账户表。一个表存了账户余额，一个表存了账单明细。到了月底你要做数据校对，也就是判断上个月的余额和当前余额的差额，是否与本月的账单明细一致。你一定希望在校对过程中，即使有用户发生了一笔新的交易，也不影响你的校对结果。</p><p>这时候使用“可重复读”隔离级别就很方便。事务启动时的视图可以认为是静态的，不受其他事务更新的影响。</p><h1>事务隔离的实现</h1><p>理解了事务的隔离级别，我们再来看看事务隔离具体是怎么实现的。这里我们展开说明“可重复读”。</p><p>在MySQL中，实际上每条记录在更新的时候都会同时记录一条回滚操作。记录上的最新值，通过回滚操作，都可以得到前一个状态的值。</p><p>假设一个值从1被按顺序改成了2、3、4，在回滚日志里面就会有类似下面的记录。</p><p><img src=https://static001.geekbang.org/resource/image/d9/ee/d9c313809e5ac148fc39feff532f0fee.png alt><br>
+当前值是4，但是在查询这条记录的时候，不同时刻启动的事务会有不同的read-view。如图中看到的，在视图A、B、C里面，这一个记录的值分别是1、2、4，同一条记录在系统中可以存在多个版本，就是数据库的多版本并发控制（MVCC）。对于read-view A，要得到1，就必须将当前值依次执行图中所有的回滚操作得到。</p><p>同时你会发现，即使现在有另外一个事务正在将4改成5，这个事务跟read-view A、B、C对应的事务是不会冲突的。</p><p>你一定会问，回滚日志总不能一直保留吧，什么时候删除呢？答案是，在不需要的时候才删除。也就是说，系统会判断，当没有事务再需要用到这些回滚日志时，回滚日志会被删除。</p><p>什么时候才不需要了呢？就是当系统里没有比这个回滚日志更早的read-view的时候。</p><p>基于上面的说明，我们来讨论一下为什么建议你尽量不要使用长事务。</p><p>长事务意味着系统里面会存在很老的事务视图。由于这些事务随时可能访问数据库里面的任何数据，所以这个事务提交之前，数据库里面它可能用到的回滚记录都必须保留，这就会导致大量占用存储空间。</p><p>在MySQL 5.5及以前的版本，回滚日志是跟数据字典一起放在ibdata文件里的，即使长事务最终提交，回滚段被清理，文件也不会变小。我见过数据只有20GB，而回滚段有200GB的库。最终只好为了清理回滚段，重建整个库。</p><p>除了对回滚段的影响，长事务还占用锁资源，也可能拖垮整个库，这个我们会在后面讲锁的时候展开。</p><h1>事务的启动方式</h1><p>如前面所述，长事务有这些潜在风险，我当然是建议你尽量避免。其实很多时候业务开发同学并不是有意使用长事务，通常是由于误用所致。MySQL的事务启动方式有以下几种：</p><ol></p><li>
+<p>显式启动事务语句， begin 或 start transaction。配套的提交语句是commit，回滚语句是rollback。</p></li><li>
+<p>set autocommit=0，这个命令会将这个线程的自动提交关掉。意味着如果你只执行一个select语句，这个事务就启动了，而且并不会自动提交。这个事务持续存在直到你主动执行commit 或 rollback 语句，或者断开连接。</p></li></ol><p>有些客户端连接框架会默认连接成功后先执行一个set autocommit=0的命令。这就导致接下来的查询都在事务中，如果是长连接，就导致了意外的长事务。</p><p>因此，我会建议你总是使用set autocommit=1, 通过显式语句的方式来启动事务。</p><p>但是有的开发同学会纠结“多一次交互”的问题。对于一个需要频繁使用事务的业务，第二种方式每个事务在开始时都不需要主动执行一次 “begin”，减少了语句的交互次数。如果你也有这个顾虑，我建议你使用commit work and chain语法。</p><p>在autocommit为1的情况下，用begin显式启动的事务，如果执行commit则提交事务。如果执行 commit work and chain，则是提交事务并自动启动下一个事务，这样也省去了再次执行begin语句的开销。同时带来的好处是从程序开发的角度明确地知道每个语句是否处于事务中。</p><p>你可以在information_schema库的innodb_trx这个表中查询长事务，比如下面这个语句，用于查找持续时间超过60s的事务。</p><pre><code>select * from information_schema.innodb_trx where TIME_TO_SEC(timediff(now(),trx_started))&gt;60
+</code></pre><h1>小结</h1><p>这篇文章里面，我介绍了MySQL的事务隔离级别的现象和实现，根据实现原理分析了长事务存在的风险，以及如何用正确的方式避免长事务。希望我举的例子能够帮助你理解事务，并更好地使用MySQL的事务特性。</p><p>我给你留一个问题吧。你现在知道了系统里面应该避免长事务，如果你是业务开发负责人同时也是数据库负责人，你会有什么方案来避免出现或者处理这种情况呢？</p><p>你可以把你的思考和观点写在留言区里，我会在下一篇文章的末尾和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>在上期文章的最后，我给你留下的问题是一天一备跟一周一备的对比。</p><p>好处是“最长恢复时间”更短。</p><p>在一天一备的模式里，最坏情况下需要应用一天的binlog。比如，你每天0点做一次全量备份，而要恢复出一个到昨天晚上23点的备份。</p><p>一周一备最坏情况就要应用一周的binlog了。</p><p>系统的对应指标就是 @尼古拉斯·赵四 @慕塔 提到的RTO（恢复目标时间）。</p><p>当然这个是有成本的，因为更频繁全量备份需要消耗更多存储空间，所以这个RTO是成本换来的，就需要你根据业务重要性来评估了。</p><p>同时也感谢 @super blue cat、@高枕、@Jason 留下了高质量的评论。</p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/ab/e1/f6b921fa.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>壹笙☞漂泊</span>
+</div><div class=_2_QraFYR_0>1、务的特性：原子性、一致性、隔离性、持久性<br>2、多事务同时执行的时候，可能会出现的问题：脏读、不可重复读、幻读<br>3、事务隔离级别：读未提交、读提交、可重复读、串行化<br>4、不同事务隔离级别的区别：<br> 读未提交：一个事务还未提交，它所做的变更就可以被别的事务看到<br> 读提交：一个事务提交之后，它所做的变更才可以被别的事务看到<br> 可重复读：一个事务执行过程中看到的数据是一致的。未提交的更改对其他事务是不可见的<br> 串行化：对应一个记录会加读写锁，出现冲突的时候，后访问的事务必须等前一个事务执行完成才能继续执行<br>5、配置方法：启动参数transaction-isolation<br>6、事务隔离的实现：每条记录在更新的时候都会同时记录一条回滚操作。同一条记录在系统中可以存在多个版本，这就是数据库的多版本并发控制（MVCC）。<br>7、回滚日志什么时候删除？系统会判断当没有事务需要用到这些回滚日志的时候，回滚日志会被删除。<br>8、什么时候不需要了？当系统里么有比这个回滚日志更早的read-view的时候。<br>9、为什么尽量不要使用长事务。长事务意味着系统里面会存在很老的事务视图，在这个事务提交之前，回滚记录都要保留，这会导致大量占用存储空间。除此之外，长事务还占用锁资源，可能会拖垮库。<br>10、事务启动方式：一、显式启动事务语句，begin或者start transaction,提交commit，回滚rollback；二、set autocommit=0，该命令会把这个线程的自动提交关掉。这样只要执行一个select语句，事务就启动，并不会自动提交，直到主动执行commit或rollback或断开连接。<br>11、建议使用方法一，如果考虑多一次交互问题，可以使用commit work and chain语法。在autocommit=1的情况下用begin显式启动事务，如果执行commit则提交事务。如果执行commit work and chain则提交事务并自动启动下一个事务。<br><br>思考题：<br><br>在开发过程中，尽可能的减小事务范围，少用长事务，如果无法避免，保证逻辑日志空间足够用，并且支持动态日志空间增长。监控Innodb_trx表，发现长事务报警。<br><br>疑问：<br><br>关于第二节的思考题，读题干的意思，是在什么场景下，一天一备比一周一备更有优势。老师的答案只是给出了一天一备的优势，那么适用场景怎么理解呢？<br><br></div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 总结得非常好👍🏿<br><br>第二讲问题，其实备份是强需求，至于多少合适，还是得平衡业务需求和存储成本</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-19 13:58:09</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/fd/b0/e30fd916.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>京京beaver</span>
+</div><div class=_2_QraFYR_0>mysql> show variables like 'transaction_isolation';<br>这句写错了，应该是tx_isolation。测试了一下</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 你是不是用的5.6或更早的版本😄<br><br>5.7引入了transaction_isolation用来替换tx_isolation了，到8.0.3就去掉了后者了</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-12-28 15:34:05</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/5d/60/b06efd0b.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>劳斯</span>
+</div><div class=_2_QraFYR_0>预告：林晓斌老师将做客极客Live，分享他MySQL的心路历程<br>前阿里丁奇：我的MySQL心路历程<br>11月21日（周三） 20:30-21:30<br><br>本次直播，林晓斌将畅谈个人成长经历，分享自己是如何从数据库小白逐步成长为MySQL内核开发人员的。从业十几年，他经历了哪些比较重要的事儿？他觉得什么事儿最有难度？什么事儿最有成就感？他是怎样应对的？<br>1、MySQL数据库的最佳学习路径<br>2、丁奇遇到过哪些挑战？走过那些坑？是如何应对的？<br>3、从业十几年来，关于数据库性能的“奇闻异事”<br><br>加小助手微信：geektime001或geektime004（二选一），获取直播最新消息</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-19 13:52:02</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/86/59/e8f58a2a.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>LAMBO</span>
+</div><div class=_2_QraFYR_0>读未提交：别人改数据的事务尚未提交，我在我的事务中也能读到。<br>读已提交：别人改数据的事务已经提交，我在我的事务中才能读到。<br>可重复读：别人改数据的事务已经提交，我在我的事务中也不去读。<br>串行：我的事务尚未提交，别人就别想改数据。<br>这4种隔离级别，并行性能依次降低，安全性依次提高。</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 总结的好👍🏿</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-20 20:21:45</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>WL</span>
+</div><div class=_2_QraFYR_0>为该讲总结了几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br><br> 1. <br>事务的概念是什么?<br> 2. <br>mysql的事务隔离级别读未提交, 读已提交, 可重复读, 串行各是什么意思?<br> 3. <br>读已提交, 可重复读是怎么通过视图构建实现的?<br> 4. <br>可重复读的使用场景举例? 对账的时候应该很有用?<br> 5. <br>事务隔离是怎么通过read-view(读视图)实现的?<br> 6. <br>并发版本控制(MCVV)的概念是什么, 是怎么实现的?<br> 7. <br>使用长事务的弊病? 为什么使用常事务可能拖垮整个库?<br> 8. <br>事务的启动方式有哪几种? <br> 9. <br>commit work and chain的语法是做什么用的? <br> 10. <br>怎么查询各个表中的长事务?<br> 11. <br>如何避免长事务的出现?<br><br></div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 谢谢。我在微博上会截图优质评论，你的总结会经常“上榜”哈。如果有不合适你跟我说下，我去删掉🤝</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-24 15:12:51</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/4e/44/66450d97.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>Gavin</span>
+</div><div class=_2_QraFYR_0>下面是我的自问自答，也是我的学习笔记，问下斌哥，这样理解准确吗？<br>在可重复读的隔离级别下，如何理解**当系统里没有比这个回滚日志更早的 read-view 的时候**，这个回滚日志就会被删除？<br><br>这也是**尽量不要使用长事务**的主要原因。<br><br>比如，在某个时刻（今天上午9:00）开启了一个事务A（对于可重复读隔离级别，此时一个视图read-view A也创建了），这是一个很长的事务……<br><br>事务A在今天上午9:20的时候，查询了一个记录R1的一个字段f1的值为1……<br><br>今天上午9:25的时候，一个事务B（随之而来的read-view B）也被开启了，它更新了R1.f1的值为2（同时也创建了一个由2到1的回滚日志），这是一个短事务，事务随后就被commit了。<br><br>今天上午9:30的时候，一个事务C（随之而来的read-view C）也被开启了，它更新了R1.f1的值为3（同时也创建了一个由3到2的回滚日志），这是一个短事务，事务随后就被commit了。<br><br>……<br><br>到了下午3:00了，长事务A还没有commit，为了保证事务在执行期间看到的数据在前后必须是一致的，那些老的事务视图、回滚日志就必须存在了，这就占用了大量的存储空间。<br><br>源于此，我们应该尽量不要使用长事务。</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 非常好</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-12-04 09:55:46</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/8a/a7/674c1864.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>William</span>
+</div><div class=_2_QraFYR_0>脏读：<br> 当数据库中一个事务A正在修改一个数据但是还未提交或者回滚，<br> 另一个事务B 来读取了修改后的内容并且使用了，<br> 之后事务A提交了，此时就引起了脏读。 <br> <br> 此情况仅会发生在： 读未提交的的隔离级别.<br> <br>不可重复读：<br> 在一个事务A中多次操作数据，在事务操作过程中(未最终提交)，<br> 事务B也才做了处理，并且该值发生了改变，这时候就会导致A在事务操作<br> 的时候，发现数据与第一次不一样了。 就是不可重复读。<br> <br> 此情况仅会发生在：读未提交、读提交的隔离级别.<br> <br>幻读：<br> 一个事务按相同的查询条件重新读取以前检索过的数据，<br> 却发现其他事务插入了满足其查询条件的新数据，这种现象就称为幻读。<br> <br> 幻读是指当事务不是独立执行时发生的一种现象，例如第一个事务对一个表中的数据进行了修改，比如这种修改涉及到表中的“全部数据行”。同时，第二个事务也修改这个表中的数据，这种修改是向表中插入“一行新数据”。那么，以后就会发生操作第一个事务的用户发现表中还存在没有修改的数据行，就好象发生了幻觉一样.<br> 一般解决幻读的方法是增加范围锁RangeS，锁定检索范围为只读，这样就避免了幻读。<br> <br> 此情况会回发生在：读未提交、读提交、可重复读的隔离级别.<br> <br> <br>事务的隔离级别：<br> 四种：读未提交 、 读提交 、 可重复读、 串行化。</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-12-13 14:58:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/dd/35/f9cbab6a.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>杨</span>
+</div><div class=_2_QraFYR_0>能抽出一章详细的讲讲mvcc吗，感觉很模糊</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-21 13:02:55</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/aa/21/6c3ba9af.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>lfn</span>
+</div><div class=_2_QraFYR_0>事务隔离的实现似乎有点太简略，没跟上林老师的思路。。</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 对于RR，你可以这么想，每个事务启动的时候打一个快照，别人改的“我不听我不听”😄</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-19 01:11:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/1e/96/c735ad6b.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>滩涂曳尾</span>
+</div><div class=_2_QraFYR_0>在“读提交”隔离级别下，这个视图是在每个 SQL 语句开始执行的时候创建的。老师，这句话怎么理解呢</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-20 08:08:30</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/72/89/1a83120a.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>yihang</span>
+</div><div class=_2_QraFYR_0>在“可重复读”隔离级别下，这个视图是在事务启动时创建的，整个事务存在期间都用这个视图。<br><br>这种说法似乎不准确：这个视图应该是“在事务内第一次查询时被创建，整个事务存在期间都用这个视图“。<br>例如 RR级别下，有记录 id 1, name zhang<br>tx1 begin<br> tx 2 begin<br> tx2 update T set name = 'li' where id = 1;<br> tx2 commt;<br>tx1 select 结果是li</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 事务在第一个select才启动</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-30 08:52:59</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/76/93/c78a132a.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>果然如此</span>
+</div><div class=_2_QraFYR_0>作业：设置autocommit=1，另外，编写一个定时监控Innodb_trx表中时间比较大的事务的任务，如果发现长事务，随时自动发邮件提醒开发人员。<br></div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-19 08:55:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELZPnUAiajaR5C25EDLWeJURggyiaOP5GGPe2qlwpQcm5e3ybib8OsP4tvddFDLVRSNNGL5I3SFPJHsA/132 class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>null</span>
+</div><div class=_2_QraFYR_0>帮助记忆：<br>视图理解为数据副本，每次创建视图时，将当前『已持久化的数据』创建副本，后续直接从副本读取，从而达到数据隔离效果。<br><br>存在视图的 2 种隔离级别：<br>1. 读提交<br>2. 可重复读<br><br>读提交：在每一条 SQL 开始执行时创建视图，隔离作用域仅限该条 SQL 语句。<br><br>可重复读：事务启动时创建视图，因此，在事务任意时刻，对记录读取的值都是一样的。<br><br>其他 2 种无视图的隔离级别：<br>1. 读未提交<br>2. 串行化<br><br>读未提交：直接返回记录最新值。<br><br>串行化：通过读写锁来避免并行访问。<br>读-读：允许并发执行<br>读-写：只能串行<br>写-写：只能串行<br><br><br>老师，关于视图理解为数据副本，“读-读”在串行化隔离级别允许并发，这样的理解是否适合呢？谢谢</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 对，读和读不互斥的</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-22 09:41:21</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f2/a5/bc63dee1.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>* 晓 *</span>
+</div><div class=_2_QraFYR_0>老师，MySQL中undo的内容会被记录到redo中吗？比如一个事务在执行到一半的时候实例崩溃了，在恢复的时候是不是先恢复redo，再根据redo构造undo回滚宕机前没有提交的事务呢？</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 对的，是你说的这个流程</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-20 08:32:26</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epLbHgQhI0pFNI9iblcKdXqI8F5Fc4fTW0OR78oPdT8rsdq6kIicLhjAUO8atSTIpYk66X1dv08RFcw/132 class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>大肉丸</span>
+</div><div class=_2_QraFYR_0>林老师，您好，我在书上看到事务隔离级别为“可重复读”时，可能会出现幻读的情况， 幻读书上说是当事务A在读取某个范围内的记录时，事务B又在该范围插入了新的数据，导致事务A读到事务B插入的数据，但是，“可重复读”级别不是提供了一个一致性视图吗，为什么事务B插入的数据会影响到这个视图呢？辛苦您解答了！</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-12-10 22:34:34</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/c7/67/0077314b.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>田佳伟</span>
+</div><div class=_2_QraFYR_0>老师，在没有显式开启事务的情况下，可不可以认为每个sql的执行都算是一个事务？</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 是的</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-06-12 08:48:56</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/0SDRac7XoordnKYgDLhz5wxAOtE6xqcsSywsywEtKQAR7xicBZQ6ceYftfZjl4Ivq3a5dzvRhYkn2GcUWiaQK7ZQ/132 class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>ThinkingQuest</span>
+</div><div class=_2_QraFYR_0>感谢老师的高质量文章。<br><br>试图的实现，多个回滚段那一块，不是很好理解。</div><div class=_10o3OAxT_0>
+</div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-19 09:33:53</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/5c/c5/1231d633.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>梁中华</span>
+</div><div class=_2_QraFYR_0>感觉没讲透，最好结合锁一起讲才能彻底讲清楚，比如两个RR级的事务同时启动，都是对同一个字段操作，系统起了两个互不影响的view,那事务的结果会不会被覆盖，直觉上肯定不会被覆盖，大家知道记录上会有锁，但这个锁和view是什么关系呢？建议mvcc可以展开来讲讲。</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 涉及到更新是是涉及行锁，在第七讲会讲到。 </p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-19 12:46:51</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/db/d3/d71622c8.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>tjudream</span>
+</div><div class=_2_QraFYR_0>问题思考：<br>1. 作为业务负责人要尽量避免长事务的产生:<br>(1)培训业务开发人员，避免长事务<br>(2)在code review中仔细检查数据库的相关配置<br>(3)让测试人员建立长事务的相关用例<br>2. 作为数据库负责人<br>(1)要求业务组上生产之前必须将数据库的相关配置、表结构设计以及SQL语句提交到DBA部门审核，由DBA把关，从源头杜绝长事务<br>(2)定期到各业务组进行数据库相关知识的培训<br>(3)建立长事务监控指标，发现之后及时报警</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2019-04-06 19:41:45</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f0/81/8d539cba.jpg class=_3FLYR4bF_0>
+<div class=_36ChpWj4_0>
+<div class=_2zFoi7sd_0><span>王凯</span>
+</div><div class=_2_QraFYR_0>autocommit设置为1，用文中提到的检查长事务的方法做每秒的计划任务检查，检查到的话记录并杀死进程。<br><br>另外，设置SET GLOBAL MAX_EXECUTION_TIME=3000. 确保单条语句执行时间在规定的范围之内。</div><div class=_10o3OAxT_0>
+<p class=_3KxQPN3V_0>作者回复: 👍🏿<br><br>不过global设下去恐怕担心如果真有需要执行久的，（比如备份），会不会被误伤😄<br><br>可以考虑设置成session内有效，让业务代码主动去做？</p></div><div class=_3klNVc4Z_0>
+<div class=_3Hkula0k_0>2018-11-19 10:25:43</div></div></div></div></li></ul><footer class=footline>
 </footer></div></div><div id=navigation>
-<a class="nav nav-next" href=/1/ title=MySQL实战45讲 style=margin-right:0><i class="fa fa-chevron-right"></i></a>
+<a class="nav nav-prev" href=/1/2/ title=02_日志系统：一条SQL更新语句是如何执行的？> <i class="fa fa-chevron-left"></i></a>
+<a class="nav nav-next" href=/1/4/ title=04_深入浅出索引（上） style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
 <div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
 <script src=/js/perfect-scrollbar.min.js?1646789669></script>
