@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>02_日志系统：一条SQL更新语句是如何执行的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>02_日志系统：一条SQL更新语句是如何执行的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/2/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -280,101 +280,121 @@ MySQL实战45讲
 但是由于binlog没写完就crash了，这时候binlog里面就没有记录这个语句。因此，之后备份日志的时候，存起来的binlog里面就没有这条语句。<br>
 然后你会发现，如果需要用这个binlog来恢复临时库的话，由于这个语句的binlog丢失，这个临时库就会少了这一次更新，恢复出来的这一行c的值就是0，与原库的值不同。</p></li><li>
 <p><strong>先写binlog后写redo log</strong>。如果在binlog写完之后crash，由于redo log还没写，崩溃恢复以后这个事务无效，所以这一行c的值是0。但是binlog里面已经记录了“把c从0改成1”这个日志。所以，在之后用binlog来恢复的时候就多了一个事务出来，恢复出来的这一行c的值就是1，与原库的值不同。</p></li></ol><p>可以看到，如果不使用“两阶段提交”，那么数据库的状态就有可能和用它的日志恢复出来的库的状态不一致。</p><p>你可能会说，这个概率是不是很低，平时也没有什么动不动就需要恢复临时库的场景呀？</p><p>其实不是的，不只是误操作后需要用这个过程来恢复数据。当你需要扩容的时候，也就是需要再多搭建一些备库来增加系统的读能力的时候，现在常见的做法也是用全量备份加上应用binlog来实现的，这个“不一致”就会导致你的线上出现主从数据库不一致的情况。</p><p>简单说，redo log和binlog都可以用于表示事务的提交状态，而两阶段提交就是让这两个状态保持逻辑上的一致。</p><h1>小结</h1><p>今天，我介绍了MySQL里面最重要的两个日志，即物理日志redo log和逻辑日志binlog。</p><p>redo log用于保证crash-safe能力。innodb_flush_log_at_trx_commit这个参数设置成1的时候，表示每次事务的redo log都直接持久化到磁盘。这个参数我建议你设置成1，这样可以保证MySQL异常重启之后数据不丢失。</p><p>sync_binlog这个参数设置成1的时候，表示每次事务的binlog都持久化到磁盘。这个参数我也建议你设置成1，这样可以保证MySQL异常重启之后binlog不丢失。</p><p>我还跟你介绍了与MySQL日志系统密切相关的“两阶段提交”。两阶段提交是跨系统维持数据逻辑一致性时常用的一个方案，即使你不做数据库内核开发，日常开发中也有可能会用到。</p><p>文章的最后，我给你留一个思考题吧。前面我说到定期全量备份的周期“取决于系统重要性，有的是一天一备，有的是一周一备”。那么在什么场景下，一天一备会比一周一备更有优势呢？或者说，它影响了这个数据库系统的哪个指标？</p><p>你可以把你的思考和观点写在留言区里，我会在下一篇文章的末尾给出我的答案。</p><p>感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>super blue cat</span>
 </div><div class=_2_QraFYR_0>我可以认为redo log 记录的是这个行在这个页更新之后的状态，binlog 记录的是sql吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Redo log不是记录数据页“更新之后的状态”，而是记录这个页 “做了什么改动”。<br><br>Binlog有两种模式，statement 格式的话是记sql语句， row格式会记录行的内容，记两条，更新前和更新后都有。<br>（谢谢你提这个问题，为了不打断文章思路，这个点没在正文写，但是又是很重要的点😄😄）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 00:49:59</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Jason</span>
 </div><div class=_2_QraFYR_0>首先谈一下，学习后的收获<br>redo是物理的，binlog是逻辑的；现在由于redo是属于InnoDB引擎，所以必须要有binlog，因为你可以使用别的引擎<br>保证数据库的一致性，必须要保证2份日志一致，使用的2阶段式提交；其实感觉像事务，不是成功就是失败，不能让中间环节出现，也就是一个成功，一个失败<br>如果有一天mysql只有InnoDB引擎了，有redo来实现复制，那么感觉oracle的DG就诞生了，物理的速度也将远超逻辑的，毕竟只记录了改动向量<br>binlog几大模式，一般采用row，因为遇到时间，从库可能会出现不一致的情况，但是row更新前后都有，会导致日志变大<br>最后2个参数，保证事务成功，日志必须落盘，这样，数据库crash后，就不会丢失某个事务的数据了<br>其次说一下，对问题的理解<br>备份时间周期的长短，感觉有2个方便<br>首先，是恢复数据丢失的时间，既然需要恢复，肯定是数据丢失了。如果一天一备份的话，只要找到这天的全备，加入这天某段时间的binlog来恢复，如果一周一备份，假设是周一，而你要恢复的数据是周日某个时间点，那就，需要全备+周一到周日某个时间点的全部binlog用来恢复，时间相比前者需要增加很多；看业务能忍受的程度<br>其次，是数据库丢失，如果一周一备份的话，需要确保整个一周的binlog都完好无损，否则将无法恢复；而一天一备，只要保证这天的binlog都完好无损；当然这个可以通过校验，或者冗余等技术来实现，相比之下，上面那点更重要<br><br>不对的地方，望大神指点</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿置顶了<br><br>你说的物理复制业界有团队在做了<br><br>而且官方新版本也把MySQL的表结构都收归InnoDB管理了😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 16:46:14</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>lfn</span>
 </div><div class=_2_QraFYR_0>老师,今天MYSQL第二讲中提到binlog和redo log, 我感觉binlog很多余，按理是不是只要redo log就够了?[费解] <br>您讲的时候说redo log是InnoDB的要求，因为以plugin的形式加入到MySQL中，此时binlog作为Server层的日志已然存在，所以便有了两者共存的现状。但我觉得这并不能解释我们在只用InonoDB引擎的时候还保留Binlog这种设计的原因.</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: binlog还不能去掉。<br><br>一个原因是，redolog只有InnoDB有，别的引擎没有。<br><br>另一个原因是，redolog是循环写的，不持久保存，binlog的“归档”这个功能，redolog是不具备的。 </p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 13:04:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Godruoyi</span>
 </div><div class=_2_QraFYR_0>Bin log 用于记录了完整的逻辑记录，所有的逻辑记录在 bin log 里都能找到，所以在备份恢复时，是以 bin log 为基础，通过其记录的完整逻辑操作，备份出一个和原库完整的数据。<br><br>在两阶段提交时，若 redo log 写入成功，bin log 写入失败，则后续通过 bin log 恢复时，恢复的数据将会缺失一部分。(如 redo log 执行了 update t set status = 1，此时原库的数据 status 已更新为 1，而 bin log 写入失败，没有记录这一操作，后续备份恢复时，其 status = 0，导致数据不一致）。<br><br>若先写入 bin log，当 bin log 写入成功，而 redo log 写入失败时，原库中的 status 仍然是 0 ，但是当通过 bin log 恢复时，其记录的操作是 set status = 1，也会导致数据不一致。<br><br>其核心就是， redo log 记录的，即使异常重启，都会刷新到磁盘，而 bin log 记录的， 则主要用于备份。<br><br>我可以这样理解吗？还有就是如何保证 redo log 和 bin log 操作的一致性啊？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 几乎全对，除了这个“两阶段提交时，若redo log写入成功，但binlog写入失败…”这句话。<br><br>实际上，因为是两阶段提交，这时候redolog只是完成了prepare, 而binlog又失败，那么事务本身会回滚，所以这个库里面status的值是0。<br><br>如果通过binlog 恢复出一个库，status值也是0。<br><br>这样不算丢失，这样是合理的结果。<br><br>两阶段就是保证一致性用的。<br>你不用担心日志写错，那样就是bug了…</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 13:41:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>小张</span>
 </div><div class=_2_QraFYR_0>老师您好，有一个问题，如果在非常极端的情况下，redo log被写满，而redo log涉及的事务均未提交，此时又有新的事务进来时，就要擦除redo log，这就意味着被修改的的脏页此时要被迫被flush到磁盘了，因为用来保证事务持久性的redo log就要消失了。但如若真的执行了这样的操作，数据就在被commit之前被持久化到磁盘中了。当真的遇到这样的恶劣情况时，mysql会如何处理呢，会直接报错吗？还是有什么应对的方法和策略呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿，会想到这么细致的场景<br><br>这些数据在内存中是无效其他事务读不到的（读到了也放弃），同样的，即使写进磁盘，也没关系，再次读到内存以后，还是原来的逻辑</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-27 17:49:43</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>哇！怎么这么大个</span>
 </div><div class=_2_QraFYR_0>老师您好，我之前是做运维的，通过binlog恢复误操作的数据，但是实际上，我们会后知后觉，误删除一段时间了，才发现误删除，此时，我把之前误删除的binlog导入，再把误删除之后binlog导入，会出现问题，比如主键冲突，而且binlog导数据，不同模式下时间也有不同，但是一般都是row模式，时间还是很久，有没什么方式，时间短且数据一致性强的方式</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 其实恢复数据只能恢复到误删之前到一刻，<br>误删之后的，不能只靠binlog来做，因为业务逻辑可能因为误删操作的行为，插入了逻辑错误的语句，<br><br>所以之后的，跟业务一起，从业务快速补数据的。只靠binlog补出来的往往不完整</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-20 20:46:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>ricktian</span>
 </div><div class=_2_QraFYR_0>redo log的机制看起来和ring buffer一样的；<br>另外有个和高枕、思雨一样的疑问，如果在重启后，需要通过检查binlog来确认redo log中处于prepare的事务是否需要commit，那是否不需要二阶段提交，直接以binlog的为准，如果binlog中不存在的，就认为是需要回滚的。这个地方，是不是我漏了什么，拉不通。。。 麻烦老师解下疑，多谢～ </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 文章中有提到“binlog没有被用来做崩溃恢复”，<br><br>历史上的原因是，这个是一开始就这么设计的，所以不能只依赖binlog。<br><br>操作上的原因是，binlog是可以关的，你如果有权限，可以set sql_log_bin=0关掉本线程的binlog日志。 所以只依赖binlog来恢复就靠不住。<br><br>@高枕、@思雨 也看下这个讨论😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 11:36:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>DanielAnton</span>
 </div><div class=_2_QraFYR_0>有个问题请教老师，既然write pos和checkout都是往后推移并循环的，而且当write pos赶上checkout的时候要停下来，将checkout往后推进，那么是不是意味着write pos的位置始终在checkout后面，最多在一起，而这和老师画的图有些出入，不知道我的理解是不是有些错误，请老师指教。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 因为是“循环”的，图中这个状态下，write_pos 往前写，写到3号文件末尾，就回到0号继续写，这样你再理解看看“追”的状态。<br><br>刚好借你这个问题，说明一下，文中“write pos和checkpoint之间的是’粉板’上还空着的部分，可以用来记录新的操作。” <br>这句话，说的“空着的部分”，就是write pos 到3号文件末尾，再加上0号文件开头到checkpoint 的部分。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 09:52:30</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>高枕</span>
 </div><div class=_2_QraFYR_0>我再来说下自己的理解 。<br>1 prepare阶段 2 写binlog 3 commit<br>当在2之前崩溃时<br>重启恢复：后发现没有commit，回滚。备份恢复：没有binlog 。<br>一致<br>当在3之前崩溃<br>重启恢复：虽没有commit，但满足prepare和binlog完整，所以重启后会自动commit。备份：有binlog. 一致</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿，get 完成</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 15:19:31</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>1.首先客户端通过tcp/ip发送一条sql语句到server层的SQL interface<br>2.SQL interface接到该请求后，先对该条语句进行解析，验证权限是否匹配<br>3.验证通过以后，分析器会对该语句分析,是否语法有错误等<br>4.接下来是优化器器生成相应的执行计划，选择最优的执行计划<br>5.之后会是执行器根据执行计划执行这条语句。在这一步会去open table,如果该table上有MDL，则等待。<br>如果没有，则加在该表上加短暂的MDL(S)<br>(如果opend_table太大,表明open_table_cache太小。需要不停的去打开frm文件)<br>6.进入到引擎层，首先会去innodb_buffer_pool里的data dictionary(元数据信息)得到表信息<br>7.通过元数据信息,去lock info里查出是否会有相关的锁信息，并把这条update语句需要的<br>锁信息写入到lock info里(锁这里还有待补充)<br>8.然后涉及到的老数据通过快照的方式存储到innodb_buffer_pool里的undo page里,并且记录undo log修改的redo<br>(如果data page里有就直接载入到undo page里，如果没有，则需要去磁盘里取出相应page的数据，载入到undo page里)<br>9.在innodb_buffer_pool的data page做update操作。并把操作的物理数据页修改记录到redo log buffer里<br>由于update这个事务会涉及到多个页面的修改，所以redo log buffer里会记录多条页面的修改信息。<br>因为group commit的原因，这次事务所产生的redo log buffer可能会跟随其它事务一同flush并且sync到磁盘上<br>10.同时修改的信息，会按照event的格式,记录到binlog_cache中。(这里注意binlog_cache_size是transaction级别的,不是session级别的参数,<br>一旦commit之后，dump线程会从binlog_cache里把event主动发送给slave的I/O线程)<br>11.之后把这条sql,需要在二级索引上做的修改，写入到change buffer page，等到下次有其他sql需要读取该二级索引时，再去与二级索引做merge<br>(随机I/O变为顺序I/O,但是由于现在的磁盘都是SSD,所以对于寻址来说,随机I/O和顺序I/O差距不大)<br>12.此时update语句已经完成，需要commit或者rollback。这里讨论commit的情况，并且双1<br>13.commit操作，由于存储引擎层与server层之间采用的是内部XA(保证两个事务的一致性,这里主要保证redo log和binlog的原子性),<br>所以提交分为prepare阶段与commit阶段<br>14.prepare阶段,将事务的xid写入，将binlog_cache里的进行flush以及sync操作(大事务的话这步非常耗时)<br>15.commit阶段，由于之前该事务产生的redo log已经sync到磁盘了。所以这步只是在redo log里标记commit<br>16.当binlog和redo log都已经落盘以后，如果触发了刷新脏页的操作，先把该脏页复制到doublewrite buffer里，把doublewrite buffer里的刷新到共享表空间，然后才是通过page cleaner线程把脏页写入到磁盘中<br>老师，你看我的步骤中有什么问题嘛？我感觉第6步那里有点问题,因为第5步已经去open table了，第6步还有没有必要去buffer里查找元数据呢?这元数据是表示的系统的元数据嘛,还是所有表的？谢谢老师指正</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 其实在实现上5是调用了6的过程了的，所以是一回事。MySQL server 层和InnoDB层都保存了表结构，所以有书上描述时会拆开说。<br><br>这个描述很详细，同时还有点到我们后面要讲的内通（编辑快来，有人来砸场子啦😄😄）<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 21:16:09</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>为该讲的内容总结了几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br> 1. redo log的概念是什么? 为什么会存在.<br> 2. 什么是WAL(write-ahead log)机制, 好处是什么.<br> 3. redo log 为什么可以保证crash safe机制.<br> 4. binlog的概念是什么, 起到什么作用, 可以做crash safe吗? <br> 5. binlog和redolog的不同点有哪些? <br> 6. 物理一致性和逻辑一直性各应该怎么理解? <br> 7. 执行器和innoDB在执行update语句时候的流程是什么样的?<br> 8. 如果数据库误操作, 如何执行数据恢复?<br> 9. 什么是两阶段提交, 为什么需要两阶段提交, 两阶段提交怎么保证数据库中两份日志间的逻辑一致性(什么叫逻辑一致性)?<br> 10. 如果不是两阶段提交, 先写redo log和先写bin log两种情况各会遇到什么问题?</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-24 11:21:22</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>justd</span>
 </div><div class=_2_QraFYR_0>一个完整的交易过程：账本记上 卖一瓶可乐（redo log为 prepare状态），然后收钱放入钱箱（bin log记录）然后回过头在账本上打个勾（redo log置为commit）表示一笔交易结束。<br>如果收钱时交易被打断，回过头来整理此次交易，发现只有记账没有收钱，则交易失败，删掉账本上的记录（回滚）；如果收了钱后被终止，然后回过头发现账本有记录（prepare）而且钱箱有本次收入（bin log），则继续完善账本（commit），本次交易有效。<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-17 00:40:51</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>清歌</span>
 </div><div class=_2_QraFYR_0>binlog为什么说是逻辑日志呢？它里面有内容也会存储成物理文件，怎么说是逻辑而不是物理</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这样理解哈。 <br><br>逻辑日志可以给别的数据库，别的引擎使用，已经大家都讲得通这个“逻辑”；<br><br>物理日志就只有“我”自己能用，别人没有共享我的“物理格式”</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 12:57:56</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>文@雨路</span>
 </div><div class=_2_QraFYR_0>老师，我想问下如果提交事务的时候正好重启那么redo log和binlog会怎么处理？此时redo log处于prepare阶段，如果不接受这条log，但是binlog已经接受，还是说binlog会去检查redo log的状态，状态为prepare的不会恢复？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题👍🏿表示中间那段你都听明白了👍🏿<br><br>Binlog如果已经接受，那么redolog是prepare, binlog已经完整了对吧，这时候崩溃恢复过程会认可这个事务，提交掉。 （你可以分析下这种情况下，是否符合我们要达到的“用binlog恢复的库跟原库逻辑相同” 这个要求）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 01:02:23</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>cyberbit</span>
 </div><div class=_2_QraFYR_0>我理解备份就是救命药加后悔药，灾难发生的时候备份能救命，出现错误的时候备份能后悔。事情都有两面性，没有谁比谁好，只有谁比谁合适，完全看业务情况和需求而定。一天一备恢复时间更短，binlog更少，救命时候更快，但是后悔时间更短，而一周一备正好相反。我自己的备份策略是设置一个16小时延迟复制的从库，充当后悔药，恢复时间也较快。再两天一个全备库和binlog，作为救命药,最后时刻用。这样就比较兼顾了。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你是有故事的人😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 20:06:43</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mao</span>
 </div><div class=_2_QraFYR_0>老师，您好。您说MySQL 使用WAL，先写日志再写磁盘。请教一个问题，<br><br>执行一条Update 语句后，马上又执行一条 select * from table limit 10。<br><br>如果刚刚update的记录，还没持久化到磁盘中，而偏偏这个时候的查询条件，又包含了刚刚update的记录。<br><br>那么这个时候，是从日志中获取刚刚update的最新结果，还是说，先把日志中的记录先写磁盘，再返回最新结果？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-19 23:10:09</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Shopee内推码：NTAGxyl</span>
 </div><div class=_2_QraFYR_0>老师，我这想请教两个问题：<br>1.写redo日志也是写io（我理解也是外部存储）。同样耗费性能。怎么能做到优化呢<br>2.数据库只有redo commit 之后才会真正提交到数据库吗</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. Redolog是顺序写，并且可以组提交，还有别的一些优化，收益最大是是这两个因素；<br><br>2.是这样，正常执行是要commit 才算完，但是崩溃恢复过程的话，可以接受“redolog prepare 并且binlog完整” 的情况</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 11:19:37</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>未来小娃</span>
 </div><div class=_2_QraFYR_0>先说下阅读的收获：<br>1、更新的流程先写redo日志，写完后更新内存，到这里操作就直接返回了。后续的流程是生成此操作的binlog，然后写到磁盘<br>2、redo日志是存储引擎实现的，记录的在某个数据页做了什么修改，固定大小，默认为4GB，可以循环写，解决了每次更新操作写磁盘、查找记录、然后更新整个过程效率低下的问题，redo日志将磁盘的随机写变成了顺序写，这个机制是WAL，先写日志再刷磁盘。一句话，redo日志保证了事务ACID的特性<br>3、binglog日志Server层实现的，记录的是语句的原始逻辑，比如给ID=1的行的状态设置成1，追加写，上个文件写完回切换成下一个文件，类似滚动日志<br>4、两阶段提交，是为了解决redo log和binlog不一致问题的，这里的不一致是指redo log写成功binlog写失败了，由于恢复是根据binlog恢复的，这样恢复的时候就会少一条更新操作，导致和线上库的数据不一致。具体而言，两阶段是指prepare阶段和commit阶段，写完redo log进入prepare阶段，写完binlog进入commit阶段。<br>然后说下由redo log联想到之前遇到的一个问题：一个普通的select查询超过30ms，经过和DBA的联合排查，确认是由于MySQL“刷脏”导致的。<br>所谓刷脏就是由于内存页和磁盘数据不一致导致了该内存页是“脏页”，将内存页数据刷到磁盘的操作称为“刷脏”。刷脏是为了避免产生“脏页”，主要是因为MySQL更新先写redo log再定期批量刷到磁盘的，这就导致内存页的数据和磁盘数据不一致，为了搞清楚为什么“刷脏”会导致慢查，我们先分析下redo log再哪些场景会刷到磁盘。<br>场景1：redo log写满了，此时MySQL会停止所有更新操作，把脏页刷到磁盘<br>场景2：系统内存不足，需要将脏页淘汰，此时会把脏页刷到磁盘<br>场景3：系统空闲时，MySQL定期将脏页刷到磁盘<br><br>可以想到，在场景1和2都会导致慢查的产生，根据文章提到的，redo log是可以循环写的，那么即使写满了应该也不会停止所有更新操作吧，其实是会的，文中有句话“粉板写满了，掌柜只能停下手中的活，把粉板的一部分赊账记录更新到账本中，把这些记录从粉板删除，为粉板腾出新的空间”，这就意味着写满后是会阻塞一段时间的。<br><br>那么问题来了，innodb存储引擎的刷脏策略是怎么样的呢？通常而言会有两种策略：全量（sharp checkpoint）和部分（fuzzy checkpoint）。全量刷脏发生在关闭数据库时，部分刷脏发生在运行时。部分刷脏又分为定期刷脏、最近最少使用刷脏、异步/同步刷脏、脏页过多刷脏。暂时先写到这，后面打算写文详细介绍。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-06 10:15:36</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>黄金的太阳</span>
 </div><div class=_2_QraFYR_0>请教老师，redo log是为了快速响应SQL充当了粉板，这里有两个疑问<br>1. redo log本身也是文件，记录文件的过程其实也是写磁盘，那和文中提到的离线写磁盘操作有何区别？<br>2.响应一次SQL我理解是要同时操作两个日志文件？也就是写磁盘两次？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你的理解是对的。<br>1. 写redo log是顺序写，不用去“找位置”，而更新数据需要找位置<br><br>2. 其实是3次（redolog两次 binlog 1次）。不过在并发更新的时候会合并写</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 08:41:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>lionetes</span>
 </div><div class=_2_QraFYR_0>昨天上午 恢复别人误操作配置表数据，幸好有xtarbackup凌晨的全量备份，只提取了改表的ibd文件，然后在本地 做了 一个一样的空表，释放该表空间，加载 提取后的ibd文件，提取昨天零晨到九点的binlog文件 筛选改表这个时段的操作记录 增量更新到本地导出csv 导入线上 。binlog太tm重要了</div><div class=_10o3OAxT_0>
@@ -384,16 +404,16 @@ MySQL实战45讲
 <a class="nav nav-prev" href=/1/1/ title=01_基础架构：一条SQL查询语句是如何执行的？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/3/ title=03_事务隔离：为什么你改了我还看不见？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

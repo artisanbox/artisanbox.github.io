@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>20_幻读是什么，幻读有什么问题？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>20_幻读是什么，幻读有什么问题？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/20/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -311,101 +311,121 @@ update t set d=N set id=N;</p>
 <p>session A试图插入一行(9,9,9)，被session B的间隙锁挡住了。</p></li></ol><p>至此，两个session进入互相等待状态，形成死锁。当然，InnoDB的死锁检测马上就发现了这对死锁关系，让session A的insert语句报错返回了。</p><p>你现在知道了，<strong>间隙锁的引入，可能会导致同样的语句锁住更大的范围，这其实是影响了并发度的</strong>。其实，这还只是一个简单的例子，在下一篇文章中我们还会碰到更多、更复杂的例子。</p><p>你可能会说，为了解决幻读的问题，我们引入了这么一大串内容，有没有更简单一点的处理方法呢。</p><p>我在文章一开始就说过，如果没有特别说明，今天和你分析的问题都是在可重复读隔离级别下的，间隙锁是在可重复读隔离级别下才会生效的。所以，你如果把隔离级别设置为读提交的话，就没有间隙锁了。但同时，你要解决可能出现的数据和日志不一致问题，需要把binlog格式设置为row。这，也是现在不少公司使用的配置组合。</p><p>前面文章的评论区有同学留言说，他们公司就使用的是读提交隔离级别加binlog_format=row的组合。他曾问他们公司的DBA说，你为什么要这么配置。DBA直接答复说，因为大家都这么用呀。</p><p>所以，这个同学在评论区就问说，这个配置到底合不合理。</p><p>关于这个问题本身的答案是，如果读提交隔离级别够用，也就是说，业务不需要可重复读的保证，这样考虑到读提交下操作数据的锁范围更小（没有间隙锁），这个选择是合理的。</p><p>但其实我想说的是，配置是否合理，跟业务场景有关，需要具体问题具体分析。</p><p>但是，如果DBA认为之所以这么用的原因是“大家都这么用”，那就有问题了，或者说，迟早会出问题。</p><p>比如说，大家都用读提交，可是逻辑备份的时候，mysqldump为什么要把备份线程设置成可重复读呢？（这个我在前面的文章中已经解释过了，你可以再回顾下第6篇文章<a href=https://time.geekbang.org/column/article/69862>《全局锁和表锁 ：给表加个字段怎么有这么多阻碍？》</a>的内容）</p><p>然后，在备份期间，备份线程用的是可重复读，而业务线程用的是读提交。同时存在两种事务隔离级别，会不会有问题？</p><p>进一步地，这两个不同的隔离级别现象有什么不一样的，关于我们的业务，“用读提交就够了”这个结论是怎么得到的？</p><p>如果业务开发和运维团队这些问题都没有弄清楚，那么“没问题”这个结论，本身就是有问题的。</p><h1>小结</h1><p>今天我们从上一篇文章的课后问题说起，提到了全表扫描的加锁方式。我们发现即使给所有的行都加上行锁，仍然无法解决幻读问题，因此引入了间隙锁的概念。</p><p>我碰到过很多对数据库有一定了解的业务开发人员，他们在设计数据表结构和业务SQL语句的时候，对行锁有很准确的认识，但却很少考虑到间隙锁。最后的结果，就是生产库上会经常出现由于间隙锁导致的死锁现象。</p><p>行锁确实比较直观，判断规则也相对简单，间隙锁的引入会影响系统的并发度，也增加了锁分析的复杂度，但也有章可循。下一篇文章，我就会为你讲解InnoDB的加锁规则，帮你理顺这其中的“章法”。</p><p>作为对下一篇文章的预习，我给你留下一个思考题。</p><p><img src=https://static001.geekbang.org/resource/image/0d/3d/0d796060073668ca169166a8903fbf3d.png alt></p><center><span class=reference>图9 事务进入锁等待状态</span></center><p>如果你之前没有了解过本篇文章的相关内容，一定觉得这三个语句简直是风马牛不相及。但实际上，这里session B和session C的insert 语句都会进入锁等待状态。</p><p>你可以试着分析一下，出现这种情况的原因是什么？</p><p>这里需要说明的是，这其实是我在下一篇文章介绍加锁规则后才能回答的问题，是留给你作为预习的，其中session C被锁住这个分析是有点难度的。如果你没有分析出来，也不要气馁，我会在下一篇文章和你详细说明。</p><p>你也可以说说，你的线上MySQL配置的是什么隔离级别，为什么会这么配置？你有没有碰到什么场景，是必须使用可重复读隔离级别的呢？</p><p>你可以把你的碰到的场景和分析写在留言区里，我会在下一篇文章选取有趣的评论跟大家一起分享和分析。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>我们在本文的开头回答了上期问题。有同学的回答中还说明了读提交隔离级别下，在语句执行完成后，是只有行锁的。而且语句执行完成后，InnoDB就会把不满足条件的行行锁去掉。</p><p>当然了，c=5这一行的行锁，还是会等到commit的时候才释放的。</p><p>评论区留言点赞板：</p><blockquote>
 <p>@薛畅 、@张永志同学给出了正确答案。而且提到了在读提交隔离级别下，是只有行锁的。<br>
 @帆帆帆帆帆帆帆帆、@欧阳成 对上期的例子做了验证，需要说明一下，需要在启动配置里面增加performance_schema=on，才能用上这个功能，performance_schema库里的表才有数据。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>令狐少侠</span>
 </div><div class=_2_QraFYR_0>老师，今天的文章对我影响很大，发现之前掌握的知识有些错误的地方，课后我用你的表结构根据以前不清楚的地方实践了一遍，现在有两个问题，麻烦您解答下<br>1.我在事务1中执行 begin;select * from t where c=5 for update;事务未提交，然后事务2中begin;update t set c=5 where id=0;执行阻塞，替换成update t set c=11 where id=0;执行不阻塞，我觉得原因是事务1执行时产生next-key lock范围是(0,5].(5,10]。我想问下update set操作c=xxx是会加锁吗？以及加锁的原理。<br>2.一直以为gap只会在二级索引上，看了你的死锁案例，发现主键索引上也会有gap锁？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 好问题。你可以理解为要在索引c上插入一个(c=5,id=0)这一行，是落在(0,5],(5,10]里面的，11可以对吧<br><br>2. 嗯，主键索引的间隙上也要有Gap lock保护的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 15:37:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>xuery</span>
 </div><div class=_2_QraFYR_0>老师之前的留言说错了，重新梳理下：<br>图8：间隙锁导致的死锁；我把innodb_locks_unsafe_for_binlog设置为1之后，session B并不会blocked，session A insert会阻塞住，但是不会提示死锁；然后session B提交执行成功，session A提示主键冲突<br><br>这个是因为将innodb_locks_unsafe_for_binlog设置为1之后，什么原因造成的？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对， innodb_locks_unsafe_for_binlog 这个参数就是这个意思 “不加gap lock”，<br><br>这个已经要被废弃了（8.0就没有了），所以不建议设置哈，容易造成误会。<br><br>如果真的要去掉gap lock，可以考虑改用RC隔离级别+binlog_format=row<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-28 19:41:26</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>杜嘉嘉</span>
 </div><div class=_2_QraFYR_0>说真的，这一系列文章实用性真的很强，老师非常负责，想必牵扯到老师大量精力，希望老师再出好文章，谢谢您了，辛苦了</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 精力花了没事，睡一觉醒来还是一条好汉😄<br>主要还是得大家有收获，我就值了😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 13:59:30</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>薛畅</span>
 </div><div class=_2_QraFYR_0>可重复读隔离级别下，经试验：<br>SELECT * FROM t where c>=15 and c&lt;=20 for update; 会加如下锁：<br>next-key lock:(10, 15], (15, 20]<br>gap lock:(20, 25)<br><br>SELECT * FROM t where c>=15 and c&lt;=20 order by c desc for update; 会加如下锁：<br>next-key lock:(5, 10], (10, 15], (15, 20]<br>gap lock:(20, 25)<br><br>session C 被锁住的原因就是根据索引 c 逆序排序后多出的 next-key lock:(5, 10]<br><br>同时我有个疑问：加不加 next-key lock:(5, 10] 好像都不会影响到 session A 可重复读的语义，那么为什么要加这个锁呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，这个其实就是为啥总结规则有点麻烦，有时候只是因为代码是这么写的😓</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-29 09:03:18</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>沉浮</span>
 </div><div class=_2_QraFYR_0>通过打印锁日志帮助理解问题<br>锁信息见括号里的说明。<br><br>TABLE LOCK table `guo_test`.`t` trx id 105275 lock mode IX<br>RECORD LOCKS space id 31 page no 4 n bits 80 index c of table `guo_test`.`t` trx id 105275 lock_mode X<br>Record lock, heap no 4 PHYSICAL RECORD: n_fields 2; compact format; info bits 0 ----(Next-Key Lock，索引锁c（5，10])<br> 0: len 4; hex 8000000a; asc ;;<br> 1: len 4; hex 8000000a; asc ;;<br><br>Record lock, heap no 5 PHYSICAL RECORD: n_fields 2; compact format; info bits 0 ----(Next-Key Lock，索引锁c (10,15]) <br> 0: len 4; hex 8000000f; asc ;;<br> 1: len 4; hex 8000000f; asc ;;<br><br>Record lock, heap no 6 PHYSICAL RECORD: n_fields 2; compact format; info bits 0 ----(Next-Key Lock，索引锁c (15,20]) <br> 0: len 4; hex 80000014; asc ;;<br> 1: len 4; hex 80000014; asc ;;<br><br>Record lock, heap no 7 PHYSICAL RECORD: n_fields 2; compact format; info bits 0 ----(Next-Key Lock，索引锁c (20,25]) <br> 0: len 4; hex 80000019; asc ;;<br> 1: len 4; hex 80000019; asc ;;<br><br>RECORD LOCKS space id 31 page no 3 n bits 80 index PRIMARY of table `guo_test`.`t` trx id 105275 lock_mode X locks rec but not gap<br>Record lock, heap no 5 PHYSICAL RECORD: n_fields 5; compact format; info bits 0 <br>----(记录锁 锁c=15对应的主键）<br> 0: len 4; hex 8000000f; asc ;;<br> 1: len 6; hex 0000000199e3; asc ;;<br> 2: len 7; hex ca000001470134; asc G 4;;<br> 3: len 4; hex 8000000f; asc ;;<br> 4: len 4; hex 8000000f; asc ;;<br><br>Record lock, heap no 6 PHYSICAL RECORD: n_fields 5; compact format; info bits 0<br> 0: len 4; hex 80000014; asc ;;<br>----(记录锁 锁c=20对应的主键）<br> 1: len 6; hex 0000000199e3; asc ;;<br> 2: len 7; hex ca000001470140; asc G @;;<br> 3: len 4; hex 80000014; asc ;;<br> 4: len 4; hex 80000014; asc ;;<br>由于字数限制，正序及无排序的日志无法帖出，倒序日志比这两者，多了范围(Next-Key Lock，索引锁c（5，10])，个人理解是，加锁分两次，第一次，即正序的锁，第二次为倒序的锁，即多出的(5,10],在RR隔离级别，<br>innodb在加锁的过程中会默认向后锁一个记录，加上Next-Key Lock,第一次加锁的时候10已经在范围，由于倒序，向后，即向5再加Next-key Lock,即多出的(5,10]范围</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 优秀</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 16:06:23</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>看了@令狐少侠 提出的问题，对锁有了新的认识：<br>对于非索引字段进行update或select .. for update操作，代价极高。所有记录上锁，以及所有间隔的锁。<br>对于索引字段进行上述操作，代价一般。只有索引字段本身和附近的间隔会被加锁。<br><br>这次终于明白，为什么说update语句的代价高！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，update、delete语句用不上索引是很恐怖的😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-03 13:36:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>kabuka</span>
 </div><div class=_2_QraFYR_0>这样，当你执行 select * from t where d=5 for update 的时候，就不止是给数据库中已有的 6 个记录加上了行锁，还同时加了 还同时加了 7 个间隙锁<br>---------------------------------------------------------------<br>老師這句話沒看太明白，數據庫只有一條d=5的記錄，為什麼會給6個記錄加上行鎖呢？<br><br> </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 因为d上没有索引，这个语句要走全表扫描</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-11 08:46:10</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>课前思考<br>1：幻读是什么？幻读有什么问题？如何避免？<br>幻读我的理解是，读出的数据出现了不一致的现象，在事务的读未提交和读已提交这两种事务的隔离级别下会出现幻读的现象，问题嘛？就是数据不一致了，对于数据严格要求一致的场景是不能够允许的。如何避免？在可重复读和串行化的事务隔离级别下应该不会出现<br>课后思考<br>1：学完此节后发现自己的认知，基本是错的<br>1-1：什么是幻读？<br>幻读是指在同一个事务中，存在前后两次查询同一个范围的数据，但是第二次查询却看到了第一次查询没看到的行。<br>注意，幻读出现的场景<br>第一：事务的隔离级别为可重复读，且是当前读<br>第二：幻读仅专指新插入的行<br>1-2：幻读带来的问题？<br>一是，对行锁语义的破坏<br>二是，破坏了数据一致性<br>1-3：怎么避免幻读？<br>存储引擎采用加间隙锁的方式来避免出现幻读<br>1-4：为啥会出现幻读？<br>行锁只能锁定存在的行，针对新插入的操作没有限定<br>1-5：间隙锁是啥？它怎么避免出现幻读的？它引入了什么新的问题？<br>间隙锁，是专门用于解决幻读这种问题的锁，它锁的了行与行之间的间隙，能够阻塞新插入的操作<br>间隙锁的引入也带来了一些新的问题，比如：降低并发度，可能导致死锁。<br>注意，读读不互斥，读写/写读/写写是互斥的，但是间隙锁之间是不冲突的，间隙锁会阻塞插入操作<br>另外，间隙锁在可重复读级别下才是有效的<br>感谢老师的分享，意料之外的认知很好玩，也纠正了自己的认知偏差。<br>感觉自己明白了，看完评论，感觉自己啥都不懂。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-01 08:52:50</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>郭江伟</span>
 </div><div class=_2_QraFYR_0>insert into t values(0,0,0),(5,5,5),<br>(10,10,10),(15,15,15),(20,20,20),(25,25,25);<br>运行mysql> begin;<br>Query OK, 0 rows affected (0.00 sec)<br>mysql> select * from t where c>=15 and c&lt;=20 order by c desc for update;<br>c 索引会在最右侧包含主键值，c索引的值为(0,0) (5,5) (10,10) (15,15) (20,20) (25,25)<br>此时c索引上锁的范围其实还要匹配主键值 。<br>思考题答案是，上限会扫到c索引(20,20) 上一个键，为了防止c为20 主键值小于25 的行插入，需要锁定(20,20) (25,25) 两者的间隙；开启另一会话(26,25,25)可以插入，而(24,25,25)会被堵塞。<br>下限会扫描到(15,15)的下一个键也就是(10,10),测试语句会继续扫描一个键就是(5,5) ，此时会锁定，(5,5) 到(15,15)的间隙，由于id是主键不可重复所以下限也是闭区间；<br>在本例的测试数据中添加(21,25,25)后就可以正常插入(24,25,25)</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 感觉你下一篇看起来会很轻松了哈👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 13:38:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>慧鑫coming</span>
 </div><div class=_2_QraFYR_0>这篇需要多读几遍，again</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 08:24:06</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>发条橙子 。</span>
 </div><div class=_2_QraFYR_0>老师 ， 看到幻读的定义是 ： 幻读是一个事物在前后两次查询同一个范围的时候，后一次查询看到了前一次查询没有看到的行 。 <br><br>那么我感觉<br>1. 读提交事务隔离级别 <br>2.可重复读事务隔离级别的当前读 <br>这两个都符合这个定义 。 那是不是说 在 1 、 2 条件下都会发生幻读 。<br><br>但是我看一些文章都说幻读是rr级别下的 ， rc 是不可重复读 。请问是我理解有误还是文章写的不准确</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 其实读提交隔离级别下看到的，严格来说不算。<br>因为这个就是读提交隔离级别下“设计内”的问题😄<br><br>这种感觉就是，对于读提交隔离级别，这个算“feature”,（是不是恨熟悉）<br>对于可重复读，这个是”bug”, 所以要解决，称呼这个bug为幻读😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-01 13:31:28</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>hetiu</span>
 </div><div class=_2_QraFYR_0>mysql官方提到自增锁是个表级锁，老师能介绍下这个吗，以及实际项目中高并发insert是否需要避免自增主键？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，innodb_auroinc_lock_mode设置为2，binlog_formate设置成row就行，没有表锁问题</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-06 09:31:34</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>凡凡是谁爹</span>
 </div><div class=_2_QraFYR_0>老师，你有点没详细讲<br>1、那其实不是记录锁和间隙锁的冲突，是意向插入锁和间隙锁的冲突。<br>2、你没有讲什么条件下会gap锁，gap锁是非唯一索引下会加的</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-12-20 22:04:04</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>卡卡</span>
 </div><div class=_2_QraFYR_0>间歇锁 和 排他锁有关系吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: next-key lock = gap lock + record lock<br>间隙锁是一种锁的类型<br>排他是一种锁的行为<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-26 20:33:33</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>郭健</span>
 </div><div class=_2_QraFYR_0>老师，想请教您几个问题。1.在第六章MDL锁的时候，您说给大表增加字段和增加索引的时候要小心，之前做过测试，给一个一千万的数据增加索引有时需要40分钟，但是增加索引不会对表增加MDL锁吧。除了增加索引慢，还会对数据库有什么影响吗，我问我们dba，他说就开始和结束的时候上一下锁，没什么影响，我个人是持怀疑态度的。2，老师讲到表锁除了MDL锁，还有显示命令lock table的命令的表锁，老师我可以认为，在mysql中如果不显示使用lock table表锁的话，那么mysql是永远不会使用表锁的，如果锁的条件没有索引，使用的是锁住行锁+间隙控制并发。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 在锁方面你们dba说的基本是对的。一开始和结束有写锁，执行中间40分钟只有读锁<br>但是1000万的表要做40分钟，可能意味着系统压力大（或者配置偏小），这样可能不是没影响对，比较这个操作还是要吃IO和CPU的<br><br>2. 嗯，innodb引擎是这样的。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-30 16:13:43</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>乔纳森</span>
 </div><div class=_2_QraFYR_0>加锁过程的分析，这篇文章也是很棒的；供同学们参考<br>http://hedengcheng.com/?p=771</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-05-04 22:27:14</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Cv</span>
 </div><div class=_2_QraFYR_0>gap锁是否只会在可重复读的情况下才有?<br>在提交读和有唯一索引的情况下, 我也有遇到过因为gap死锁的情况<br>大致是这种sql<br>session1<br>delete from t where id in (1,3,5);<br>insert into t id(1,3,5);<br>session2<br>delete from t where id in (2,4,6);<br>insert into t id(2,4,6);</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 读提交隔离级别一般没有gap lock，不过也有例外情况， 比如insert 出现主键冲突的时候，也可能加间隙锁</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-07 20:03:05</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>do it</span>
 </div><div class=_2_QraFYR_0>什么是幻读?<br>幻读指的是一个事务在前后两次查询同一个范围的时候，后一次查询看到了前一次查询没有看到的行。（幻读在当前读下才会出现；幻读仅专指新插入的行）<br>如何解决幻读?<br>间隙锁（Gap lock）:（两个值之间的锁）。<br>间隙锁和行锁合称 next-key lock，每个 next-key lock 是前开后闭区间。<br>间隙锁为开区间。<br>next-key-lock为前开后闭区间。<br>间隙锁引入什么问题？<br>可能会导致同样的语句锁住更大的范围，这其实是影响了并发度的。<br>间隙锁在RR级别下才有效，RC级别下无间隙锁。<br>不使用间隙锁方法:<br>使用读提交隔离级别+ binlog_format=row组合。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-16 08:19:23</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_89bbab</span>
 </div><div class=_2_QraFYR_0>表结构<br>CREATE TABLE `t2` (<br> `id` int(11) DEFAULT NULL,<br> `v` int(11) DEFAULT NULL<br>) ENGINE=InnoDB; <br>两个session，<br>session1, | session2<br>step1： set session transaction isolation level repeatable read;(session1) | set session transaction isolation level repeatable read;(session2)<br>step2： begin;(session1)<br>step3： begin; (session2)<br>step4： insert into t2 (id,v) values(1,1); （session1)<br>step5： insert into t2 (id,v) select 2,2 from dual where not exists(select * from t2 where id=2); (session2) // 这里为什么会阻塞，直到session1提交呢？<br>step6： commit; (session1) 该句执行完 session2不再阻塞<br>step7：commit;(session2)<br>我的疑惑就是为什么step5 那一步会阻塞？select * from t2 where id=2 不是快照读吗？也没有用for update，share lock 之类的语句，而且insert into 也没有什么唯一键约束，主键约束，怎么用数据库锁和隔离级别的知识来解释这个现象呢？请老师指点</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题<br><br>Insert...select 是会给select部分加读锁的<br><br>这个也是为了保证一致性</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-07 20:19:43</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>陈家睿</span>
 </div><div class=_2_QraFYR_0>其实for update加了锁，sessionB根本不会执行，都是推论?<br></div><div class=_10o3OAxT_0>
@@ -415,16 +435,16 @@ update t set d=N set id=N;</p>
 <a class="nav nav-prev" href=/1/19/ title=19_为什么我只查一行的语句，也执行这么慢？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/21/ title=21_为什么我只改一行的语句，锁这么多？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

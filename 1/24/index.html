@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>24_MySQL是怎么保证主备一致的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>24_MySQL是怎么保证主备一致的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/24/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -314,101 +314,121 @@ use 'test’命令之后的delete 语句，就是我们输入的SQL原文了。�
 <p>@way 同学提到了一个有趣的现象，由于从库设置了 binlog_group_commit_sync_delay和binlog_group_commit_sync_no_delay_count导致一直延迟的情况。我们在主库设置这两个参数，是为了减少binlog的写盘压力。备库这么设置，尤其在“快要追上”的时候，就反而会受这两个参数的拖累。一般追主备就用“非双1”（追上记得改回来）。</p></blockquote><blockquote>
 <p>@一大只 同学验证了在sync_binlog=0的情况下，设置sync_delay和sync_no_delay_count的现象，点赞这种发现边界的意识和手动验证的好习惯。是这样的：sync_delay和sync_no_delay_count的逻辑先走，因此该等还是会等。等到满足了这两个条件之一，就进入sync_binlog阶段。这时候如果判断sync_binlog=0，就直接跳过，还是不调fsync。</p></blockquote><blockquote>
 <p>@锅子 同学提到，设置sync_binlog=0的时候，还是可以看到binlog文件马上做了修改。这个是对的，我们说“写到了page cache”，就是文件系统的page cache。而你用ls命令看到的就是文件系统返回的结果。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Sinyo</span>
 </div><div class=_2_QraFYR_0>主库 A 从本地读取 binlog，发给从库 B；<br>老师，请问这里的本地是指文件系统的 page cache还是disk呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，<br>是这样的，对于A的线程来说，就是“读文件”，<br>1. 如果这个文件现在还在 page cache中，那就最好了，直接读走；<br>2. 如果不在page cache里，就只好去磁盘读<br><br>这个行为是文件系统控制的，MySQL只是执行“读文件”这个操作</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-21 17:43:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Leon📷</span>
 </div><div class=_2_QraFYR_0>老师，我想问下双M架构下，主从复制，是不是一方判断自己的数据比对方少就从对方复制，判断依据是什么</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题。<br><br>一开始创建主备关系的时候， 是由备库指定的。<br>比如基于位点的主备关系，备库说“我要从binlog文件A的位置P”开始同步， 主库就从这个指定的位置开始往后发。<br><br><br>而主备复制关系搭建完成以后，是主库来决定“要发数据给备库”的。<br><br>所以主库有生成新的日志，就会发给备库。<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-25 18:00:54</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Joker</span>
 </div><div class=_2_QraFYR_0>老师您好，读到您关于binlog的文章之后，我有个疑问。<br>我之前理解是，mysql 每执行一条事务所产生的binlog准备写到 binlog file时，都会先判断当前文件写入这条binlog之后是否会超过设置的max_binlog_size值。 如果超过，则rotate 自动生成下个binlog flie 来记录这条binlog信息。<br>那如果 事务所有产生的binlog 大于 max_binlog_size 值呢？ 那不是永久地rotate吗？ mysql是如何处理的？<br>谢谢。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题<br><br>一个事务的binlog日志不会被拆到两个binlog文件，所以会等到这个事务的日志写完再rotate，所以你会看见超过配置大小上限的binlog 文件</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-06 11:38:56</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>观弈道人</span>
 </div><div class=_2_QraFYR_0>老师你好，问个备份问题，假如周日23点做了备份，周二20点需要恢复数据，那么在用binlog恢复时，如何恰好定位到周日23点的binlog,谢谢。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Mysqlbinlog有个参数—stop-datetime </p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-07 07:44:18</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>妥妥</span>
 </div><div class=_2_QraFYR_0>老师，我想问下，如果一张表并没有主键，插入的一条数据和这张表原有的一条数据所有字段都是一样的，然后对插入的这条数据做恢复，会不会把原有的那条数据删除？不知道在没有主键的情况下binlog会不会也记录数据库为其生成的主键id</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，<br>会删除一条，但确实可能删除到之前的那条。<br><br>主要就是因为，没有主键的时候，binlog里面就不会记录主键字段。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-28 12:52:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>HuaMax</span>
 </div><div class=_2_QraFYR_0>课后题。如果在同步的过程中修改了server id，那用原server id 生成的log被两个M认为都不是自己的而被循环执行，不知这种情况会不会发生</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，会</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-07 14:06:54</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>一大只😴</span>
 </div><div class=_2_QraFYR_0>死循环第二种情况：<br>双主，log_slave_updates=on，binlog_format=statement<br>配置文件里写成statement格式，然后两个master都重启<br>(从row格式改成statement试了几次没有成功,因为binlog中记录格式还是row)<br>测试：<br>表t (id ,c,d) 主键id，有一条数据(1,2,1);<br>M1执行 <br> stop slave;<br> update t set c=c+1 ;或 update t set c=c+1 where id=1;<br> set global server_id=new_server_id；<br> start slave；<br>然后就能看到c的值在不断变大，想停止就把server_id改回原来的就可以了。<br><br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 赞</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-07 15:18:52</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>三木禾</span>
 </div><div class=_2_QraFYR_0>老师，双M可能会造成数据不一致的情况么? 比如，A B同时更新同一条数据？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 一般说双M是只AB之间设置为互为主备，不过任何时刻只有一个节点在接受更新的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-31 16:37:55</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>hua168</span>
 </div><div class=_2_QraFYR_0>大神，我前些天去面试，面试官问了一题:<br>mysql做主从，一段时间后发现从库在高峰期会发生一两条条数据丢失（不记得是查询行空白还是查询不到了），主从正常，怎么判断？<br>1.我问他是不是所以从库都是一样，他说不一样<br>2.我说低峰期重做新的从库观察，查看日志有没有报错？他好像不满意这个答案。<br><br> 二、他还问主库挂了怎么办？<br>1. mysql主从+keepalived/heartbeat<br> 有脑裂，还是有前面丢数据问题<br>2. 用MMM或HMA之类<br>3.用ZK之类<br><br>三、写的压力大怎么办？<br>我回答，分库，分表<br><br>感觉整天他都不怎么满意，果然没让我复试了，我郁闷呀，我就面试运维的，问数据这么详细。😂<br>大神，能说下我哪里有问题吗？现在我都想不明白😂</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 运维现在要求也挺高的<br><br>第一个问题其实我也没看懂，“高峰期丢数据”是指主备延迟查不到数据，还是真的丢了，得先问清楚下<br><br>不过你回答的第二点不太好，低峰期重做这个大家都知道要这么做，而且只是修复动作，没办法用来定位原因，面试官是要问你分析问题的方法（方向错误）<br>重搭从库错误日志里面什么都没有的（这个比较可惜，暴露了对字节不够了解，一般不了解的方法在面试的时候是不如不说的）<br><br>第二个问题三点都是你回答的吗？那还算回答得可以的，但是不能只讲名词，要找个你熟悉细节的方案展开一下<br><br>三方向也是对的<br><br>我估计就是第一个问题减分比较厉害</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-08 05:49:45</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>汪炜</span>
 </div><div class=_2_QraFYR_0>老师，问个问题，希望能被回答：<br>mmysql不是双一设置的时候，破坏了二阶段提交，事务已提交，redo没有及时刷盘，binlog刷盘了，这种情况，mysql是怎么恢复的，这个事务到底算不算提交？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 如果”redo没有及时刷盘，binlog刷盘了”之后瞬间数据库所在主机掉电，<br>主机重启，MySQL重启以后，这个事务会丢失；这里确实会引起日志和数据不一致，<br>这个就是我们说要默认设置为双1的原因之一哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-23 10:07:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>linqw</span>
 </div><div class=_2_QraFYR_0>写下学习完这篇的总结和理解，老师有空帮忙看下哦<br>1、简单主备，一主多备，主进行更新操作，将生成binlog文件发送给备，但是比较好奇一点的是所有备向主拿binlog文件的时候，主都是一个线程进行将binlog文件依次发送给备么？两个库互为主备可以将一个负责数据的写入，生成binlog文件，另一个作为数据的同步，将其改变的binlog同步到自身，然后其他备再从其同步binlog，多master可以做到一台宕机，快速切换到另一台作为主，防止主库宕机对业务造成的影响，但是这样可能导致一定程度的同步延迟。<br>2、主备复制关系搭建完成，主有数据写入的时候，发送给备的应该不是整个binlog log文件吧，是每次写入的binlog event么？<br>3、在图 2 主备流程图对bg-thread->undolog(disk)->data(disk)不太理解，回滚段也是先记录到内存，再记录在磁盘么？undolog(disk)再到data(disk),看了下undo log的控制参数没有看到控制类似行为的，没想通？老师帮忙解答下哦<br>4、binlog的三种格式，statement,记录数据库原句，有可能导致，主备所选择的索引不一致，导致主备数据不一致。row，binlog log记录的是操作的字段值，根据binlog_row_image 的默认配置是 FULL包括操作行为的所有字段值，binlog_row_image 设置为 MINIMAL，则会记录必须的字段,一般设置为row，可以根据binlog文件做其他操作，比如在误删除一行数据时，可以做insert，恢复数据。<br>5、如果执行的是 update 语句的话，binlog 里面会记录修改前整行的数据和修改后的整行数据，在二级索引的普通索引，有个change buffer优化，防止频繁的将数据页读入进来，可以减少buffer pool的消耗，可以在读取数据时，再将其marge，或者后台线程marge，但是在binlog log设置row格式的，update时，需要记录更新前后的数据，那这样的话，chage buffer不是用不上了么？还是说设置成row格式的时候，change buffer会没生效？老师麻烦帮忙解答下哦，没想明白</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 2. 流式发送，一个事务提交就会发<br>3. “回滚段也是先记录到内存，再记录在磁盘么？” 是的。 undolog(disk)不需要到data(disk)，undo log的作用看一下08篇<br>5. “update时，需要记录更新前后的数据，那这样的话，chage buffer不是用不上了么” --- 不是的，binlog里面的内容用的是主键索引上的，主键索引确实用不上change buffer，但是普通索引可以<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-17 11:29:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>hetiu</span>
 </div><div class=_2_QraFYR_0>老师，请教下双M模式是如何解决数据冲突的？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 双写？别双写。<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-07 23:37:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>陈扬鸿</span>
 </div><div class=_2_QraFYR_0>老师，我现在生产上用的是MySQL5.6的主从同步，主库用的是ssd硬盘，备库用的是机械硬盘，现在从库落后主库好几个小时，主库上数据的写入更新比较大，这个问题是由于两端硬件问题造成的吗？线上只有一个数据库，有什么好的同步加速方案吗？麻烦老师给我解答一下，谢谢！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 最好是换硬件,把备库的磁盘能力提上来,<br><br>可以考虑一下备库设置 innodb_flush_log_at_trx_commit 和 sync_binlog 为非双1 试试</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-24 10:20:37</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>柚子</span>
 </div><div class=_2_QraFYR_0>大佬您好，文中说现在越来越多的使用row方式的binlog，那么只能选择接受写入慢和占用空间大的弊端么？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，当然还有minimal可选，会好些😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-07 14:50:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>不迷失</span>
 </div><div class=_2_QraFYR_0>请教一下，生产环境能不能使用正常使用表连接？要注意哪些地方？DBA总是说不建议用，还催促我将使用了表连接的地方改造，但也说不出个所以然。目前在两个百万级数据的表中有用到内连接，并没有觉得有什么问题</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 索引使用正确，不要出现全表扫描，其实OK的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-08 20:46:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>古娜拉黑暗之神·巴啦啦能量·堕落达</span>
 </div><div class=_2_QraFYR_0>老师，您好，问一个关于change buffer的问题。<br>对于insert语句来说，change buffer的优化主要在非唯一的二级索引上，因为主键是唯一索引，插入必须要判断是否存在。<br>那么对于update语句呢？如下（假设c有非唯一索引，id是主键，d没有索引）：<br>update t set d=2 where c=10;<br>原先以为：从索引c取出id之后，不会回表，也不会把修改行的数据读入内存，而是直接在change buffer中记录一下。但看了今天得内容之后又迷糊了，因为如果不把修改行的数据读入内存，它又怎么把旧数据写入binlog中呢？<br>所以我想问的就是，上面的sql语句会不会把修改行的内容也读进内存？如果读进内存，那读进内存的这一步难道就为了写binlog吗？如果不读进内存，那binlog中的旧数据又是怎么来的呢？还有delete语句也同理。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 修改的行要读入内存呀<br><br>写binlog只需要主键索引上的值<br><br>你这个语句的话，如果字段c d上都有索引，那么c用不上chsnge buffer,<br>D可能可以同上</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-07 20:53:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>守护.</span>
 </div><div class=_2_QraFYR_0>老师早，问一个和本次课题之外的问题.mysql 数据库，我如果开启多线程对多张表同时进行insert 操作. 每张表自增的主键id会不连续.这个问题怎么处理呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 我的建议是不处理，自增主键id不连续应该作为常态，也就是说系统不要依赖于这个它必须要连续</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-07 07:31:12</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mackie .Weng</span>
 </div><div class=_2_QraFYR_0>老师，你的课真好， 你讲的都是生产实际用到的，点赞~<br>不过近期有点苦恼，要请教一下近期遇到的事<br><br>场景：<br>SSD硬盘，我们数据一天一备份，想通过昨天凌晨备份+binlog恢复到最新数据，导出的binlog为2G，然后发现导入binlog花费了4，5小时，看了下binlog日志里面有很多这种信息<br># at 2492<br>#190108 17:08:38 server id 2 end_log_pos 2601 CRC32 0x8b0598ec Query thread_id=12277795 exec_time=0 error_code=0<br>SET TIMESTAMP=1546938518/*!*/;<br>BEGIN<br>/*!*/;<br># at 2601<br># at 2633<br># at 2919<br>#190108 17:08:38 server id 2 end_log_pos 2950 CRC32 0x13806369 Xid = 1924155105<br>COMMIT/*!*/;<br><br>问题：<br>1、在导出binlog为2G而且看了下里面很多这种事务，这是什么东西，有什么用吗<br>2、这种事务在导出binlog的时候可以不记录吗，然后来提高恢复数据的速度？<br>3、如果这是正常的情况，有无推荐更好的数据恢复方案或者工具<br><br>感谢老师</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 有用，最好保留这些信息一起执行；<br>2. 提升不了多少速度的，花时间主要还是在更新数据的那些日志上，那些日志又不能去掉的：）<br>3. 这个方案是串行恢复。你可以把全量恢复出来的库，接成线上一个从库的备库，开并行复制，</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-14 17:10:30</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>风二中</span>
 </div><div class=_2_QraFYR_0>在主库执行这条 SQL 语句的时候，用的是索引 a；而在备库执行这条 SQL 语句的时候，却使用了索引 t_modified<br>老师，您好，这里索引选择不一样，是因为前面提到的mysql 会选错索引吗？这种情况应该发生比较少吧，这里应该都会选择索引a吧，还是说这里只是一个事例，还有更复杂的情况</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对，只是一个举例的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-12 13:59:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>光</span>
 </div><div class=_2_QraFYR_0>林老师今天遇到个问题就是主从同步延迟，查到主从状态中出现：Slave_SQL_Running_State: Waiting for Slave Workers to free pending events。不知道这个是否会引起延迟。查了些资料说得都不是很明白。老师是否可以简短解答下。以及这种延迟如何避免。</div><div class=_10o3OAxT_0>
@@ -418,16 +438,16 @@ use 'test’命令之后的delete 语句，就是我们输入的SQL原文了。�
 <a class="nav nav-prev" href=/1/23/ title=23_MySQL是怎么保证数据不丢的？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/25/ title=25_MySQL是怎么保证高可用的？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

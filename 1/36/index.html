@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>36_为什么临时表可以重名？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>36_为什么临时表可以重名？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/36/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -306,101 +306,121 @@ insert into t_normal select * from temp_t;/*Q4*/
 @poppy同学做了很不错的分析；<br>
 @dzkk 同学在评论中介绍了MariaDB支持的hash join，大家可以了解一下；<br>
 @老杨同志提了一个好问题，如果语句使用了索引a，结果还要对a排序，就不用MRR优化了，否则回表完还要增加额外的排序过程，得不偿失。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>辣椒</span>
 </div><div class=_2_QraFYR_0>老师，不同线程可以使用同名的临时表，这个没有问题。但是如果在程序中，用的是连接池中的连接来操作的，而这些连接不会释放，和数据库保持长连接。这样使用临时表会有问题吗?。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 会，“临时表会自动回收”这个功能，主要用于“应用程序异常断开、MySQL异常重启”后，不需要主动去删除表。<br><br>而平时正常使用的时候，用完删除，还是应该有的好习惯。😆<br><br>好问题，新年快乐~</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-07 07:07:24</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>新年快乐，老师好勤奋！<br>有个问题，insert into select语句好像会给select的表加锁，如果没有索引，就锁全表，是不是这样？什么时候可以大胆的用这类语句？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年好！<br><br>“insert into select语句好像会给select的表加锁，如果没有索引，就锁全表”，是的。<br><br>这类最好不要很大胆😆，如果不是业务急需的，从源表导出来再写到目标表也是好的。<br><br> 后面第40篇会说到哈。<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-04 23:55:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>天王</span>
 </div><div class=_2_QraFYR_0>临时表建表语法create temporary table ，和普通的表不一样，和内存表也不一样。内存表数据保存到内存里，重启会丢失，临时表会写入到磁盘。临时表只对自己的session中可见，session结束后自动删除表结构和表数据。适用场景是分库分表，查询到的数据在临时表中做聚合。临时表可以重名，实际的存储文件名有线程id，在内存中表的命名有table_ref_key，是由库名加表名加serverid+线程id组成。bin log设置为row模式，临时表不会同步到备库中，设置为statement模式，会同步到备库中。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-26 09:16:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>poppy</span>
 </div><div class=_2_QraFYR_0>老师，新年快乐。<br>关于思考题，alter table temp_t rename to temp_t2,我的理解是mysql直接修改的是table_def_key，而对于rename table temp_t2 to temp_t3,mysql直接去mysql的data目录下该数据库的目录(例如老师实验用的应该是test数据库，所以对应的是test目录)下寻找名为temp_t2.frm的文件去修改名称，所以就出现了"Can't find file './test/temp_t2.frm'(errno: 2 - No such file or directory)</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 春节快乐<br><br>👍<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-04 11:05:22</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Carisy</span>
 </div><div class=_2_QraFYR_0>老师有个问题，如果说创建临时表在主库，查询的时候打到从库上，查询是不是就有问题了，查询主库的线程id跟从库不一致</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，所以一般一个事务创建临时表以后，读写分离就会默认接下来的请求都路由到主库去了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-05-18 09:16:26</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ryoma</span>
 </div><div class=_2_QraFYR_0>贴一下官方文档中的说明：To rename TEMPORARY tables, RENAME TABLE does not work. Use ALTER TABLE instead.<br>全文见：https://dev.mysql.com/doc/refman/8.0/en/rename-table.html<br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-14 14:12:10</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>鸠翱</span>
 </div><div class=_2_QraFYR_0>放假结束该补课了😅<br><br>评论区有个回答说到了连接池的问题问到会不会有问题……而老师您回答的是会有问题 可是临时表在session结束后不就删除了嘛 那么即使是用同一个线程又有什么问题呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是这样的，要看连接池怎么实现。<br><br>如果A客户端在执行过程中创建了临时表，用完了连接就放回池子里面，没有做别的清理工作，然后新的客户端B复用这个连接，就可能会看到A的临时表</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-12 11:02:54</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>亮</span>
 </div><div class=_2_QraFYR_0>老师您好，在25课里面的置顶留言“6.表上无主键的情况(主库利用索引更改数据,备库回放只能用全表扫描,这种情况可以调整slave_rows_search_algorithms参数适当优化下)”<br>为啥会存在无主键的表呢，就算dba没创建主键，Innodb可以用rowid给自动建一个虚拟主键呀，这样不就是所有的表都有主键了吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 用户没有显示指定主键的话，InnoDB引擎会自己创建一个隐藏的主键，但是这个主键对Server层是透明的，优化器用不上。<br><br>新年快乐~</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-04 09:47:33</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>undifined</span>
 </div><div class=_2_QraFYR_0>老师 有几个问题<br>1. 在 session 结束的时候会执行 DROP TEMPORARY TABLE，如果数据库掉电，这个临时表什么时候会被清除<br>2. 如果binlog 中记录了临时表的操作，因为 session 不同，在从库中访问不到，这样做的意义是什么<br><br>辛苦老师解答一下，谢谢老师</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 好问题，重启以后MySQL会扫描临时目录，把表都删掉；<br>2. 就是我们文中说的，如果binlog是statement的时候，也需要同步到备库去，否则备库上执行一个<br>insert into t_normal (select * from t_temp) 就会报错了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 13:58:34</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>布衣骇客</span>
 </div><div class=_2_QraFYR_0>错过得还是得补上，新得一年，新的开始，加油</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年快乐，加油💪</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 13:47:59</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>亮</span>
 </div><div class=_2_QraFYR_0>老师过年好呀，祝您猪年大吉，财源广进；老师咱们这个课结束后，再开一期好不好啊，没学够啊，这是我的新年愿望哦</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年快乐，共同进步😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-04 08:51:55</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>砖瓦工</span>
 </div><div class=_2_QraFYR_0>一点一点刷新着我对mysql的认识，真心谢谢老师！期待老师有更加多的课程！祝福老师！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 🤝 加油</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-11 03:48:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>老师，新年快乐。由于自身原因，错过几期精彩的内容，年后上班以后在好好补补。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 春节快乐 新年身体健康哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-04 14:04:15</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>没有昵称</span>
 </div><div class=_2_QraFYR_0>老师，备库的线程id和主库应该是不同的吧，这样怎么保证主库创建的临时表备库上可以访问？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-01-17 08:55:06</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>唯她命</span>
 </div><div class=_2_QraFYR_0>老师 为什么过滤了条件之后，选择了t1或者t3,剩下的就固定了呢？选择了t2就需要重新评估t1和t3呢？不明白</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-10 18:24:15</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>土门一哥</span>
 </div><div class=_2_QraFYR_0>又要去学习分库分表了，学老师的一节课程从来都不止学一节课……</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 😆加油</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-06 19:15:01</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>夜空中最亮的星</span>
 </div><div class=_2_QraFYR_0>过年的时候课程落下了，给老师拜个年。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年快乐</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-13 14:40:55</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>☞</span>
 </div><div class=_2_QraFYR_0>老师新年好：<br> 请问老师一下我做的实验，主从情况下，binlog为row模式的时候，退出线程从主库的binlog中关于临时表只找到了DROP /*!40005 TEMPORARY */ TABLE IF EXISTS `temp_t`，没有找到create相关的信息，从库是怎么应用这部分create的呢，而且关于drop操作那里也提到了从库没有这个临时表，是不是有所冲突啊</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 正常create 语句也会记录的。<br><br>还有，因为drop 语句里面因为有TEMPORARY，所以拿到备库执行，即使备库没这个临时表，也没关系。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 17:01:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>慕塔</span>
 </div><div class=_2_QraFYR_0>打卡 新年快乐😲😲😲</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年快乐、共同进步🤝<br><br>好勤奋呀😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-04 23:54:19</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>cheriston</span>
 </div><div class=_2_QraFYR_0>老师辛苦了，大年三十还给我们分享技术，老师新年好🎉.</div><div class=_10o3OAxT_0>
@@ -410,16 +430,16 @@ insert into t_normal select * from temp_t;/*Q4*/
 <a class="nav nav-prev" href=/1/35/ title=35_join语句怎么优化？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/37/ title=37_什么时候会使用内部临时表？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>18_为什么这些SQL语句逻辑相同，性能却差异巨大？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>18_为什么这些SQL语句逻辑相同，性能却差异巨大？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/18/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -325,101 +325,121 @@ insert into trade_detail values(11, &lsquo;aaaaaaac&rsquo;, 4, &lsquo;commit&rsq
 </code></pre><p>再加上取整个表总行数的C行，这个方案的扫描行数总共只需要C+M+1行。</p><p>当然也可以先取回id值，在应用中确定了三个id值以后，再执行三次where id=X的语句也是可以的。@倪大人 同学在评论区就提到了这个方法。</p><p>这次评论区出现了很多很棒的留言：</p><blockquote>
 <p>@老杨同志 提出了重新整理的方法、@雪中鼠[悠闲] 提到了用rowid的方法，是类似的思路，就是让表里面保存一个无空洞的自增值，这样就可以用我们的随机算法1来实现；<br>
 @吴宇晨 提到了拿到第一个值以后，用id迭代往下找的方案，利用了主键索引的有序性。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>感谢老师鼓励，我本人工作时间比较长，有一定的基础，听老师的课还是收获很大。每次公司内部有技术分享，我都去听课，但是多数情况，一两个小时的分享，就只有一两句话受益。老师的每篇文章都能命中我的知识盲点，感觉太别爽。<br><br>对应今天的隐式类型转换问题也踩过坑。<br>我们有个任务表记录待执行任务，表结构简化后如下：<br>CREATE TABLE `task` (<br> `task_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',<br> `task_type` int(11) DEFAULT NULL COMMENT '任务类型id',<br> `task_rfid` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '关联外键1',<br> PRIMARY KEY (`task_id`)<br>) ENGINE=InnoDB AUTO_INCREMENT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='任务表';<br><br>task_rfid 是业务主键，当然都是数字，查询时使用sql：<br>select * from task where task_rfid =123;<br>其实这个语句也有隐式转换问题，但是待执行任务只有几千条记录，并没有什么感觉。<br>这个表还有个对应的历史表，数据有几千万<br>忽然有一天，想查一下历史记录，执行语句<br>select * from task_history where task_rfid =99;<br>直接就等待很长时间后超时报错了。<br>如果仔细看，其实我的表没有task_rfid 索引，写成task_rfid =‘99’也一样是全表扫描。<br>运维时的套路是，猜测主键task_id的范围，怎么猜，我原表有creat_time字段，我会先查<br>select max(task_id) from task_history 然后再看看 select * from task_history where task_id = maxId - 10000的时间，估计出大概的id范围。然后语句变成<br>select * from task_history where task_rfid =99 and id between ？ and ？;<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你最后这个id预估，加上between ，<br>有种神来之笔的感觉😄<br>感觉隐约里面有二分法的思想<br>👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-24 10:47:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>赖阿甘</span>
 </div><div class=_2_QraFYR_0>“mysql>select l.operator from tradelog l , trade_detail d where d.tradeid=l.tradeid and d.id=4;”<br>图6上面那句sql是不是写错了。d.tradeid=l.tradeid是不是该写成l.tradeid = d.tradeid？不然函数会作用在索引字段上，就只能全表扫描了</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个问题不是等号顺序决定的哈<br><br><br><br>好问题</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-24 13:48:20</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>冠超</span>
 </div><div class=_2_QraFYR_0>非常感谢老师分享的内容，实打实地学到了。这里提个建议，希望老师能介绍一下设计表的时候要怎么考虑这方面的知识哈😊</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是这样的，其实我们整个专栏大部分的文章，最后都是为了说明 “怎么设计表”、“怎么考虑优化SQL语句”<br><br>但是因为这个不是一成不变的，很多是需要考虑现实的情况，<br>所以这个专栏就是想把对应的原理说一下，这样大家在应对不同场景的时候，可以组合来考虑。<br><br>也就是说没有一段话可以把“怎么设计表”讲清楚（或者说硬写出来很可能就是一些general的没有什么针对性作用的描述）<br><br>你可以把你的业务背景抽象说下，我们来具体讨论吧</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-28 07:16:49</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>可凡不凡</span>
 </div><div class=_2_QraFYR_0>1.老师好<br>2.如果在用一个 MySQL 关键字做字段,并且字段上索引,当我用这个索引作为唯一查询条件的时候 ,会 造 成隐式的转换吗? <br>例如:SELECT * FROM b_side_order WHERE CODE = 332924 ; (code 上有索引)<br>3. mysql5.6 code 上有索引 intime 上没有索引<br>语句一:<br>SELECT * FROM b_side_order WHERE CODE = 332924 ;<br>语句二;<br> UPDATE b_side_order SET in_time = '2018-08-04 08:34:44' WHERE 1=2 or CODE = 332924;<br><br>这两个语句 执行计划走 select 走了索引,update 没有走索引 是执行计划的bug 吗??<br><br> <br><br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 你好😄<br>2. CODE不是关键字呀， 另外优化器选择跟关键字无关哈，关键字的话，要用 反‘ 括起来<br>3. 不是bug, update如果把 or 改成 and , 就能走索引😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-25 09:10:31</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>700</span>
 </div><div class=_2_QraFYR_0>老师您好，有个问题恳请指教。背景如下，我长话短说：<br><br>mysql>select @@version;<br>5.6.30-log<br><br> CREATE TABLE `t1` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT,<br> `user_id` int(11) NOT NULL, `plan_id` int(11) NOT NULL DEFAULT '0' , PRIMARY KEY (`id`),<br> KEY `userid` (`user_id`) USING BTREE, KEY `idx_planid` (`plan_id`)<br>) ENGINE=InnoDB DEFAULT CHARSET=gb2312;<br><br> CREATE TABLE `t3` (<br> `id` int(11) NOT NULL AUTO_INCREMENT,<br> `status` int(4) NOT NULL DEFAULT '0',<br> `ootime` varchar(11) DEFAULT NULL,<br> PRIMARY KEY (`id`),<br> KEY `idx_xxoo` (`status`,`ootime`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;<br><br>t1 和 t3 表的字符集不一样<br><br>sql 执行计划如下：<br>explain<br>SELECT t1.id, t1.user_id<br> FROM t1, t3<br> WHERE t1.plan_id = t3.id<br> AND t3.ootime &lt; UNIX_TIMESTAMP('2022-01-18')<br>+----+-------------+-------+-------+---------------+--------------+---------+--------------+-------+----------------------------------------+<br>| id | select_type | table | type | possible_keys | key | key_len | ref | rows | Extra |<br>+----+-------------+-------+-------+---------------+--------------+---------+--------------+-------+----------------------------------------+<br>| 1 | SIMPLE | t3 | index | PRIMARY | idx_xxoo | 51 | NULL | 39106 | Using where; Using index |<br>| 1 | SIMPLE | t1 | ref | idx_planid | idx_planid | 4 | t3.id | 401 | Using join buffer (Batched Key Access) |<br>+----+-------------+-------+-------+---------------+--------------+---------+--------------+-------+----------------------------------------+<br><br>我的疑惑是<br>1)t3 的 status 没出现在 where 条件中，但执行计划为什么用到了 idex_xxoo 索引？<br>2)为什么 t3.ootime 也用到索引了，从 key_len 看出。t3.ootime 是 varchar 类型的，而 UNIX_TIMESTAMP('2022-01-18') 是数值，不是发生了隐式转换吗？<br><br>请老师指点。<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个查询语句会对t3做全索引扫描，是使用了索引的，只是没有用上快速搜索功能</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-18 19:12:01</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>探索无止境</span>
 </div><div class=_2_QraFYR_0>老师，有道面试题困扰了很久，求指教！题目是这样的，a表有100条记录，b表有10000条记录，两张表做关联查询时，是将a表放前面效率高，还是b表放前面效率高？网上各种答案，但感觉都没有十分的说服力，期待老师的指点！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: (这题目改成100万禾10000万比较好)<br>如果是考察语句写法，这两个表谁放前面都一样，优化器会调整顺序选择合适的驱动表；<br><br>如果是考察优化器怎么实现的，你可以这么想，每次在树搜索里面做一次查找都是log(n), 所以对比的是100*log(10000)和 10000*log(100)哪个小，显然是前者，所以结论应该是让小表驱动大表。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-13 11:44:49</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Leon📷</span>
 </div><div class=_2_QraFYR_0>索引字段不能进行函数操作，但是索引字段的参数可以玩函数，一言以蔽之</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 精辟😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-24 10:42:28</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>SQL逻辑相同,性能差异较大的,通过老师所讲学习到的,和平时碰到的,大概有以下几类:<br>一.字段发生了转换,导致本该使用索引而没有用到索引<br>1.条件字段函数操作<br>2.隐式类型转换<br>3.隐式字符编码转换<br>(如果驱动表的字符集比被驱动表得字符集小，关联列就能用到索引,如果更大,需要发生隐式编码转换,则不能用到索引,latin&lt;gbk&lt;utf8&lt;utf8mb4)<br><br>二.嵌套循环,驱动表与被驱动表选择错误<br>1.连接列上没有索引,导致大表驱动小表,或者小表驱动大表(但是大表走的是全表扫描) --连接列上建立索引<br>2.连接列上虽然有索引,但是驱动表任然选择错误。--通过straight_join强制选择关联表顺序<br>3.子查询导致先执行外表在执行子查询,也是驱动表与被驱动表选择错误。 <br>--可以考虑把子查询改写为内连接,或者改写内联视图(子查询放在from后组成一个临时表,在于其他表进行关联)<br>4.只需要内连接的语句,但是写成了左连接或者右连接。比如select * from t left join b on t.id=b.id where b.name='abc'驱动表被固定,大概率会扫描更多的行,导致效率降低. <br> --根据业务情况或sql情况,把左连接或者右连接改写为内连接<br><br>三.索引选择不同,造成性能差异较大<br>1.select * from t where aid= and create_name>'' order by id limit 1;<br>选择走id索引或者选择走(aid,create_time)索引,性能差异较大.结果集都有可能不一致<br>--这个可以通过where条件过滤的值多少来大概判断,该走哪个索引<br><br>四.其它一些因素<br>1.比如之前学习到的是否有MDL X锁<br>2.innodb_buffer_pool设置得太小,innodb_io_capacity设置得太小,刷脏速度跟不上<br>3.是否是对表做了DML语句之后,马上做select,导致change buffer收益不高<br>4.是否有数据空洞<br>5.select选取的数据是否在buffer_pool中<br>6.硬件原因,资源抢占<br>原因多种多样,还需要慢慢补充。<br><br>老师我问一个问题:<br>连接列上一个是int一个是bigint或者一个是char一个varchar,为什么被驱动表上会出现(using index condition)?</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-24 16:21:24</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>乔纳森</span>
 </div><div class=_2_QraFYR_0>执行explain 语句后，使用show warnings; 可以看到MySQL 实际执行的SQL，包括字符集的转换</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-05-04 17:07:08</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>风轨</span>
 </div><div class=_2_QraFYR_0>刚试了文中穿插得思考题:当主键是整数类型条件是字符串时，会走索引。<br>文中提到了当字符串和数字比较时会把字符串转化为数字，所以隐式转换不会应用到字段上，所以可以走索引。<br>另外，select 'a' = 0 ; 的结果是1，说明无法转换成数字的字符串都被转换成0来处理了。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-24 09:54:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>crazyone</span>
 </div><div class=_2_QraFYR_0>老师你好，我在执行explain的时候，发现extra 里面 有using where，using index ，using index condition 能具体讲下这几个的区别吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Using index是覆盖索引<br>Using index condition 是索引下推</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 17:11:56</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>匿名的朋友</span>
 </div><div class=_2_QraFYR_0>丁奇老师，我有个疑问，就是sql语句执行时那些order by group by limit 以及where条件，有执行的先后顺序吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 有，先where ,再order by 最后limit </p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-05 17:34:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>饭粒</span>
 </div><div class=_2_QraFYR_0>感觉要使用索引就不能“破坏”索引原有的顺序，这节的函数操作，隐式转换都“破坏”了原有的顺序。前一节的select * from t where city in in (“杭州”," 苏州 ") order by name limit 100; 同样是破坏了 (city,name) 联合索引的递增顺序，类似的还有使用联合索引，一个字段DESC，一个ASC。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍 总结得很好<br><br>“顺势而查”才能用上索引😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 23:22:12</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>涛哥哥</span>
 </div><div class=_2_QraFYR_0>老师，您好！我是做后端开发的。想问一下 mysql in关键字 的内部原理，能抽一点点篇幅讲一下吗？比如：select * from T where id in (a,b,d,c,,e,f); id是主键。1、为什么查询出来的结果集会按照id排一次序呢（是跟去重有关系么）？2、如果 in 里面的值较多的时候，就会比较慢啊（是还不如全表扫描么）？问我们公司很多后端的，都不太清楚，问我们DBA，他说默认就是这样（这不跟没说一样吗）。希望老师可以帮忙解惑。祝老师身体健康！微笑~</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 优化器会排个序，目的是如果这几个记录对应的数据都不在内存里，可以触发顺序读盘，后面文章我们介绍到join的时候，会提到MRR，你关注下<br><br>2. in里面值多就是多次执行树搜索，跟全表扫描的速度对比，就看in里面的数据个数的比例了。 你的in里面一般多少个value呀</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-26 15:53:27</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>greatcl</span>
 </div><div class=_2_QraFYR_0>刚刚帮一个同事看SQL慢的问题，帮他找出来问题，并拿出这篇文章让他看，哈哈</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍 这个感觉太赞啦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-05-22 11:38:20</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>可凡不凡</span>
 </div><div class=_2_QraFYR_0>1.老师对于多表联合查询中,MySQL 对索引的选择 以后会详细介绍吗?<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 额，你是第三个提这个问题的了，我得好好考虑下安排😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-24 13:49:14</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>探索无止境</span>
 </div><div class=_2_QraFYR_0>多表连接时，mysql是怎么选择驱动表和被驱动表的？这个很重要，希望老师可以讲讲</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-25 08:49:04</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Wrelon</span>
 </div><div class=_2_QraFYR_0>在第10章的时候提问过一次，当时表述的不够清楚，现在知道了，应该是因为隐式类型转换导致了全索引扫描。这个课程真实太棒了，我踩过的坑都说了。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿 对大家有帮助我最开心啦😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-25 21:29:12</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>TKbook</span>
 </div><div class=_2_QraFYR_0>老师，对于最后回答上一课的问题：mysql> select * from t limit N, M-N+1;<br>这个语句也不是取3条记录。 没理解。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 取其中三条…</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-27 17:44:00</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>书策稠浊</span>
 </div><div class=_2_QraFYR_0>上期问题答案是取三个数，但是这里貌似不是三个数，不理解。</div><div class=_10o3OAxT_0>
@@ -429,16 +449,16 @@ insert into trade_detail values(11, &lsquo;aaaaaaac&rsquo;, 4, &lsquo;commit&rsq
 <a class="nav nav-prev" href=/1/17/ title=17_如何正确地显示随机消息？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/19/ title=19_为什么我只查一行的语句，也执行这么慢？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

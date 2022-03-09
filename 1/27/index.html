@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>27_主库出问题了，从库怎么办？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>27_主库出问题了，从库怎么办？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/27/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -329,101 +329,121 @@ start slave;
 <li>接下来，执行完主备切换，然后照着上述流程再执行一遍即可。</li></ul><h1>小结</h1><p>在今天这篇文章中，我先和你介绍了一主多从的主备切换流程。在这个过程中，从库找新主库的位点是一个痛点。由此，我们引出了MySQL 5.6版本引入的GTID模式，介绍了GTID的基本概念和用法。</p><p>可以看到，在GTID模式下，一主多从切换就非常方便了。</p><p>因此，如果你使用的MySQL版本支持GTID的话，我都建议你尽量使用GTID模式来做一主多从的切换。</p><p>在下一篇文章中，我们还能看到GTID模式在读写分离场景的应用。</p><p>最后，又到了我们的思考题时间。</p><p>你在GTID模式下设置主从关系的时候，从库执行start slave命令后，主库发现需要的binlog已经被删除掉了，导致主备创建不成功。这种情况下，你觉得可以怎么处理呢？</p><p>你可以把你的方法写在留言区，我会在下一篇文章的末尾和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>上一篇文章最后，我给你留的问题是，如果主库都是单线程压力模式，在从库追主库的过程中，binlog-transaction-dependency-tracking 应该选用什么参数？</p><p>这个问题的答案是，应该将这个参数设置为WRITESET。</p><p>由于主库是单线程压力模式，所以每个事务的commit_id都不同，那么设置为COMMIT_ORDER模式的话，从库也只能单线程执行。</p><p>同样地，由于WRITESET_SESSION模式要求在备库应用日志的时候，同一个线程的日志必须与主库上执行的先后顺序相同，也会导致主库单线程压力模式下退化成单线程复制。</p><p>所以，应该将binlog-transaction-dependency-tracking 设置为WRITESET。</p><p><strong>评论区留言点赞板：</strong></p><blockquote>
 <p>@慧鑫coming 问了一个好问题，对同一行作更新的几个事务，如果commit_id相同，是不是在备库并行执行的时候会导致数据不一致？这个问题的答案是更新同一行的事务是不可能同时进入commit状态的。<br>
 @老杨同志 对这个问题给出了更详细的回答，大家可以去看一下。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>1.如果业务允许主从不一致的情况那么可以在主上先show global variables like 'gtid_purged';然后在从上执行set global gtid_purged =' '.指定从库从哪个gtid开始同步,binlog缺失那一部分,数据在从库上会丢失,就会造成主从不一致<br>2.需要主从数据一致的话,最好还是通过重新搭建从库来做。<br>3.如果有其它的从库保留有全量的binlog的话，可以把从库指定为保留了全量binlog的从库为主库(级联复制)<br>4.如果binlog有备份的情况,可以先在从库上应用缺失的binlog,然后在start slave<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 非常好👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-15 17:21:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>老师您好：<br>在实际工作中，主从备份似乎是mysql用的最多的高可用方案。<br>但是个人认为主从备份这个方案的问题实在太多了：<br>1. binlog数据传输前，主库宕机，导致提交了的事务数据丢失。<br>2. 一主多从，即使采用半同步，也只能保证binlog至少在两台机器上，没有一个机制能够选出拥有最完整binlog的从库作为新的主库。<br>3. 主从切换涉及到 人为操作，而不是全自动化的。即使在使用GTID的情况下，也会有binlog被删除，需要重新做从库的情况。<br>4. 互为主备，如果互为主备的两个实例全部宕机，mysql直接不可用。<br><br>mysql应该有更强大更完备的高可用方案（类似于zab协议或者raft协议这种），而在实际环境下，为什么主从备份用得最多呢？<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 3 这个应该是可以做到自动化的。<br>4 这个概率比较小，其实即使是别的三节点的方案，也架不住挂两个实例，所以这个不是MySQL主备的锅。<br><br>前面两点提得很对哈。<br>其实MySQL到现在，还是提供了很多方案可选的。很多是业务权衡的结果。<br><br>比如说，异步复制，在主库异常掉电的时候可能会丢数据。<br>这个大家知道以后，有一些就改成semi-sync了，但是还是有一些就留着异步复制的模式，因为semi-sync有性能影响（一开始35%，现在好点15%左右，看具体环境），而可能这些业务认为丢一两行，可以从应用层日志去补。 就保留了异步复制模式。<br><br>最后，为什么主从备份用得最多，我觉得有历史原因。多年前MySQL刚要开始火的时候，大家发现这个主备模式好方便，就都用了。<br>而基于其他协议的方案，都是后来出现的，并且还是陆陆续续出点bug。<br>涉及到线上服务，大家使用新方案的热情总是局限在测试环境的多。<br><br>semi-sync也是近几年才开始稳定并被一些公司开始作为默认配置。<br><br>新技术的推广，在数据库上，确实比其他领域更需要谨慎些，也算是业务决定的吧^_^<br>好问题👍<br>以上仅一家之言哈😆<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-18 10:43:24</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>悟空</span>
 </div><div class=_2_QraFYR_0>看过上篇后想到一个问题:<br>级联复制A->B->C结构下, 从库C的Seconds_Behind_Master的时间计算问题.<br>假定当前主库A仅有一个DDL要进行变更,耗时1分钟.那么从库C的SBM值最大应该是多少时间?<br>是1分钟, 2分钟, 还是3分钟呢 ?<br>带着疑问看了一下测试从库C的binlog文件中的时间戳,得出结论应该是3分钟.<br><br>打破之前认知 🤦‍♀️ . 请老师解惑 , 谢谢 ! </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，因为算的是：当前执行时间，跟*日志时间*的差距<br><br>而这个日志时间，是在A上执行出来的。<br><br>好问题，很好的验证过程。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-14 16:06:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>张永志</span>
 </div><div class=_2_QraFYR_0>今天问题回答：<br>GTID主从同步设置时，主库A发现需同步的GTID日志有删掉的，那么A就会报错。<br>解决办法：<br>从库B在启动同步前需要设置 gtid_purged，指定GTID同步的起点，使用备份搭建从库时需要这样设置。<br><br>如果在从库上执行了单独的操作，导致主库上缺少GTID，那么可以在主库上模拟一个与从库B上GTID一样的空事务，这样主从同步就不会报错了。<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你已经理解GTID的机制啦👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-14 16:49:22</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>老师您好：<br>之前讲过 互为主备 的场景下，会出现循环复制的问题，今天这节讲了GTID。<br>如果使用GTID，那么 循环复制 的问题自然而然就解决了呀？？！！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 哈哈，you got it</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-18 10:33:15</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Lukia</span>
 </div><div class=_2_QraFYR_0>对于老师之前对其他他同学的回答还有一点疑问需要请教一下：<br><br>Master A上的binlog时间不是在事物commit之前写binlog的时间吗，那么在从节点C上的SBM最大值不应该是2分钟吗？（按3分钟的答案来说，Master A上执行的1分钟为啥要算进去呢？）<br><br>看过上篇后想到一个问题:<br>级联复制A->B->C结构下, 从库C的Seconds_Behind_Master的时间计算问题.<br>假定当前主库A仅有一个DDL要进行变更,耗时1分钟.那么从库C的SBM值最大应该是多少时间?<br>是1分钟, 2分钟, 还是3分钟呢 ?<br>带着疑问看了一下测试从库C的binlog文件中的时间戳,得出结论应该是3分钟.<br><br>打破之前认知 🤦‍♀️ . 请老师解惑 , 谢谢 !<br>作者回复: 是的，因为算的是：当前执行时间，跟*日志时间*的差距<br><br>而这个日志时间，是在A上执行出来的。<br><br>好问题，很好的验证过程。<br><br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯，多一跳确实是应该多1分钟，在c的最长延迟时间应该是2分钟</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-18 13:30:53</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>mgxian</span>
 </div><div class=_2_QraFYR_0>老师我有一个问题 如果数据库已经有完成了很多事务 实例 A’的 GTID集合和 实例 B的 GTID集合 是不是很大，这个GTID是从binglog里一点一点的解析出来所有的事务的吗？这样是不是会很慢 ？在所有binlog里定位某个GTID是不是效率也很低</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，👍<br>在binlog文件开头，有一个Previous_gtids, 用于记录 “生成这个binlog的时候，实例的Executed_gtid_set”, 所以启动的时候只需要解析最后一个文件；<br><br>同样的，由于有这个Previous_gtids，可以快速地定位GTID在哪个文件里。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-15 08:25:21</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>时隐时现</span>
 </div><div class=_2_QraFYR_0>其实基于gtid复制有个大坑，在主库上千万不要执行reset master，否则从库不会报错，只会跳过gno &lt; current_no的事务，造成一个现象就是主库复制没有中断，但是主库上的数据无法同步到从库。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，<br>不过reset master这种语句。。就算是基于position的协议，谁在线上主库上执行，也是直接当做删数据论处的了😅</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-31 11:26:46</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>fuyu</span>
 </div><div class=_2_QraFYR_0>seta 和 setb 里的集合大小不会很大？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 大没关系呀，是分段的，比如 server_uuid_of_a:1-1000000，就一个段</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-15 12:55:43</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>大坤</span>
 </div><div class=_2_QraFYR_0>今天问题回答，由于GTID具有全局唯一性，那么其它正常的gtid已经被复制到了其他从库上了，只需要切换gtid到其他从库，等待同步完毕后在切换回主库即可</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个想法很不错 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-14 08:16:49</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>PengfeiWang</span>
 </div><div class=_2_QraFYR_0>老师，您好： 文中对于sql_slave_skip_counter=1的理解似乎有偏差，官方文档中的解释是：<br>When you use SET GLOBAL sql_slave_skip_counter to skip events and the result is in the middle of a group, the slave continues to skip events until it reaches the end of the group. Execution then starts with the next event group.<br>按照官方文档的解释，命令sql_slave_skip_counter=1 应该是跳过一个事务中的1个event，除非这个事务是有单个event组成的，才会跳过一个事务。<br> </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你这个是好问题，<br><br>确实只是跳过一个event，不过文档中说了呀<br>“the slave continues to skip events until it reaches the end of the group. ”， <br>所以效果上等效于跳过一个事务哦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-14 16:06:00</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>春困秋乏夏打盹</span>
 </div><div class=_2_QraFYR_0>回答undifined的第二个问题<br>A-A'-B这样的级联结构<br>A (binlog：A:1-M)<br>A'(binlog: A:1-M,B:1-N) ,A'上面的操作记为B:1-N<br>B (binlog: A:1-M,B:1-N,C:1-X) B上面的操作记为C:1-X<br>---A,B,C分别为A-A'-B的uuid</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对的<br>总之就是，一个主备关系里，备库的GTID集合应该包含主库的GTID集合。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-16 16:46:16</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>灵犀andy</span>
 </div><div class=_2_QraFYR_0>林老师，我是看了很久了您的专栏的一位粉丝，最近我们计划在docker中跑mysql，但是我觉的docker中运维mysql太麻烦了，xtrabackup工具好像在docker中就无法安装。还有主从,MHA等，请问docker中适合跑mysql吗，优点和缺点是什么？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: docker中跑MySQL没问题的~</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-19 10:57:52</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>亮</span>
 </div><div class=_2_QraFYR_0>老师您好，假如a宕机了，需要把从切换到a'，这时候业务已经有感知了吧？怎么能让业务尽量没有感知呢？谢谢老师</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这种情况下，不可能业务完全无感知，<br><br>但是如果业务代码有“重连并重试”的逻辑，并且切换足够快，就可以对业务无影响，前提是要解决主备延迟问题，就是25、26两篇提到的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-14 10:13:16</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>undifined</span>
 </div><div class=_2_QraFYR_0>老师 有几个问题：<br>1. 会不会出现主库切换后，B 中已经执行过的事务，而 A'由于网络延迟还没有收到，此时已经对 B 执行切换主库，这时候，B 中有该 GTID，但是 A'中没有，这种情况会怎么处理<br>2. 如果 A 是主库，A' 备库，B 是 A'的从库，此时 B 的 GTID 集合应该是 server_uuid_of_A':1-N，此时 A'宕机，B 改为监听 A，这时候A 和 B 的 GTID 集合没有交集，会不会发生 A 将所有的binlog 重新发给B<br>3. 思考题我的理解是从主库中 dump 出相关的数据，在备库中执行后再次执行 start slave；评论中说到从其他从库获取，但是如果只有一主一从，有 binlog 丢失，是不是只要 dump 文件恢复这一个办法</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 这个也是异步复制导致的，只有semi-sync能解了。。<br>2. 不是哦，如果“ A 是主库，A' 备库，B 是 A'的从库”，那所有A的更新也都会通过A'传给B，所以B的GTID集合正常就是包含了A和A'的<br>3. “如果只有一主一从，有 binlog 丢失”，是的，就只有备库重做了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-14 12:45:17</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Monday</span>
 </div><div class=_2_QraFYR_0>1、GTID感觉就是一个由主库命名的唯一ID，并且随binlog发送到从库。<br>2、从库在拿到binlog时，先判断GTID是否存在，若存在则忽略此条log，若不存在则执行并加入自己的GTID集合<br>我是这样理解的</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-08-22 11:21:51</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Eason Tai</span>
 </div><div class=_2_QraFYR_0>你好，丁大佬，如果一套高可用管理工具基于gtid做管控。如果gtid出现空洞的情况，应该怎么解决问题。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 得看看空洞怎么出现的<br><br>如果只是要补空洞的话，就循环的<br>set gtid_next=...<br>begin;<br>commit;<br>就可以了，不过这个只是治标哈，还是得找出根因</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-19 22:23:33</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>黄继立</span>
 </div><div class=_2_QraFYR_0>您好：<br> 感谢您的分享，通过GTID 很好的主从切换，我这边线上切换时遇到过3个问题：1: 主库故障飘逸VIP ，从库同步master_ip：VIP， 但是有时候会如果VIP 飘逸到新从库上面，从库会报错1236。 2: 从库延迟瞬间会很高，需要手动stop slave ,start slave 同时主从切换速度过慢，导致主从结构恢复过慢。 3: 通过GTID 切换 从库直接报1236 错误。 <br><br>以上我这边解决方式：主动切换时先主动切换，切换判断所有从节点正常，成功后飘逸VIP，业务通过VIP 连接新主。这样直接解决了后续两个问题。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 这个可能是之前就存在空洞，要提前处理gtid空洞（就是不连续的情况）<br>2. 如果使用可靠性优先，延迟是会导致切换慢的，延迟的原因要具体看<br>3. 跟1可能是类型的情况</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-02 20:42:30</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>PengfeiWang</span>
 </div><div class=_2_QraFYR_0>老师，你好：在生产环境（基于位点的主备切换）中，经常会遇到这样的场景：备库由于硬件或其他原因异常宕机，恢复后重启备库，执行start slave命令，总会遇到1062主键重复的报错，一直解释不清楚为什么？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 看一下这个语句的结果, 会受这几个参数的影响哈<br>select * from information_schema.GLOBAL_VARIABLES where VARIABLE_NAME in ('master_info_repository','relay_log_info_repository','sync_master_info','sync_relay_log_info', 'sync_binlog', 'innodb_flush_log_at_trx_commit');<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-14 15:50:59</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>往事随风，顺其自然</span>
 </div><div class=_2_QraFYR_0>执行事务之前生成GTID，系统怎么知道下次要生成事物，是预生成留在那？</div><div class=_10o3OAxT_0>
@@ -433,16 +453,16 @@ start slave;
 <a class="nav nav-prev" href=/1/26/ title=26_备库为什么会延迟好几个小时？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/28/ title=28_读写分离有哪些坑？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

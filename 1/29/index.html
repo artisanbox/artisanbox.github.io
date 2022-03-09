@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>29_如何判断一个数据库是不是出问题了？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>29_如何判断一个数据库是不是出问题了？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/29/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -283,101 +283,121 @@ insert into mysql.health_check(id, t_modified) values (@@server_id, now()) on du
 </code></pre><p>假设，现在你已经开启了redo log和binlog这两个统计信息，那要怎么把这个信息用在实例状态诊断上呢？</p><p>很简单，你可以通过MAX_TIMER的值来判断数据库是否出问题了。比如，你可以设定阈值，单次IO请求时间超过200毫秒属于异常，然后使用类似下面这条语句作为检测逻辑。</p><pre><code>mysql&gt; select event_name,MAX_TIMER_WAIT  FROM performance_schema.file_summary_by_event_name where event_name in (&lsquo;wait/io/file/innodb/innodb_log_file&rsquo;,&lsquo;wait/io/file/sql/binlog&rsquo;) and MAX_TIMER_WAIT&gt;200</em>1000000000;
 </code></pre><p>发现异常后，取到你需要的信息，再通过下面这条语句：</p><pre><code>mysql&gt; truncate table performance_schema.file_summary_by_event_name;
 </code></pre><p>把之前的统计信息清空。这样如果后面的监控中，再次出现这个异常，就可以加入监控累积值了。</p><h1>小结</h1><p>今天，我和你介绍了检测一个MySQL实例健康状态的几种方法，以及各种方法存在的问题和演进的逻辑。</p><p>你看完后可能会觉得，select 1这样的方法是不是已经被淘汰了呢，但实际上使用非常广泛的MHA（Master High Availability），默认使用的就是这个方法。</p><p>MHA中的另一个可选方法是只做连接，就是 “如果连接成功就认为主库没问题”。不过据我所知，选择这个方法的很少。</p><p>其实，每个改进的方案，都会增加额外损耗，并不能用“对错”做直接判断，需要你根据业务实际情况去做权衡。</p><p>我个人比较倾向的方案，是优先考虑update系统表，然后再配合增加检测performance_schema的信息。</p><p>最后，又到了我们的思考题时间。</p><p>今天，我想问你的是：业务系统一般也有高可用的需求，在你开发和维护过的服务中，你是怎么判断服务有没有出问题的呢？</p><p>你可以把你用到的方法和分析写在留言区，我会在下一篇文章中选取有趣的方案一起来分享和分析。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>上期的问题是，如果使用GTID等位点的方案做读写分离，在对大表做DDL的时候会怎么样。</p><p>假设，这条语句在主库上要执行10分钟，提交后传到备库就要10分钟（典型的大事务）。那么，在主库DDL之后再提交的事务的GTID，去备库查的时候，就会等10分钟才出现。</p><p>这样，这个读写分离机制在这10分钟之内都会超时，然后走主库。</p><p>这种预期内的操作，应该在业务低峰期的时候，确保主库能够支持所有业务查询，然后把读请求都切到主库，再在主库上做DDL。等备库延迟追上以后，再把读请求切回备库。</p><p>通过这个思考题，我主要想让关注的是，大事务对等位点方案的影响。</p><p>当然了，使用gh-ost方案来解决这个问题也是不错的选择。</p><p>评论区留言点赞板：</p><blockquote></p><p>@曾剑、@max 同学提到的备库先做，再切主库的方法也是可以的。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>目前是只有一台服务器来做判断,是否数据库出问题了,就是采用的update的方式。如果是主从架构就一条语句,如果是双主的话就是两条update语句。但是这种方式有很大的弊端,只有一个进程来判断数据库出问题的话,会出现单点判断的问题。所以后续准备多个单数进程来做判断,如果超过了半数以上的监控进程都认为数据库出问题,才做切换。<br>老师我有两个问题:<br>1.innodb_thread_concurrency的设置是不是应该跟计算机核数成正比,一般是1.5倍-2倍左右？<br>2.怎么之前遇到空间满了,数据库都登不上了,所有的连接都连不上,更不用执行select语句了,这个是什么原因啊？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 虽然理论上是核数的2倍左右最好，但是现在很多人把MySQL创建在虚拟机上，就分1~2个核，我怕那么写，有同学会认为innodb_thread_concurrency建议设置成4。。<br><br>2. 空间满本身是不会导致连不上的。但是因为空间满，事务无法提交，可能会导致接下来外部事务重试，新重试的业务还是堵在提交阶段，持续累积可能会把连接数用满</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-20 20:57:05</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>StarkYanng</span>
 </div><div class=_2_QraFYR_0>老师，我有个疑问，您说外部检测是采用定时轮询的方式。那内部检测通过'mysql> select event_name,MAX_TIMER_WAIT FROM performance_schema.file_summary_by_event_name where event_name in ('wait/io/file/innodb/innodb_log_file','wait/io/file/sql/binlog') and MAX_TIMER_WAIT>200*1000000000;<br>'的方法，不是也需要定时轮询来执行这个语句么？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对，但是这个方法本质上是“内部把一段时间内的统计信息存在这里”，只是“定期来取”，去到的是“一段时间内的信息”<br><br>而前面的几种方法，都是“检测那个时间点的信息”</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-16 21:55:37</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>现在很多公司都是使用dubbo或者类似dubbo的rpc调用。说说我对dubbo的理解 <br>dubbo 存活检测感觉分为下面三个层面<br>服务端与注册中心的链接状态<br> 通常注册中心是zookeeper，服务端注册临时节点，客户端注册这个节点的watch事件，一但服务端失联，<br> 客户端将把该服务从自己可用服务列表中移除。（一个服务通常有多个提供者，只是把失联的提供者移除）。<br> zookeeper是通过心跳发现服务提供者失联的，心跳实际上就是以固定的频率（比如每秒）发送检测的数据包；<br><br>客户端与注册中心的链接状态<br> 客户端与zookeeper失联，会暂时使用自己缓存的服务提供者列表。如果每个提供者多次调不通，把它移除。<br><br>客户端与服务单的链接状态<br> 服务端提供类似于echo的方法，客户定时调用。部分返回正常，认为服务处于亚健康状态，如果超过阀值，会被降级<br> 从服务提供者列表移除。被移除的方法可能会在超过一定时间后，拿回来重试，可以恢复成正常服务，也可能继续降级。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 很好的实践分享。<br>是不是还有配套一些服务的RT时间的报告？<br>毕竟echo是一个比较轻量的调用，正确率可能比实际业务调用的正确率高</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-18 09:53:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>IceGeek17</span>
 </div><div class=_2_QraFYR_0>对于使用 GTID 等位点的方案做读写分离，对大表做DDL的问题，<br>有一种做法是先在从库上设置 set_log_bin = off，在从库上先做DDL，完成后做一下主从切换。然后再在之前的主库上同样操作一遍。<br>但这会有一个问题，当先在从库上做DDL（大表DDL时间会比较长，比如10分钟），在这段时间内，此时如果读写请求都走主库的话，如果写请求对于DDL的改动是有依赖的，那这些写请求在主库就可能会失败；同样此时对于主库上的读请求，也可能会读到“过期”的数据（读请求希望读到DDL之后的数据，但此时DDL在从库执行，主库上还是DDL之前的），老师怎么看这个问题 ？<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是这样的，我们说DDL，一般是指加减索引，增加字段在最后一列，这种操作…</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-29 10:09:10</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>强哥</span>
 </div><div class=_2_QraFYR_0>1.基础监控，包括硬盘，CPU，网络，内存等。<br>2.服务监控，包括jvm，服务端口，接入上下游服务的超时监控等。<br>3.业务监控，主要是监控业务的流程是否出现问题。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍，这里的“超时监控”，是怎么得到的？<br>是单独有命令检测，还是去看业务请求的返回时间？</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-18 09:18:09</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>老师请教一个问题，在gtid模式下，对于大的ddl操作，采用在备库执行sql_log_bin=0的方式先执行，然后再切换主备的方式在主库再执行，这种情况下，ddl操作是不记录binlog的，不知道对gtid的计数有什么影响，是按顺序递增还是会跳过这个序列号？<br>另外补充一下有些dl操作是不适合这个主备切换的方式，比如drop一个列，如果先在备库执行就可能导致主备同步异常。这个场景适合osc方式或把读请求切到主库，先在主库执行这两种方案。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 如果set sql_log_bin=0， 就不记录binlog，就不会给这个事务分配gtid。<br><br>你说得对，drop列是很麻烦的，尽量不做。毕竟业务代码直接无视这个列就好了。。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-18 09:07:21</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>专栏用户</span>
 </div><div class=_2_QraFYR_0>问个和本课不太相关的问题，自己开了general log，然后看到有很多set autocommit=0,之后set autocommit=1的日志，查了一下，看说是关闭/开启自动提交模式，所以就有点不懂为何会爱挨着出现这两个语句？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个是框架做的吧？ <br><br>我知道有些框架喜欢用<br>set autocommit=0, 表示开启事务<br>set autocommit=1，表示提交事务<br>虽然也对，<br><br>但比较建议用begin 和 commit</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-30 23:59:10</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>老师您好：<br>关于 主备同步停止 的问题，看了您的回复。<br>我是这么理解的：<br>insert into mysql.health_check(id, t_modified) values (1, now()) on duplicate key update t_modified=now(); <br>按照您说的场景，主备分别执行这句话后，复制给彼此。<br>如果单单看这句话，就算是主库执行备库复制过来的这句话，也不会出现异常呀。（因为如果主键冲突就会更新时间）<br>但是这种场景会导致 主备同步停止， 所以实际上主库在应用备库这句话的binlog的时候，发现主键冲突，自然就会报错。<br><br>不知道是不是这样，因为如果单单看这句sql，即使主键冲突也没关系呀？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 啊 主键冲突为啥没关系？<br>是这样的，这两个语句如果同时执行，那么在主库和备库上就都是“insert行为”<br>写到binlog里面就都是Write rows event<br>这个冲突就会导致主备同步停止哦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 21:16:16</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>慧鑫coming</span>
 </div><div class=_2_QraFYR_0>老师，文中提到的“但是，如果主库 A 和备库 B 都用相同的更新命令，就可能出现行冲突，也就是可能会导致主备同步停止。”，这个能展开说一下吗，这个行冲突指什么？它们会都更新各自检测表的同一字段我觉得会带来不准确的问题，怎么导致主从同步停止了呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题<br><br>比如两个表刚开始都是空表，<br>然后第一个语句执行<br>insert into mysql.health_check(id, t_modified) values (1, now()) on duplicate key update t_modified=now();<br><br>就会两边各写入一个insert语句的binlog日志，传到对面就导致同步停止了<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 08:50:53</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>路平</span>
 </div><div class=_2_QraFYR_0>你好，这两天一路看下来，收获不少。<br>提个表设计相关的问题：<br>用一个表存储文件全路径，删除某个文件（一行记录）时使用逻辑删除。怎么设计表及其索引（如果有）？<br>需要考虑：<br>1. 文件被删除后有可能会再创建一个同名的文件；<br>2. 新创建的文件也可能再次被逻辑删除；<br>3. 第二个文件被删除后还可能创建第三同名文件，以此类推；<br>4. 未删除的文件路径不能有重复值。<br><br>不知道作者是否还会回复留言。如果回复了，我是会收到提醒吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 如果你是要保存“历史”，可以加两个字段：版本号和状态（表示是否删除）<br><br>【编辑跟我说会有提醒~】</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-23 22:33:54</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>一大只😴</span>
 </div><div class=_2_QraFYR_0>老师，我想问下，我的ECS上是8核CPU，只跑一个MySQL实例，那innodb_thread_concurrency如果设成2倍，那就是16哈。看并发查询的数量，是不是关注Threads_running是否超过innodb_thread_concurrency就可以了。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Thread running 是包含“锁等待”状态的线程的，<br>超过点也没事😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-21 17:28:09</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>老师您好：<br><br>本章有个疑惑：<br>”外部检测的时候，主备使用同一条更新语句，造成行冲突，导致主备同步停止”<br><br>上面这句话实在想不通。外部检测是只是看更新语句的返回时间，health_check表在主库备库都有，为啥会造成行冲突？为啥会导致主备同步停止？即使是相同的binlog，也没啥影响呀。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 比如两个表刚开始都是空表，<br>然后第一个语句执行<br>insert into mysql.health_check(id, t_modified) values (1, now()) on duplicate key update t_modified=now();<br><br>就会两边各写入一个insert语句的binlog日志，传到对面就导致同步停止了<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 11:41:15</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>lzh</span>
 </div><div class=_2_QraFYR_0>难道就没人问为啥SELECT 1不算入并发线程中吗？难道因为没查表吗？只有查了表涉及IO的才会算入并发线程？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-10-02 21:34:27</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>heat nan</span>
 </div><div class=_2_QraFYR_0>老师，一直有个疑问，想咨询下。innodb buffer 会缓存表的数据页和索引页。现在我想知道如何确认一个查询的行已经被缓存在内存中了。 我想了一下，第一种方法是直接去内存中遍历这个表相关的数据页。这样的话，因为内存中的页可能是分散的，可能不构成一个完成的索引结构，可能不能利用b+树叶子节点的路由功能。 这里有点模糊，希望老师有空可以解释一下</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: “因为内存中的页可能是分散的，可能不构成一个完成的索引结构，可能不能利用b+树叶子节点的路由功能。”<br><br>这里不对哈<br><br>放在内存里是b+树组织的，可以利用b+树叶子节点的路由功能的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-19 10:13:09</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>布衣骇客</span>
 </div><div class=_2_QraFYR_0>作为一个开发我也很想了解一下我们自己生产库上的监控情况，接触到最多的就是Datasource,以及user，password,port（基本上是基于连接那种级别，最多就是加锁），等等参数，大部分都是基于业务开发。站在个人层面或者业务开发层面（很少能接触到DBA，以及看到DBA是怎么设置这些参数情况，除非库挂掉了就会和DBA一起看这些）怎么去修改和观看以及使用这些参数鸭</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 有DBA就不要自己去修改线上的参数啦<br><br>如果说观察，一个比较好的管控系统，是会能够让你看到这些值的<br><br>如果没有，就让dba给你一份线上的my.cnf的配置，然后你在测试环境自己用这个配置启动实例来观察</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-18 14:29:27</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ryoma</span>
 </div><div class=_2_QraFYR_0>现在的服务中只加了一个healthCheck的接口，和MySQL中使用select判断比较类似。当服务依赖的MySQL及Redis等第三方资源发生问题时，还是不能有效的判断</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-18 09:11:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Shiki珠</span>
 </div><div class=_2_QraFYR_0>老师您好！请教下，我们这边每天白天几乎每个整点，业务那边有定时批量任务，那几分钟内CPU会彪到100%。活跃线程数也在200左右，QPS峰值20000+，此时也会出现平时不慢的“慢sql”，如果把innodb_thread_concurrency从0改为128或者更低，是否会有所缓解呢?但是如果限制了那有很多连接会排队等待是否会延迟，而造成业务很慢呢?</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-07 15:53:20</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>IT橘子</span>
 </div><div class=_2_QraFYR_0>老师，当innodb并发线程数过多导致的系统不可用问题，进行主备切换后问题就可以解决吗？备库上的innodb并发线程会不会也在一段时间之后也达到阈值呢？<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-07-29 15:03:31</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>alias cd=rm -rf</span>
 </div><div class=_2_QraFYR_0>1、判断进程是否可用：ping的方案（类似select 1）<br>2、根据业务的需求一般会设置一个阈值以及策略（如：单位时间失败的次数，响应时间超过多少阈值）如何进行熔断、扩容等方案。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-12 01:05:39</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>wuxbeyond</span>
 </div><div class=_2_QraFYR_0>proxysql 可以根据延时判断走 主库 还是从库。</div><div class=_10o3OAxT_0>
@@ -387,16 +407,16 @@ insert into mysql.health_check(id, t_modified) values (@@server_id, now()) on du
 <a class="nav nav-prev" href=/1/28/ title=28_读写分离有哪些坑？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/30/ title=30_答疑文章（二）：用动态的观点看加锁 style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

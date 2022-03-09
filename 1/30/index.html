@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>30_答疑文章（二）：用动态的观点看加锁 :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>30_答疑文章（二）：用动态的观点看加锁 :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/30/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -314,101 +314,121 @@ select id from t where c in(5,20,10) lock in share mode;
 <p>插入(c=5, id=5)这个记录；</p></li><li>
 <p>删除(c=1, id=5)这个记录。</p></li></ol><p>第一步试图在已经加了间隙锁的(1,10)中插入数据，所以就被堵住了。</p><h1>小结</h1><p>今天这篇文章，我用前面<a href=https://time.geekbang.org/column/article/75173>第20</a>和<a href=https://time.geekbang.org/column/article/75659>第21篇</a>文章评论区的几个问题，再次跟你复习了加锁规则。并且，我和你重点说明了，分析加锁范围时，一定要配合语句执行逻辑来进行。</p><p>在我看来，每个想认真了解MySQL原理的同学，应该都要能够做到：通过explain的结果，就能够脑补出一个SQL语句的执行流程。达到这样的程度，才算是对索引组织表、索引、锁的概念有了比较清晰的认识。你同样也可以用这个方法，来验证自己对这些知识点的掌握程度。</p><p>在分析这些加锁规则的过程中，我也顺便跟你介绍了怎么看show engine innodb status输出结果中的事务信息和死锁信息，希望这些内容对你以后分析现场能有所帮助。</p><p>老规矩，即便是答疑文章，我也还是要留一个课后问题给你的。</p><p>上面我们提到一个很重要的点：所谓“间隙”，其实根本就是由“这个间隙右边的那个记录”定义的。</p><p>那么，一个空表有间隙吗？这个间隙是由谁定义的？你怎么验证这个结论呢？</p><p>你可以把你关于分析和验证方法写在留言区，我会在下一篇文章的末尾和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>我在上一篇文章最后留给的问题，是分享一下你关于业务监控的处理经验。</p><p>在这篇文章的评论区，很多同学都分享了不错的经验。这里，我就选择几个比较典型的留言，和你分享吧：</p><ul>
 <li>@老杨同志 回答得很详细。他的主要思路就是关于服务状态和服务质量的监控。其中，服务状态的监控，一般都可以用外部系统来实现；而服务的质量的监控，就要通过接口的响应时间来统计。</li><li>@Ryoma 同学，提到服务中使用了healthCheck来检测，其实跟我们文中提到的select 1的模式类似。</li><li>@强哥 同学，按照监控的对象，将监控分成了基础监控、服务监控和业务监控，并分享了每种监控需要关注的对象。</li></ul><p>这些都是很好的经验，你也可以根据具体的业务场景借鉴适合自己的方案。</p><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ryoma</span>
 </div><div class=_2_QraFYR_0>删除数据，导致锁扩大的描述：“因此，我们就知道了，由于 delete 操作把 id=10 这一行删掉了，原来的两个间隙 (5,10)、(10,15）变成了一个 (5,15)。”<br>我觉得这个提到的(5, 10) 和 (10, 15)两个间隙会让人有点误解，实际上在删除之前间隙锁只有一个(10, 15)，删除了数据之后，导致间隙锁左侧扩张成了5，间隙锁成为了(5, 15)。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯 所以我这里特别小心地没有写“锁“这个字。<br><br>间隙 (5,10)、(10,15）是客观存在的。<br><br>你提得也很对，“锁”是执行过程中才加的，是一个动态的概念。<br>这个问题也能够让大家更了解我们标题的意思，置顶了哈 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 10:48:27</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>令狐少侠</span>
 </div><div class=_2_QraFYR_0>有个问题想确认下，在死锁日志里，lock_mode X waiting是间隙锁+行锁，lock_mode X locks rec but not gap这种加but not gap才是行锁？<br>老师你后面能说下group by的原理吗，我看目录里面没有</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对， 好问题<br>lock_mode X waiting表示next-key lock；<br>lock_mode X locks rec but not gap是只有行锁；<br>还有一种 “locks gap before rec”，就是只有间隙锁；<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 15:18:55</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>IceGeek17</span>
 </div><div class=_2_QraFYR_0>老师，新年好，有几个问题：<br>问题一：<br>对于文中的第一个例子（不等号条件里的等值查询），当试图去找 “第一个id&lt;12的值"的时候，用的还是从左往右的遍历（因为用到了优化2），也就是说，当去找第一个等值的时候（通过树搜索去定位记录的时候），即使order by desc，但用的还是向右遍历，当找到了第一个等值的时候（例子中的id=15），然后根据order by desc，再向左遍历。<br>是不是这么理解？<br><br>问题二：<br>对于第21讲的思考题， select * from t where c>=15 and c&lt;=20 order by c desc lock in share mode， 老师已经给出了答案，我这里再详细理解一下：<br>先定位索引c上最右边c=20的行，所以第一个等值查询会扫描到c=25，然后通过优化2，next-key lock退化为间隙锁，则会加上间隙锁（20，25），紧接着再向左遍历，会加 next-key lock (15, 20], (10, 15], 因为要扫描到c=10才停下来，所以也会加next-key lock (5,10]<br>理解的是否正确？<br><br>问题三：<br>对于上面的问题二的sql，在索引c上，把（10，25）这段区间锁上就应该是完备的了，理论上（5，10]这段区间是否锁上对结果应该没有影响呀。<br>是不是说MySQL就是这么实现的，next-key lock前开后闭，因为扫到了c=10，所以会加next-key lock (5,10]，这里MySQL的实现扩大了锁的区间范围，其实没有这个必要？<br>另外，如果不加next-key lock (5,10]，是不是这里c=10还是应该要锁的，如果不锁可能被删除？<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 对的<br><br>2. 对的<br><br>3. “因为扫到了c=10，所以会加next-key lock (5,10]”， 对的。 <br> 第二个“如果”，实现上并不是这样的，所以没法回答😆<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 21:36:24</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Jason_鹏</span>
 </div><div class=_2_QraFYR_0>最后一个update的例子，为没有加（0，5）的间隙呢？我理解应该是先拿c＝5去b+树搜索，按照间隙索最右原则，应该会加（0，5]的间隙，然后c＝5不满足大于5条件，根据优化2原则退化成（0，5）的间隙索，我是这样理解的</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 根据c>5查到的第一个记录是c=10，因此不会加(0,5]这个next-key lock。<br><br>你提醒得对，我应该多说明这句， 我加到文稿中啦👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 09:24:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>☞</span>
 </div><div class=_2_QraFYR_0>老师好：<br> select * from t where c>=15 and c&lt;=20 order by c desc for update;<br> 为什么这种c=20就是用来查数据的就不是向右遍历<br> select * from t where c>=15 and c&lt;=20 这种就是向右遍历<br> 怎么去判断合适是查找数据，何时又是遍历呢，是因为第一个有order by desc，然后反向向左遍历了吗？所以只需要[20,25)来判断已经是最后一个20就可以了是吧</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 索引搜索就是 “找到第一个值，然后向左或向右遍历”，<br>order by desc 就是要用最大的值来找第一个；<br>order by就是要用做小的值来找第一个；<br><br>“所以只需要[20,25)来判断已经是最后一个20就可以了是吧”，<br>你描述的意思是对的，但是在MySQL里面不建议写这样的前闭后开区间哈，容易造成误解。<br>可以描述为：<br>“取第一个id=20后，向右遍历(25,25)这个间隙”^_^</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 10:24:50</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>老师，之前讲这个例子时，select * from t where c>=15 and c&lt;=20 order by c desc in share mode;<br>最右边加的是 (20, 25)的间隙锁，<br>而这个例子select * from t where id>10 and id&lt;=15 for update中，最右边加的是(15,20]的next-key锁，<br>这两个查询为何最后边一个加的gap锁，一个加的next-key锁，他们都是&lt;=的等值范围查询，区别在哪里？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: select * from t where c>=15 and c&lt;=20 order by c desc in share mode;<br><br>这个语句是根据 c=20 来查数据的，所以加锁(20,25]的时候，可以使用优化2；<br><br>select * from t where id>10 and id&lt;=15 for update；<br>这里的id=20，是用“向右遍历”的方式得到的，没有优化，按照“以next-key lock”为加锁单位来执行<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 08:01:11</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Long</span>
 </div><div class=_2_QraFYR_0>感觉这篇文章以及前面加锁的文章，提升了自己的认知。还有，谢谢老师讲解了日志的对应细节……还愿了</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 😆 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-28 03:52:37</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek8819</span>
 </div><div class=_2_QraFYR_0>老师，我记得之前你有说过范围查询第一次定位时用的等值查找。那select * from t where id >10 and id &lt;= 15这条语句，首先用10去索引树查找。不应该加（5，10]这样一个记录锁么？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-07-19 15:46:28</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>索旭东</span>
 </div><div class=_2_QraFYR_0>select * from t where id>10 and id&lt;=15 for update;<br><br>select c from t where c>5 lock in share mode;<br><br>第一条的锁是(5,10),(10,15)<br>第二个语句的锁是（5,10]....<br>两个对比，感觉矛盾了呀，第二个语句给的理由是，大于5的第一个被访问到的记录是10，同样原理第一个语句访问的第一个记录不是应该是15吗？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-03-04 16:47:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>往事随风，顺其自然</span>
 </div><div class=_2_QraFYR_0>这么多加锁规则记不住</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 练着练着，规则就忘记了，然后直接脑补执行流程，上结论</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-19 09:03:00</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>老师，还是select * from t where c>=15 and c&lt;=20 order by c desc in share mode与select * from t where id>10 and id&lt;=15 for update的问题，为何select * from t where id>10 and id&lt;=15 for update不能解释为：根据id=15来查数据，加锁(15, 20]的时候，可以使用优化2，<br>这个等值查询是根据什么规则来定的？ 如果select * from t where id>10 and id&lt;=15 for update加上order by id desc是否可以按照id=15等值查询，利用优化2？多谢指教。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 代码实现上，传入的就是id>10里面的这个10<br>2. 可以的，不过因为id是主键，而且id=15这一行存在，我觉得用优化1解释更好哦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 19:57:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>老师，select * from t where id>10 and id&lt;=15 for update;这个语句持有的锁不应该是（5,10）（10,15]（15,20）吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不是哦，这里第一个id>10找到的是(10,15)这个gap，并没有加（5,10）， <br>还有根据股则里面的“bug”，id=20也会被锁的，所以应该是（10,15]（15,20]</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-21 08:35:08</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>hal</span>
 </div><div class=_2_QraFYR_0>非常谢谢老师，专栏质量非常高，祝老师身体健康万事如意，因为内容写的太好了……很激动👍👍👍👍👍</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 🤝🤝🤝🤝🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-01 16:47:31</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Justin</span>
 </div><div class=_2_QraFYR_0>想咨询一下 普通索引 如果索引中包括的元素都相同 在索引中顺序是怎么排解的呢 是按主键排列的吗 比如(name ,age ) 索引 name age都一样 那索引中会按照主键排序吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 会的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 15:23:34</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>库淘淘</span>
 </div><div class=_2_QraFYR_0>对于问题 我理解是这样 <br>session 1：<br>delete from t;<br>begin; select * from t for update;<br>session 2:<br>insert into t values(1,1,1);发生等待<br>show engine innodb status\G; <br>.....<br>------- TRX HAS BEEN WAITING 5 SEC FOR THIS LOCK TO BE GRANTED:<br>RECORD LOCKS space id 75 page no 3 n bits 72 index PRIMARY of table `test`.`t` trx id 752090 lock_mode X insert intention waiting<br>Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0<br> 0: len 8; hex 73757072656d756d; asc supremum;;<br>其中申请插入意向锁与间隙锁 冲突，supremum这个能否理解为 间隙右边的那个记录</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 发现了👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-21 16:18:14</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Lane</span>
 </div><div class=_2_QraFYR_0>第一个例子<br>begin; select * from t where id>9 and id&lt;12 order by id desc for update; <br>为什么会有(0,5]，不理解，但是测试确实insert into t values (3,3,3);会卡主</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-05-21 19:11:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>唯她命</span>
 </div><div class=_2_QraFYR_0>老师，update语句 mysql在执行过程中 ，都是先拆成 插入 和 删除的吗？不是直接修改？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 修改索引值都会修改位置的😆<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-03 16:47:17</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Yc</span>
 </div><div class=_2_QraFYR_0>老师你好，请问一下 图4的一个问题。。求解答<br><br>为啥，10不会被锁住呢？条件是id>10，查询规则是首先找到id=10的这行数据，然后根据这行数据进行向右遍历。按照加锁规则：原则 2：查找过程中访问到的对象才会加锁。<br>加锁的话 在根据优化1：优化 1：索引上的等值查询，给唯一索引加锁的时候，next-key lock 退化为行锁。 这个例子为啥ID=10不加锁！！！，求老师翻牌</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-04-11 17:13:45</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>先说结论：空表锁 (-supernum，supernum],老师提到过mysql的正无穷是supernum，在没有数据的情况下，next-key lock 应该是supernum前面的间隙加 supernum的行锁。但是前开后闭的区间，前面的值是什么我也不知道，就写了一个-supernum。<br>稍微验证一下<br>session 1）<br>begin;<br>select * from t where id>9 for update;<br>session 2）<br>begin;<br>insert into t values(0,0,0),(5,5,5);<br>（block）<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 赞<br>show engine innodb status 有惊喜😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-21 14:29:59</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>考拉出山</span>
 </div><div class=_2_QraFYR_0>第一个解释有误导，没说清楚。因为之前有例子说过 小于 大于 小于＜ ＞ 不是等值查询。现在又来解释等值查询。</div><div class=_10o3OAxT_0>
@@ -418,16 +438,16 @@ select id from t where c in(5,20,10) lock in share mode;
 <a class="nav nav-prev" href=/1/29/ title=29_如何判断一个数据库是不是出问题了？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/31/ title=31_误删数据后除了跑路，还能怎么办？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

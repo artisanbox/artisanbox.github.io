@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>41_怎么最快地复制一张表？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>41_怎么最快地复制一张表？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/41/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -328,101 +328,121 @@ b. 再执行load data语句，往备库的db2.t表中插入跟主库相同的数
 <li>必须是全表拷贝，不能只拷贝部分数据；</li><li>需要到服务器上拷贝数据，在用户无法登录数据库主机的场景下无法使用；</li><li>由于是通过拷贝物理文件实现的，源表和目标表都是使用InnoDB引擎时才能使用。</li></ul></li><li>
 <p>用mysqldump生成包含INSERT语句文件的方法，可以在where参数增加过滤条件，来实现只导出部分数据。这个方式的不足之一是，不能使用join这种比较复杂的where条件写法。</p></li><li>
 <p>用select … into outfile的方法是最灵活的，支持所有的SQL写法。但，这个方法的缺点之一就是，每次只能导出一张表的数据，而且表结构也需要另外的语句单独备份。</p></li></ol><p>后两种方式都是逻辑备份方式，是可以跨引擎使用的。</p><p>最后，我给你留下一个思考题吧。</p><p>我们前面介绍binlog_format=statement的时候，binlog记录的load data命令是带local的。既然这条命令是发送到备库去执行的，那么备库执行的时候也是本地执行，为什么需要这个local呢？如果写到binlog中的命令不带local，又会出现什么问题呢？</p><p>你可以把你的分析写在评论区，我会在下一篇文章的末尾和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>我在上篇文章最后给你留下的思考题，已经在今天这篇文章的正文部分做了回答。</p><p>上篇文章的评论区有几个非常好的留言，我在这里和你分享一下。</p><p>@huolang 同学提了一个问题：如果sessionA拿到c=5的记录锁是写锁，那为什么sessionB和sessionC还能加c=5的读锁呢？</p><p>这是因为next-key lock是先加间隙锁，再加记录锁的。加间隙锁成功了，加记录锁就会被堵住。如果你对这个过程有疑问的话，可以再复习一下<a href=https://time.geekbang.org/column/article/78427>第30篇文章</a>中的相关内容。</p><p>@一大只 同学做了一个实验，验证了主键冲突以后，insert语句加间隙锁的效果。比我在上篇文章正文中提的那个回滚导致死锁的例子更直观，体现了他对这个知识点非常好的理解和思考，很赞。</p><p>@roaming 同学验证了在MySQL 8.0版本中，已经能够用临时表处理insert … select写入原表的语句了。</p><p>@老杨同志 的回答提到了我们本文中说到的几个方法。</p><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>课后题答案<br>不加“local”，是读取服务端的文件，这个文件必须在 secure_file_priv 指定的目录或子目录下；而备库的apply线程执行时先讲csv内容读出生成tmp目录下的临时文件，这个目录容易受secure_file_priv的影响，如果备库改参数设置为Null或指定的目录，可能导致load操作失败，加local则不受这个影响。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-17 22:19:45</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>poppy</span>
 </div><div class=_2_QraFYR_0>关于思考题，我理解是备库的同步线程其实相当于备库的一个客户端，由于备库的会把binlog中t.csv的内容写到/tmp/SQL_LOAD_MB-1-0中，如果load data命令不加'local'表示读取服务端的文件，文件必须在secure_file_priv指定的目录或子目录，此时可能找不到该文件，主备同步执行会失败。而加上local的话，表示读取客户端的文件，既然备份线程都能在该目录下创建临时文件/tmp/SQL_LOAD_MB-1-0,必然也有权限访问，把该文件传给服务端执行。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍这是其中一个原因</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 17:13:42</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>☆appleう</span>
 </div><div class=_2_QraFYR_0>通知对方更新数据的意思是: 针对事务内的3个操作:插入和更新两个都是本地操作，第三个操作是远程调用，这里远程调用其实是想把本地操作的那两条通知对方(对方:远程调用)，让对方把数据更新，这样双方(我和远程调用方)的数据达到一致，如果对方操作失败，事务的前两个操作也会回滚，主要是想保证双方数据的一致性，因为远程调用可能会出现网络延迟超时等因素，极端情况会导致事务10s左右才能处理完毕，想问的是这样耗时的事务会带来哪些影响呢？<br><br>设计的初衷是想这三个操作能原子执行，只要有不成功就可以回滚，保证两方数据的一致性<br><br>耗时长的远程调用不放在事务中执行，会出现我这面数据完成了，而对方那面由于网络等问题，并没有更新，这样两方的数据就出现不一致了<br><br><br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯 了解了<br><br>这种设计我觉得就是会对并发性有比较大的影响。<br>一般如果网络状态不好的，会建议把这个更新操作放到消息队列。<br>就是说<br>1. 先本地提交事务。<br>2. 把通知这个动作放到消息队列，失败了可以重试；<br>3. 远端接收事件要设置成可重入的，就是即使同一个消息收到两次，也跟收到一次是相同的效果。<br>2 和3 配合起来保证最终一致性。<br><br>这种设计我见到得比较多，你评估下是否符合你们业务的需求哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 13:38:41</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>尘封</span>
 </div><div class=_2_QraFYR_0>老师mysqldump导出的文件里，单条sql里的value值有什么限制吗默认情况下，假如一个表有几百万，那mysql会分为多少个sql导出？<br>问题：因为从库可能没有load的权限，所以local</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，<br><br>会控制单行不会超过参数net_buffer_length，这个参数是可以通过--net_buffer_length 传给mysqldump 工具的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 08:40:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>库淘淘</span>
 </div><div class=_2_QraFYR_0>如果不加local 如secure_file_priv 设置为null 或者路径 可能就不能成功,这样加了之后可以保证执行成功率不受参数secure_file_priv影响。 还有发现物理拷贝文件后，权限所属用户还得改下，不然import tablespace 会报错找不到文件，老师是不是应该补充上去，不然容易踩坑。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯嗯，有同学已经踩了，<br>我加个说明进去，多谢提醒</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 15:51:42</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>undifined</span>
 </div><div class=_2_QraFYR_0>老师，用物理导入的方式执行 alter table r import tablespace 时 提示ERROR 1812 (HY000): Tablespace is missing for table `db1`.`r`. 此时 db1/ 下面的文件有 db.opt r.cfg r.frm r.ibd t.frm t.ibd；这个该怎么处理<br><br>执行步骤：<br><br>mysql> create table r like t;<br>Query OK, 0 rows affected (0.01 sec)<br><br>mysql> alter table r discard tablespace;<br>Query OK, 0 rows affected (0.01 sec)<br><br>mysql> flush table t for export;<br>Query OK, 0 rows affected (0.00 sec)<br><br>cp t.cfg r.cfg<br>cp t.ibd r.ibd<br><br>mysql> unlock tables;<br>Query OK, 0 rows affected (0.01 sec)<br><br>mysql> alter table r import tablespace;<br>ERROR 1812 (HY000): Tablespace is missing for table `db1`.`r`.<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 应该就是评论区其他同学帮忙回复的权限问题了吧？</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 11:46:48</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>lionetes</span>
 </div><div class=_2_QraFYR_0>mysql> select * from t;<br>+----+------+<br>| id | name |<br>+----+------+<br>| 1 | Bob |<br>| 2 | Mary |<br>| 3 | Jane |<br>| 4 | Lisa |<br>| 5 | Mary |<br>| 6 | Jane |<br>| 7 | Lisa |<br>+----+------+<br>7 rows in set (0.00 sec)<br><br>mysql> create table tt like t;<br>Query OK, 0 rows affected (0.03 sec)<br><br>mysql> alter table tt discard tablespace;<br>Query OK, 0 rows affected (0.01 sec)<br><br>mysql> flush table t for export;<br>Query OK, 0 rows affected (0.01 sec)<br><br>mysql> unlock tables;<br>Query OK, 0 rows affected (0.00 sec)<br><br>mysql> alter table tt import tablespace;<br>Query OK, 0 rows affected (0.03 sec)<br><br>mysql> show tables;<br>+----------------+<br>| Tables_in_test |<br>+----------------+<br>| t |<br>| t2 |<br>| tt |<br>+----------------+<br>3 rows in set (0.00 sec)<br><br>mysql> select * from t;<br>+----+------+<br>| id | name |<br>+----+------+<br>| 1 | Bob |<br>| 2 | Mary |<br>| 3 | Jane |<br>| 4 | Lisa |<br>| 5 | Mary |<br>| 6 | Jane |<br>| 7 | Lisa |<br>+----+------+<br>7 rows in set (0.00 sec)<br><br>mysql> select * from tt;<br>+----+------+<br>| id | name |<br>+----+------+<br>| 1 | Bob |<br>| 2 | Mary |<br>| 3 | Jane |<br>| 4 | Lisa |<br>| 5 | Mary |<br>| 6 | Jane |<br>| 7 | Lisa |<br>+----+------+<br>7 rows in set (0.00 sec)<br><br><br><br>ll 后 查看 tt.cfg 文件没有自动删除 5.7mysql<br><br>-rw-r-----. 1 mysql mysql 380 2月 15 09:51 tt.cfg<br>-rw-r-----. 1 mysql mysql 8586 2月 15 09:49 tt.frm<br>-rw-r-----. 1 mysql mysql 98304 2月 15 09:51 tt.ibd<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你说得对，👍细致<br><br>import动作 不会自动删除cfg文件，我图改一下<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 09:56:22</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>☆appleう</span>
 </div><div class=_2_QraFYR_0>老师，我想问一个关于事务的问题，一个事务中有3个操作，插入一条数据(本地操作),更新一条数据(本地操作)，然后远程调用，通知对方更新上面数据(如果远程调用失败会重试，最多3次，如果遇到网络等问题，远程调用时间会达到5s,极端情况3次会达到15s)，那么极端情况事务将长达5-15s，这样会带来什么影响吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: “通知对方更新上面数据” 是啥概念，如果你这个事务没提交，其他线程也看不到前两个操作的结果的。<br><br>设计上不建议留这么长的事务哈，最好是可以先把事务提交了，再去做耗时的操作。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 08:36:53</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>信信</span>
 </div><div class=_2_QraFYR_0>老师好，唯一索引的加next-key lock时，会退化会记录锁。这中间会先拿到间隙锁再释放，还是从一开始就不会获取间隙锁，直接只获取记录锁呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 在我们这篇的例子里面，insert duplicate key后导致加锁这个，是不会退化的哦。<br><br>如果是说我们在21篇讲的加锁规则里面， 这个退化的效果就是直接不加间隙锁</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 13:19:18</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>小灰灰</span>
 </div><div class=_2_QraFYR_0>老师您好，想问下如果是迁移5000W左右的一张表，使用导出CSV文件的方式效率高吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 导出挺快的，但是导入就不好办了。~<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-16 15:37:27</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>AstonPutting</span>
 </div><div class=_2_QraFYR_0>老师，mysqlpump能否在平时代替mysqldump的使用？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 我觉得是 </p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-22 10:40:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>PengfeiWang</span>
 </div><div class=_2_QraFYR_0>老师，您好：<br> 文中“–add-locks 设置为 0，表示在输出的文件结果里，不增加" LOCK TABLES t WRITE;" 是否是笔误，--add-locks应该是在insert语句前后添加锁，我的理解此处应该是--skip-add-locks，不知道是否是这样？<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯嗯，命令中写错了，是--add-locks=0，<br>效果上跟--skip-add-locks是一样的哈<br>👍细致</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-18 15:59:30</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>千木</span>
 </div><div class=_2_QraFYR_0>老师您好，您在文章的物理拷贝里面写到的注意事项的第二点，说为了保持表空间的id和数据字典一致，会修改t.ibd的表空间id。<br>然后我理解从unlock tables；之后应该就不会对t表造成影响了，所以你的本意其实是会修改r.ibd的表空间id吗？<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你说得对，我这里笔误了，修改的是r.ibd。<br>unlock tables以后就对表没有影响了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 10:30:43</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>与狼共舞</span>
 </div><div class=_2_QraFYR_0>我们这边的运维使用 mysql 直接导出，这种和mysqldump有多大的区别？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 原理类似，不过mysqldump本身会保留一些环境信息、字符集这些，自己导出的话要注意保留这些</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-03-02 08:27:33</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>佳</span>
 </div><div class=_2_QraFYR_0>老师好，这个/tmp/SQL_LOAD_MB-1-0 是应该在主库上面，还是备库上面？为啥我执行完是在主库上面出现了这个文件呢？<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 就是在MySQL的运行进程所在的主机上</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-14 19:27:19</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>夜空中最亮的星</span>
 </div><div class=_2_QraFYR_0>学习完老师的课都想做dba了</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 21:40:02</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>一步</span>
 </div><div class=_2_QraFYR_0>物理导入后，最后还有一个 r.cfg 文件，这个文件能删除吗？ 导入成功后还有什么作用的？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-11-02 22:04:06</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>XXX</span>
 </div><div class=_2_QraFYR_0>关于复制表，如果在不跨库的情况下也可以通过pt-tools中的online DDL工具pt-online-schema-change，配合--no-swap-tables --no-drop-old-table --no-drop-triggers参数实现表拷贝，并依赖触发器保持这个两个表实时同步，在需要的时候删除触发器，结束同步</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-04-20 23:17:40</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>龙晓</span>
 </div><div class=_2_QraFYR_0>老师文中讲的物理拷贝方法，我在8.0主从环境中试了一下，发现备库在最后一步alter table r import tablespace;报错 Last_SQL_Error: Error 'Tablespace is missing for table `db1`.`r`.' on query. Default database: 'db1'. Query: 'alter table r import tablespace'，导致主从同步中断，我是这么解决的：<br>1、停止从库同步 stop slave<br>2、将主库r.ibd文件scp到从库的db1目录下<br>3、开启从库同步 start slave,然后同步就恢复正常了。<br><br>我虽然侥幸解决了，但恐其中有疏漏，请老师帮忙解析一下，谢谢！</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-03-28 16:28:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>先听</span>
 </div><div class=_2_QraFYR_0>在rds这样的云数据库服务上，好像无法使用into outfile 命令。有没有什么好的解决办法呢？</div><div class=_10o3OAxT_0>
@@ -432,16 +452,16 @@ b. 再执行load data语句，往备库的db2.t表中插入跟主库相同的数
 <a class="nav nav-prev" href=/1/40/ title=40_insert语句的锁为什么这么多？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/42/ title=42_grant之后要跟着flushprivileges吗？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>11_怎么给字符串字段加索引？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>11_怎么给字符串字段加索引？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/11/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -305,101 +305,121 @@ from SUser;
 <p>@斜面镜子 Bill 的评论最接近答案；<br>
 @某、人 做了两个很不错的对照试验；<br>
 @ye7zi 等几位同学很认真的验证，赞态度。大家的机器如果IO能力比较差的话，做这个验证的时候，可以把innodb_flush_log_at_trx_commit 和 sync_binlog 都设置成0。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>封建的风</span>
 </div><div class=_2_QraFYR_0>原谅我偷懒的想法，一个学校每年预估2万新生，50年才100万记录，能节省多少空间，直接全字段索引。省去了开发转换及局限性风险，碰到超大量迫不得已再用后两种办法</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 从业务量预估优化和收益，这个意识很好呢👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-08 23:23:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>老师整篇都讲的是字符串索引，但是思考题的学号比较特殊，15位数字+固定后缀“@gmail.com”<br>这种特殊的情况，可以把学号使用bigint存储,占4个字节，比前缀索引空间占用要小。跟hash索引比，<br>也有区间查询的优势</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Bigint 8 个字节哦，赞思路。<br><br>嗯问题不是唯一答案，大家集思广益哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 11:26:27</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>小文</span>
 </div><div class=_2_QraFYR_0>首先排除全部索引，占空间，其次排除前缀索引，区分度不高，再排除倒序索引，区分度还没前缀索引高。<br>最后hash索引适合，而且只是登录检验，不需要范围查询。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 08:50:44</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>把该讲内容总结为几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br><br> 1. <br>采用整个字符串作为索引. 在查询操作时, 执行顺序是怎样的?<br> 2. <br>采用部分字段做索引, 在查询操作时, 执行顺序是怎样的?<br> 3. <br>使用什么语句可以分析不同长度前缀的索引区分度是多少?<br> 4. <br>前缀索引相比较整个字段做索引有什么优势和劣势?<br> 5. <br>采用反序存储和hash字段作为索引有什么异同点?<br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-09 16:40:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>老师针对上一期的答案有两个问题:<br>1.为什么事务A未提交,之前插入的10W数据不能删除啊？不是应该都进undo和change buffer了嘛,<br>根据mvcc查之前的版本就可以了啊。<br>2.不明白为什么第二次调用插入的存储过程,id就变为100000-200000,id是固定插入的,又不是自增的</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 这里说的“不能删”，其实就是说的，undo log不能删，逻辑上还在<br><br>2. 你说的对… 😓我最开始的例子是用自增主键，改完自己晕了，堪误了哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 00:36:14</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>小潘</span>
 </div><div class=_2_QraFYR_0>可以考虑根据字符串字段业务特性做进制压缩，业务上一般会限制每个字符的范围(如字母数字下划线)。<br>从信息论的角度看，每个字节并没有存8 bit的信息量。如果单个字符的取值只有n种可能性(把字符转成0到n-1的数字)，可以考虑把n进制转为为更高进制存储(ascii可看做是128进制)。<br>这样既可以减少索引长度，又可以很大程度上兼顾前缀匹配。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个有点高端了😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 11:23:24</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>不似旧日</span>
 </div><div class=_2_QraFYR_0>因为mail的格式是学号@gmail.com ,所以@gmail.com可以不存储,使用倒叙前缀索引即可</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-27 10:03:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>ccccc</span>
 </div><div class=_2_QraFYR_0>实际操作上直接全字段索引就行了，一个学校数据库的数据量和查询压力都不会大到哪儿去。<br>如果单从优化数据表的角度：<br>1. 后缀@gmail可以单独一个字段来存，或者用业务代码来保证，<br>2. 城市编号和学校编号估计也不会变，也可以用业务代码来配置<br>3. 然后直接存年份和顺序编号就行了，这个字段可以全字段索引</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-23 13:33:21</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>进阶的码农</span>
 </div><div class=_2_QraFYR_0>老师按照你视频里的例子又做了一下还是不行<br>mysql版本8.0.12<br>+-----------+<br>| version() |<br>+-----------+<br>| 8.0.12 |<br>+-----------+<br>是innodb 隔离级别是RR<br>1.先打开一个客户端A 执行start transaction with consistent snapshot;没有commit<br>2.然后在重新打开一个mysql客户端B 执行 <br>delete from t;call idata(); explain select * from t between 10000 and 20000;<br>+----+-------------+-------+------------+-------+---------------+------+---------+------+-------+----------+-----------------------+<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |<br>+----+-------------+-------+------------+-------+---------------+------+---------+------+-------+----------+-----------------------+<br>| 1 | SIMPLE | t | NULL | range | a | a | 5 | NULL | 10001 | 100.00 | Using index condition |<br>+----+-------------+-------+------------+-------+---------------+------+---------+------+-------+----------+-----------------------+</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 19:47:48</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>一撮韶光</span>
 </div><div class=_2_QraFYR_0>删的时候，由于有未提交事务开启的一致性视图read-view，所以导致了存在两个数据版本的数据，貌似优化器在"看"二级索引的时候，"看到"了多个历史版本的数据，错误以为有很多数据<br><br>而主键索引数量由于确认机制不同，数量没有变，综合考虑，优化器选择了主键索引</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-09 16:20:16</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>lttzzlll</span>
 </div><div class=_2_QraFYR_0>只取 四位年份+五位编号 并转化为int类型作为唯一主键</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 22:11:10</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Tony Du</span>
 </div><div class=_2_QraFYR_0>对于上一期的问题的回答，“索引 a 上的数据其实就有两份”，是不是这样理解，<br>其中一份是已经被标记为deleted的数据，另一份是新插入的数据，对索引数据的预估把已经被标记为deleted的数据也算上去了？MySQL对索引数据的预估为什么不去check 被标记为deleted的数据？<br>这种场景一旦发生，就会导致预估索引数据不准确，有什么好的方法去避免和解决？<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 理解对的，<br><br>方法就是避免长事务（session A 就是模拟一个长事务）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 10:51:41</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>回答下今天老师的问题:<br>1.在user建立索引,由于学号的最后7位才能确定到某个学生.不满足最左前缀,那么select from where '%1234567%'无法使用索引,是全表扫描。但是这种情况也有优化的办法,如果该表上的字段比较多,可以这样改写select password from t join (select id from where user like '%1234567%') as a on a.id=t.id<br>通过全扫描二级索引得到唯一id值.再用id值与t表关联的时候,就能迅速的定位到某一行了,避免全表扫描<br>不过在本次问题里,这种方式效果不好<br> <br>2.hash索引,建立(hashuser,user,password)索引,不用回表,覆盖索引,但是索引占用长度长。<br>或者建立(hashuser)索引,因为hashuser基本上能确定到唯一值,虽然回表但是扫描的行数也就两行,效率也挺高。但是hash索引对于insert和update操作要多做一些额外的操作。要嘛通过程序计算出hash值,插入表里,要嘛就通过触发器来做。<br><br>3.建立前缀索引,由于后面是固定email,可以考虑只存学号.由于学号后面7位就能确定到某一个学生,可以用倒序存储+前缀索引。不过由于前缀索引不能在int类型上建立,只能用varchar类型。虽然前缀索引无法用到覆盖索引,不过回表扫描的行数也就一行,效率也挺高。这种方式来说,对insert和update相对还好。还有前缀索引还有个影响是不能用于排序。<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-08 20:03:25</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>怎么给字符串字段加索引？<br><br>1：直接创建完整索引，这样可能比较占用空间；<br><br>这种方式最简单，如果性能没问题，我会这么创建，简单直接且存储空间的费用越来越低<br><br>2：创建前缀索引，节省空间，但会增加查询扫描次数，并且不能使用覆盖索引；<br><br>这种方式需要判断出前缀的长度多少合适，需要根据自己的业务来定，主要是看区分度多少合适<br><br>3：倒序存储，再创建前缀索引，用于绕过字符串本身前缀的区分度不够的问题；<br><br>这种方式用于前缀区分度不高后缀区分度高的场景，目的还是要提高索引的区分度，使用这种方式不适合范围检索<br><br>4：创建 hash 字段索引，查询性能稳定，有额外的存储和计算消耗，跟第三种方式一样，都不支持范围扫描。<br><br>终于不太烧脑啦😄<br><br>学习这个专栏感觉速度好慢，需要反复听，另外，我喜欢看评论，这个评论太多了，好像买一赠一。<br><br>非常棒，非常感谢，这样感觉确实是在重构MySQL的知识网络！<br><br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-30 15:46:44</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>alioo</span>
 </div><div class=_2_QraFYR_0>去掉@gmail.com后倒序存储，取7位创建前缀索引</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-26 08:53:45</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Hunter</span>
 </div><div class=_2_QraFYR_0>是不是还是之前的思路，把邮件的地址里面@的前一段做倒排存储，然后就可以使用前缀索引了。<br>或者也可以用年份和顺序号单独存一列，这样就有点类似哈希了，优点是还可以支持范围查询。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 08:49:25</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>叶剑峰</span>
 </div><div class=_2_QraFYR_0>我觉得建立索引和插入数据在实际生产过程中可能是相互迭代的。先建立索引--后插入数据--再优化索引，再插入数据，所以文中说的几种方法都要知道下，具体不同情况不同看。像人员表邮箱这个字段，会先建立全字符串索引，要是业务发展到人员表暴增，导致磁盘比较多，才会想到优化某种长度的字符串索引</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 差不多是这样的<br>一般在你说的这个迭代之前，会再多一个“业务量预估”😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-16 11:38:55</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Livis</span>
 </div><div class=_2_QraFYR_0>课后题思考：可以使用学号拼接密码构建一个hash值，每次登录校验时重新计算hash值匹配；</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 08:05:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>V</span>
 </div><div class=_2_QraFYR_0>请教一个问题, 下面这条SQL order_id 和 user_id 都是 int 类型，都加了索引，在看 EXPLAIN 的时候 执行只使用了 order_id 索引， 为什么 user_id 索引没有采用呢？如果WHERE 条件后面都有索引是否都会执行、还是优化器会选择最有效率都一个索引执行？ 将两个调整成组合索引也没有效果, 如果 force index(user_id) 则全表扫描。 能帮忙解答下吗？谢谢<br>SELECT<br> count(1)<br>FROM<br> A a<br>WHERE<br> EXISTS(<br> SELECT<br> 1<br> FROM<br> B b<br> WHERE<br> b.order_id = a.order_id<br> AND b.user_id = a.user_id <br>);</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 只能用一个索引，如果两个都用就是merge-index算法，一般优化器很少采用</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-13 14:03:17</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>一步</span>
 </div><div class=_2_QraFYR_0>前缀索引和整个字段的索引在索引树上是没有区分的吗？ 能不能通过某个属性判断一个索引是不是前缀索引？<br><br>还有个问题，就是文中使用整个字段的索引的时候，取出邮箱的值后还要回表判断一下邮箱是否正确，但是下面讲解覆盖索引的时候又不需要回表判断邮箱的值是否正确， 这个如果是整个字段的索引就不需要回表判断是否正确了吧<br><br>下面是文中的内容<br>****************************<br>如果使用的是 index1（即 email 整个字符串的索引结构），执行顺序是这样的：从 index1 索引树找到满足索引值是’zhangssxyz@xxx.com’的这条记录，取得 ID2 的值；到主键上查到主键值是 ID2 的行，判断 email 的值是正确的，将这行记录加入结果集；取 index1 索引树上刚刚查到的位置的下一条记录，发现已经不满足 email='zhangssxyz@xxx.com’的条件了，循环结束。<br>****************************</div><div class=_10o3OAxT_0>
@@ -409,16 +429,16 @@ from SUser;
 <a class="nav nav-prev" href=/1/10/ title=10_MySQL为什么有时候会选错索引？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/12/ title=12_为什么我的MySQL会“抖”一下？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

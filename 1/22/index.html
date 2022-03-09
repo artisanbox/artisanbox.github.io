@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>22_MySQL有哪些“饮鸩止渴”提高性能的方法？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>22_MySQL有哪些“饮鸩止渴”提高性能的方法？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/22/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -294,101 +294,121 @@ MySQL实战45讲
 <p>@信信 提了一个不错的问题，要知道最终的加锁是根据实际执行情况来的。所以，如果一个select * from … for update 语句，优化器决定使用全表扫描，那么就会把主键索引上next-key lock全加上。</p></blockquote><blockquote>
 <p>@nero 同学的问题，提示我需要提醒大家注意，“有行”才会加行锁。如果查询条件没有命中行，那就加next-key lock。当然，等值判断的时候，需要加上优化2（即：索引上的等值查询，向右遍历时且最后一个值不满足等值条件的时候，next-key lock退化为间隙锁。）。</p></blockquote><blockquote>
 <p>@小李子、@发条橙子同学，都提了很好的问题，这期高质量评论很多，你也都可以去看看。</p></blockquote><p>最后，我要为元旦期间还坚持学习的同学们，点个赞 ^_^</p><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>最近才发生了个案列:<br>由于一个delete大事务导致磁盘空间满了,数据库hang住,连接不上,所以无法kill掉该大事务<br>当时的观察到的现象是:<br>binlog有一个文件已经达到50多G<br>lsof | grep delete 该tmp文件100多G<br>redo log还是只有4个组,每个文件1G<br>undo log大概有100来G<br>由于数据库连不上,只有把连接切到从库,kill掉主库的进程。过了几分钟,binlog文件才缩小为原来的大小。把主库启起来,但是recovery非常慢。后面kill掉,又以innodb_force_recovery=3恢复,recovery也是半天没反应。由于这个库也不是重要的库,就把新的主库的备份文件重做了之前的主库,以从库启起来<br><br>通过最近的学习+测试分析了下,为什么binlog达到了50多G。tmp文件100多G.<br>由于binlog_cache不够用,把binlog写进了tmp文件中,binlog文件50多G,说明事务已经执行完成,是binlog在fsync阶段,把空间占满了。fsync并不是一个move而是相当于copy。要等binlog完全落盘以后,才会删除之前的tmp文件。redo log由于是循环写,而且在事务执行过程中,就会把redo log分为mtx落地到磁盘上。所以没有一次性暴增,还是以1G的大小持续写.<br>我也是后续做测试,观察在事务进行中,redo log文件一直都有变化。binlog没有变化<br>binlog是在事务执行完以后,才一次性fsync到磁盘<br>但是为什么recovery=3的情况下,还比较耗时。我估计是之前脏页较多,而redo log又全部被覆盖掉,<br>需要先通过binlog来恢复redo log,然后再通过redo log来恢复数据页。<br><br>请问老师有没有更好的办法来处理这种hang住的情况?<br>如果在操作系统层面kill掉执行的线程,就好了。<br>昨天提到的问题3,我也没有测试出来Sending to client这个状态.是之前别人问到的,我也挺懵</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 先说明下，binlog是没有“恢复redolog”的能力的哈。其它部分分析得很好👍🏿<br><br>Binlog 这么大，说明是大事务，崩溃恢复的时候要处理的redolog 很多，估计耗时间耗在这。<br><br>这种磁盘空间满的情况，以前我的处理方法是把最老的binlog移动到别的盘（如果确定日志已经备份到备份系统了就删掉），目的是腾出空间让这个事务执行完成。<br>后面可以考虑这种方案，强制重启还是有点伤的，不过核心还是做好监控，不让出现磁盘100%写满的情况</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-03 19:56:53</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Long</span>
 </div><div class=_2_QraFYR_0>不是专业DBA，遇到过几次数据库问题，有的能解决，有的好像除了重启或者干等着没啥好办法。<br>MySQL5.6版本遇到的部分问题：<br><br>1. 几个线程处于killed状态一直kill不掉（1天），然后备份的时候MySQL backup flush all tables with read lock的时候被阻塞，后面的线程只能等待flush table, kill backup以后也没有办法kill那几个killed状态的语句（processlist显示的killed状态的语句的就是show columns, show create table这样的），后面没办法，重启了server。（看到老师后面第25讲有关于kill的解释，非常期待新知识）<br><br>2. 一个非常大（大几百万行）的表truncate，结果后面所有的线程都阻塞了，类似于下面这个MySQL bug的场景，结果就是等这个truncate结束。没有继续干预。<br>https://bugs.mysql.com/bug.php?id=80060<br><br>3. 某个新功能上线以后，一个记录操作人员操作页面操作时间KPI的功能，由于sql性能不好，在业务上线跑了3天后数据量增多到临界值，突然影响了整个系统性能。数据库发现是大量的sql执行状态是converting heap to MyISAM，sql写法类似 select (select * from table) where id(有索引)= xxxx order by yyyy<br>DBA以及他们团队要求重启。但是分析了几分钟后提供了几个意见给"DBA"，并解释重启解决不了问题：首先这个问题重启是解决不了，因为每次这个sql查询全表，查询分配的临时表空间不足了，需要把结果集转到磁盘上，重启了sql动作没变，参数没变所以重启解决不了问题。<br>页面查询也没法屏蔽，页面查询也无法过滤条件，<br>（1）和研发确认后，表数据删除不影响功能，只影响客户的KPI报表，先备份表，然后删除，后面等功能修复了再补回去。<br>（2）调整max_heap_table_size，tmp_table_size，扩大几倍<br>（3）给这个sql的唯一的一个order by字段加个索引。<br>同时催促研发提供hotfix。最终选择了最简单有效的（1）问题解决，研发迅速后面也发了hotfix解决了。<br><br>4. 某个消费高峰时间段，高频查询被触发，一天几十万次执行，由于存量数据越来越多，查询性能越来越慢，主要是索引没有很好规划，导致CPU资源使用飙升，后面的sql执行越来越慢。 最后尝试了给2个字段添加单独的索引，解决了50%的问题，看到执行计划，extra里面，索引合并使用了intersect，性能还是慢，然后立马drop原先的2个单独索引，创建两个字段的联合索引，问题解决了。<br><br>5. 死锁回滚，导致的MySQL hang住了，当时刚入门，只能简单复现死锁，没有保留所有的日志，现在想查也查不了了。。。<br>感觉大部分都是慢sql和高频事务导致的。<br><br>（当然后面的慢sql监控分析，项目上就很重视了。。）<br><br><br>今天看了这期专栏，发现5.7的这个功能，query_rewrite，受教了。等我们升到5.7以后，可以实际操练下。上面的问题3，也可以用这个功能了（因为是新业务，新表，特殊sql，完全可以起到hotfix的作用）。<br><br><br>请老师帮忙看下上面几次故障是否有更好，更专业的解决方案。多谢</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. Kill 掉备份线程在当时是最好的办法了。不过我之前确实也没碰到过show create table 不能kill的情况，我看下代码，如果能复现出来加入那篇文章中<br>2. 嗯，80060这个问题是因为要truncate，所以要回收脏页导致慢，不过这个问题在5.5.23就优化掉了哦，看你使用的是5.6，可能是别的原因。truncate如果不是被锁，而是已经在执行了，确实还是别做别的事情，等结束最好；<br>3. 这个语句是因为子查询要用临时表，跟order by 无关的（你看到的阶段还没开始order by 操作）。这个语句的临时表都能多到把磁盘打满，增加tmp_table_size是没用的。<br>就是说这三个方法里面2和3其实都无效。你们当时的选择很精准呀。<br>而且前面提出“重启无效”的这个人值得团队内大力表扬（是不是就是你😄）<br>另外这个语句，看着像有机会优化的样子，核心方向是去掉临时表<br>4.可以只删掉其中一个独立索引，再加一个联合索引，就是变成(a,b)和(b)这两种索引，也就是把(a)改成(a,b)，这样是加法，相对比较安全。删除索引是一个要很小心的操作，少删一个多一份安全，之后再通过观察索引b的使用情况，确定没必要再删。interset确实一般都比较慢。<br>5. 正常回滚很快的，是不是大事务回滚？这种还是得从消除大事务入手<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-02 03:08:39</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ryoma</span>
 </div><div class=_2_QraFYR_0>我之前的描述有点问题，其实想问的是：为什么加了 order by c desc，第一个定位c=20 的行，会加上间隙锁 (20,25) 和 next-key lock (15,20]？<br><br>如果没有order by c desc，第一次命中c=15时，只会加上next-key lock(10.15]；<br>而有了order by c desc，我的理解是第一次命中c=20只需要加上next-key lock (15,20]<br><br>当然最后(20,25)还是加上了锁，老师的结论是对的，我也测试过了，但是我不知道如何解释。<br>唯一能想到的解释是order by c desc 并不会改变优化2这个原则：即等值查询时，会向右遍历且最后一个值不满足等值条件；同时order by c desc 带来一个类似于优化2的向左遍历原则。<br>进而导致最后的锁范围是(5,25)；而没有order by c desc的范围是(10,25]。<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 因为执行c=20的时候，由于要order by c desc, 就要先找到“最右边第一个c=20的行”，<br>这个怎么找呢，只能向右找到25，才能知道它左边那个20是“最右的20”<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-03 20:06:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Tony Du</span>
 </div><div class=_2_QraFYR_0>对于上期问题的解答，有一点不是特别理解，<br>因为order by desc，在索引c上向左遍历，对于（15， 25）这段区间没有问题，<br>然后，扫描到c=10才停下来，理论上把（10，15]这个区间锁上就应该是完备的了呀。（5，10]这段区间是否锁上对结果应该没有影响呀，为什么会需要（5，10] 这段的next-key lock ?<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 就是这么实现的😓<br><br>C=10还是要锁的，如果不锁可能被删除</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-02 16:00:42</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>null</span>
 </div><div class=_2_QraFYR_0>原文：<br><br>在扫描过程中，c=20、c=15、c=10 这三行都存在值，由于是 select *，(所以会在主键 id 上加三个行锁。1)<br><br>(主键索引上 id=15、20 两个行锁。2)<br><br>老师，(1) 和 (2) 的描述，是否有出入吖？谢谢</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-12 20:42:58</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Long</span>
 </div><div class=_2_QraFYR_0>老师好，看到有的同学在讨论锁的释放问题。<br><br>之前分析过一个锁表异常，很多用workbench或者类似客户端的同学可能会遇到，<br>复现方式：<br>Step 1：显示的打开一个事务，或者把autocommit=0，或者mysql workbench中把自动提交的置灰按钮打开以后<br>Step 2: 执行一个sql（比如，update或者delete之类的），然后sql还没有返回执行结果的中途点击workbench 自带的那个stop的红色的按钮。<br>这个时候很多人可能就不再做其他操作，大多会认为执行已经结束了。但是实际上，锁还在继续锁着的并不会释放。<br><br>系统日志记录：<br>（1）processlist的状态是sleep，info为null<br>（2）innodb_trx的状态是running，trx_query为null<br>（3）performance_schema.events_statements_current表中的，<br>sql_text，digest_text：是有正确的sql的。---这个5.6以后就有了，如果ps打开的话，应该是可以看到的。<br>message_text ：Query execution was interrupted<br>（4）inoodb_locks，lock_waits，以及show engine innodb status，只有出现锁等待的时候才会记录，如果只有一个事务的记录行锁，或者表锁，是不会记录的。（不知道是否有参考控制，还是默认的）<br>（5）关于行锁记录数的问题，从测试的结果看，inoodb_trx的locked rows，当我点停止的时候，锁定行数保持不变了，当我继续点击执行的时候，锁定记录行数会在之前的记录上向上累加，并不是从0开始。<br><br>然后查了audit log以后发现，客户端（mysqlworkbench）送给server端的是KILL QUERY thread_id，而不是Kill thread_id，<br>所以MySQL只是终止了事务中的statement执行，但是并不会释放锁，因为目前的琐的获取和释放都是基于事务结束的（提交或者回滚）。<br>这里面关于kill query/ thread_id的区别解释<br>https://dev.mysql.com/doc/refman/5.6/en/kill.html<br><br>解决方法：<br>自己解决：kill 对应的thread_id，或者关闭执行窗口（这个时候会送个quit给server端）。<br>别人解决：有super权限的人kill thread_id。<br><br>关于kill的那个文章，其实对所有DDL，DML的操作释放过程，还没有全部搞清楚，期待老师的第25讲。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 总结的非常好，而且现象很全面。<br>核心的一个点是：kill query 只是终止当前执行语句，并不会让事务回滚👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-02 22:36:54</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>张永志</span>
 </div><div class=_2_QraFYR_0>分享一个主从切换时遇到的问题，主从切换前主库要改为只读，设置只读后，show master status发现binlog一直在变化，当时应用没断开。<br>主库并不是其他库的从库，怎么搞的呢？<br>检查业务用户权限发现拥有super权限，查看授权语句原来是grant all on *.* to user，这里要说的是*.* 权限就太大了，而且这个也很容易被误解，需要特别注意。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对的，readonly对super无效；<br>一方面是尽量不要给业务super<br>一方面你做完readonly还会去确认binlog有没有变，这个意识很好哦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-04 08:00:10</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Tony Du</span>
 </div><div class=_2_QraFYR_0>对于上期问题的解答，有一点不是特别理解，<br>因为order by desc，在索引c上向左遍历，对于（15， 25）这段区间没有问题，<br>然后，扫描到c=10才停下来，理论上把（10，15]这个区间锁上就应该是完备的了呀。（5，10]这段区间是否锁上对结果应该没有影响呀，为什么会需要（5，10] 这段的next-key lock ?<br>2019-01-02<br> 作者回复<br>就是这么实现的😓<br><br>C=10还是要锁的，如果不锁可能被删除<br><br>我的回复：<br>所以，如果把sql改成<br>select * from t where c>=15 and c&lt;=20 order by c asc lock in share mode;<br>那锁的范围就应该是索引c上（10，25）了吧。<br>同样查询条件，不同的order顺序，锁的范围不一样，稍微感觉有一点奇怪...<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯，因为执行索引遍历的顺序不一样，其实锁范围不一样也算合理啦😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-03 09:51:11</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Moby</span>
 </div><div class=_2_QraFYR_0>丁奇老师好，不好意思，学渣看得比较慢。关于前两期的问题，我有一点没搞懂。就是你说的："session A 在 select 语句锁的范围是 1.... ; 2.在主键索引上id=10、15、20三个行锁”，经我测试(MySQL版本：5.7.17-log; 隔离级别：可重复读)：“session <br>A: begin; select * from t where c>=15 and c&lt;=20 order by c desc lock in share mode;"、"session B: update t set c=1010 where id=10; Query ok"、”session C: update t set c=1515 where id=15;block...“。即：为什么id=10这一行可以更新数据？而id=15、20这两行更新数据就被阻塞？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这没问题呀<br><br>begin; select * from t where c>=15 and c&lt;=20 order by c desc lock in share mode;<br>锁的范围是这样的：<br>索引c上，next-key lock: (5，10],(10,15],(15,20];<br>索引id上，行锁: id=15和id=20</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-21 17:38:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>沙漠里的骆驼</span>
 </div><div class=_2_QraFYR_0>qps(查询语句)突然增大的情况，我们的实践是:<br>1. 账号、接口级别的限流。<br>2.引导到备库执行</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-19 08:32:28</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>老师,我有几个问题:<br>1.如果把order by去掉或者order by c asc,往右扫描,为什么没有加[25,30)next-key lock?<br>2.执行session A,为什么slow log里的Rows_examined为2?按照答案来讲不应该是为3嘛<br>3.thread states里sending data包括sending data to the client,<br>另外还有一种state是Sending to client(5.7.8之前叫Writing to net)是writing a packet to the client.<br>请问针对发送数据给客户端,这两种状态有什么区别？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. Next-key lock是前开后闭区间呀，有扫描到25，所以(20,25]<br><br>2. Rows_examined 是server层统计的，这个不满足的值没返回给server<br><br>3. 你show processlist 结果发我看下，代码中没搜到😓</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-02 16:50:59</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>helloworld</span>
 </div><div class=_2_QraFYR_0>评论区的都是高手中的高手啊</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-11-11 17:31:57</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>mongo</span>
 </div><div class=_2_QraFYR_0>看完了《算法导论》那本书的前20章，看到了动态规划。再来看老师的专栏，发现我终于可以无障碍get到本专栏的知识了。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 在算法导论面前，这个专栏的内容算很浅的😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-07-18 20:55:42</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>张永志</span>
 </div><div class=_2_QraFYR_0>我是从Oracle转到MySQL来的，先接触的Oracle再看MySQL就经常喜欢拿两者对比，包括表数据存储结构，二级索引的异同，redo，binlog，锁机制，以及默认隔离级别。<br>研究锁后，根据自己的理解得出一个结论，MySQL默认隔离级别选为RR也是无奈之举！<br>因为当时binlog还是语句格式，为了保证binlog事务顺序正确就得有gap和next key锁。<br>而对开发人员来说，他们未必清楚事务隔离级别，且大多数开发都是从Oracle转向MySQL的，故果断将隔离级别全部调整为RC。<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，以前有很多oracle专家，然后大家就觉得RC够用。<br><br>不过他们不是“以为够用”，他们是真的分析过业务场景，分析业务的用法，确认够用。这种是很好的实践</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-04 08:14:02</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>zws</span>
 </div><div class=_2_QraFYR_0>老师，如果不是专业的dba看着专栏是不是有点太深了。 老师可不可以把文章分下类，哪部分可以适合业务开发人员看。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 业务开发基本都能用上的哈😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-24 05:29:58</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>devil</span>
 </div><div class=_2_QraFYR_0>上期问题的答案有点不明白，为什么（5，10]会被加锁？第一个不满足条件的不是10吗？退化到间隙锁的情况也只会加锁（10，15],不退化应该是[10,15]<br><br>另外主键索引到底锁了几行，上面一句写的锁了10，15，20。下面写的锁了15，20</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-22 23:45:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>刘昆</span>
 </div><div class=_2_QraFYR_0>老师你好，上期问题里面我遇到一下问题：<br>insert into t values(6,5,6) => block<br>insert into t values(4,5,6) => no block<br>insert into t values(6,4,6) => no block<br>insert into t values(7,5,6) => block<br>insert into t values(7,4,6) => no block<br>根据你的解答，c 上面的 next-key lock 在 (5, 10]，那么上面的情况应该都不会阻塞还对呀？<br>Server version: 5.7.24-log MySQL Community Server (GPL)<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是这样的，我们只是简写成(5,10],<br>这个是索引c上的next-key lock，<br>所以这个范围的左边界是 (c=5,id=5), 右边界是(c=10,id=10)<br><br>你举例里面，<br>insert into t values(6,5,6) 是（c=5, id=6);<br>insert into t values(7,5,6) 是（c=5, id=7);<br>这两个都落在上面的next-key lock的区间，所以是会被锁住的哦<br><br>好问题， 新年快乐</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-02 18:14:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>我在实际工作中没怎么遇到过这类问题，仅仅简单的进行过一些SQL语句的优化。<br>不过我觉得目前所在的公司的做法值得参考<br>1：加入公司会让专业DBA进行培训，讲公司数据库的使用规范和最佳实践<br>2：实际开发中建表语句会让架构师审核是否合适<br>3：开发的代码包括SQL语句会让架构师review<br>4：大促前基础架构部会监控慢SQL让解决<br>5：大促高峰会通过降日志减轻机器压力，还不行会通过先积压消息的方式减轻数据库的压力，最后还不行会通过开关不进行数据的持久化，只进行es的持久化来减轻数据库的压力<br>6：另外大促前也会进行数据的结转</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-03 12:11:12</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>不二</span>
 </div><div class=_2_QraFYR_0>老师，曾剑同学的问题<br>关于上期遗留问题的解答，我有一点疑惑：<br>解答中的1中，第一个要定位的是索引 c 上“最右边的”c=20 的行，为啥只会加上间隙锁（20,25）和next-key lock(15,20]呢，为啥不是两个next-key lock(15,20]和(20,25]呢？25上的行锁难道是退化的？老师上一篇文章中说到加锁的基本原则中第一点是加锁的基本单位是next-key lock，而退化都是基于索引上的等值查询才会发生呀？盼老师指点迷津。<br>您给回答是定位到c=20的时候，是等值查询，所以加的是(20,25)的间隙锁，25的行锁退化了，那么在上一期中的案例五：唯一索引范围锁 bug，那id&lt;=15,不也是先定位到id=15，然后向右扫描，那应该也是等值查询，那么应该加的是（15，20）间隙锁，那为啥你说的加的是（15，20],为啥这个id=20的行锁也加上了呢，为啥同样是范围查询，一个行锁退化了，一个没有退化呢，求老师指点迷津<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 第一次就是找c=20,这个就是一次等值查找<br>2. 案例5那个，等值查的是id=10,然后向右遍历。这两个，一个是有order by desc,索引的扫描方向不一样，“找第一个”的值也是不一样的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-04 11:41:37</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ryoma</span>
 </div><div class=_2_QraFYR_0>select * from t where c>=15 and c&lt;=20 order by c desc lock in share mode; 这条语句在索引C上锁的范围是(5,25)；<br>如果把order by c desc去掉，锁的范围即(10,25]；、<br>请问老师为什么加上order by c desc后差异这么大，第一次定位到c=20的时候，为什么还要继续往后再查一次呢；而没有order by c desc后，第一次定位到10，就不会往前再查一次，这个差异是什么导致的？</div><div class=_10o3OAxT_0>
@@ -398,16 +418,16 @@ MySQL实战45讲
 <a class="nav nav-prev" href=/1/21/ title=21_为什么我只改一行的语句，锁这么多？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/23/ title=23_MySQL是怎么保证数据不丢的？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

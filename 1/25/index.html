@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>25_MySQL是怎么保证高可用的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>25_MySQL是怎么保证高可用的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/25/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -303,101 +303,121 @@ start slave;
 <p>@一大只、@HuaMax 同学提到了第一个复现方法；</p></blockquote><blockquote>
 <p>@Jonh同学提到了IGNORE_SERVER_IDS这个解决方法；</p></blockquote><blockquote>
 <p>@React 提到，如果主备设置不同的步长，备库是不是可以设置为可读写。我的建议是，只要这个节点设计内就不会有业务直接在上面执行更新，就建议设置为readonly。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>遇到过下面几种造成主从延迟的情况:<br>1.主库DML语句并发大,从库qps高<br>2.从库服务器配置差或者一台服务器上几台从库(资源竞争激烈,特别是io)<br>3.主库和从库的参数配置不一样<br>4.大事务(DDL,我觉得DDL也相当于一个大事务)<br>5.从库上在进行备份操作<br>6.表上无主键的情况(主库利用索引更改数据,备库回放只能用全表扫描,这种情况可以调整slave_rows_search_algorithms参数适当优化下)<br>7.设置的是延迟备库<br>8.备库空间不足的情况下<br><br>这期的问题：<br>看这曲线,应该是从库正在应用一个大事务,或者一个大表上无主键的情况(有该表的更新)<br>应该是T3随着时间的增长在增长,而T1这个时间点是没变的,造成的现象就是<br>随着时间的增长,second_behind_master也是有规律的增长</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 分析的点很准确👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-10 21:46:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>可可</span>
 </div><div class=_2_QraFYR_0>老师，我先来讲个笑话<br>昨天去面试另一家公司，问mysql的问题，问罢之后。<br>面试官:我看你对mysql了解的还蛮深得，是不是也看了极客时间的。。。～<br>我: 没有没有(连忙否认，有一种提前看了考试答案的罪恶感😂😂😂)<br><br><br>所以最后我有个问题，如果后面还有这样的问题，老师您觉得我应该怎么回答？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 额。。这个不好说，得看面试官是什么类型的😅<br><br>最好的情况是那种，面试官问你的专栏讲到的知识点你都回答了，<br>然后面试官又把问题延伸了，然后你还顺利回答出来了。<br><br>这样就大大方方说学过了， 面试官一定觉得你又好学又勤于思考哟😆<br><br>（先预祝一波顺利拿到offer哈）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-27 08:16:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>aubrey</span>
 </div><div class=_2_QraFYR_0>semi-sync在网络故障超时的情况下会退化成async，这个时候如果刚好主库掉电了，有些binlog还没有传给从库，从库无法判断数据跟主库是否一致，如果强行切换可能会导致丢数据，在金融业务场景下只能＂人工智能＂来做切换，服务中断时间长。AliSQL采用双通道复制更容易判断主备数据是否一致，如果一致可以自动切换，如果不一致才需要人工恢复数据。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍内行😆<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-14 14:03:49</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>linqw</span>
 </div><div class=_2_QraFYR_0>总结下学习完高可用，老师有空帮忙看下<br>1、主备延迟，就是在同一个事务在备库执行完成的时间和主库执行完成的时间之间的差值，包括主库事务执行完成时间和将binlog发送给备库，备库事务的执行完成时间的差值。每个事务的seconds_behind_master延迟时间，每个事务的 binlog 里面都有一个时间字段，用于记录主库上的写入时间，备库取出当前正在执行的事务的时间字段的值，计算它与当前系统时的差值。<br>2、主备延迟的来源①首先，有些部署条件下，备库所在机器的性能要比主库所在的机器性能差，原因多个备库部署在同一台机器上，大量的查询会导致io资源的竞争，解决办法是配置”双1“，redo log和binlog都只write fs page cache②备库的压力大，产生的原因大量的查询操作在备库操作，耗费了大量的cpu，导致同步延迟，解决办法，使用一主多从，多个从减少备的查询压力③大事务，因为如果一个大的事务的dml操作导致执行时间过长，将其事务binlog发送给备库，备库也需执行那么长时间，导致主备延迟，解决办法尽量减少大事务，比如delete操作，使用limit分批删除，可以防止大事务也可以减少锁的范围。<br>④大表的ddl，会导致主库将其ddl binlog发送给备库，备库解析中转日志，同步，后续的dml binlog发送过来，需等待ddl的mdl写锁释放，导致主备延迟。<br>3、可靠性优先策略，①判断备库 B 现在的 seconds_behind_master如果小于某个值（比如 5 秒）继续下一步，否则持续重试这一步，②把主库 A 改成只读状态，即把 readonly 设置为 true，③判断备库 B 的 seconds_behind_master的值，直到这个值变成 0 为止； 把备库 B 改成可读写也就是把 readonly 设置为 false； 把业务请求切换到备库，个人理解如果发送过来的binlog在中转日志中有多个事务，业务不可用的时间，就是多个事务被运用的总时间。如果非正常情况下，主库掉电，会导致出现的问题，如果备库和主库的延迟时间短，在中转日志运用完成，业务才能正常使用，如果在中转日志还未运用完成，切换为备库会导致之前完成的事务，”数据丢失“，但是在一些业务场景下不可接受。<br>4、可用性策略，出现的问题：在双m，且binlog_format=mixed，会导致主备数据不一致，使用使用 row 格式的 binlog 时，数据不一致的问题更容易发现，因为binlog row会记录字段的所有值。<br>5、老师有个问题不太理解，就是主备延迟时，会导致备库在没有运用中转日志时，业务查询时导致”数据丢失“，那如何解决了？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1~4 很好的总结<br>5. 也是好问题，直接看《28 | 读写分离有哪些坑？》😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-17 22:16:15</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>万勇</span>
 </div><div class=_2_QraFYR_0>主备同步延迟，工作中常遇到几种情况：<br>1.主库做大量的dml操作，引起延迟<br>2.主库有个大事务在处理，引起延迟<br>3.对myisam存储引擎的表做dml操作，从库会有延迟。<br>4.利用pt工具对主库的大表做字段新增、修改和添加索引等操作，从库会有延迟。<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿<br>你是有故事的😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 11:58:00</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>cyberty</span>
 </div><div class=_2_QraFYR_0>请问老师，如果备库连接主库之后，主库的系统时间修改了，备库同步的时候是否会自动修正？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，不会</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-10 13:19:46</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>John</span>
 </div><div class=_2_QraFYR_0>循环复制根本原因是binlog中引入了非当前主机的server id，可以通过ignore server ids过滤，但是一般情况如果出现循环复制，数据的可靠性就值得怀疑了，不管是过滤还是重新找点都很难保证循环的部分完整执行过，最后都要验证数据的状态，属于特别严重故障😂</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你这个方法好👍🏿<br><br>数据问题的话，如果是设置的row 格式的binlog还好，因为insert和delete都会报错，会出现循环的就是update, 然后update都是可重入的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-10 09:05:45</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>梁中华</span>
 </div><div class=_2_QraFYR_0>我有一个比较极端一点的HA问题，假设主库的binlog刚写成功还未来得及把binlog同步到从库，主库就掉电了，这时候从库的数据会不完整吗？<br>第二个问题，原主库重启加入集群后，那条没有传出去的binlog会如何处理？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1.可能会丢<br>2. 要看重启之后的拓扑结构了，如果还有节点是这个库的从库，还是会拿走的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 10:43:37</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>运维老胡</span>
 </div><div class=_2_QraFYR_0>复制延迟排查思路：<br>1、查数据库在干什么<br>pager cat - | grep -v Sleep | sort -rn -k 12 | head -n 20<br>show full processlist;<br>select * from information_schema.processlist where 1=1 order by TIME desc limit 10;<br><br>2、查看sql_thread在干什么<br>slave上查看状态：show slave status\G;<br>查看relay_master_log_file以及exec_master_log_pos<br>master上解析binglog日志：mysqlbinlog -v --base64-output=decode-rows --start-position=exec_master_log_pos relay_master_log_file<br><br>如果发现卡在操作某表上：<br>检查表结构<br> 没有索引：stop slave 可能会卡主，建议关闭mysql，启动后先加索引，然后start slave<br> 有索引：只能等，大事务需要做拆分，不要操作太多数据<br>大事务：M上session回话使用statement格式，使用语句级别的复制 <br><br>3、查看MySQL状态<br>机器性能（CPU、IO等）：从库配置适当高一点，使用新硬件PCI-E或SSD设备<br>表结构: 设计要合理，必须有主键，主键要短小，为查询字段建索引<br>业务程序：适当使用缓存，减少数据库压力<br>分析MySQL进程并结合源码：perf top `pidof mysqld` <br><br>4、参数临时优化<br>主库开启group commit<br>从库开启writeset<br>从库设置sync_binlog=0 && innodb_flush_log_at_trx_commit=2<br><br>5、检查锁情况<br>show engine innodb status\G;</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-03-22 14:40:19</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Max</span>
 </div><div class=_2_QraFYR_0>老师，图中产生的这个现象的原因应该是，执行一个大事务，导致second_behind_master一直在增加。<br>其实second_behind_master的计算机方法应该当前系统的时间戳减去sql_thread线程正在执行的binglog event上的时间戳，得到的差值就是seconds_behind_master.<br>但根据seconds_behind_master来判断主从同步有一个严重的问题，如果主库和从库网络如果不通，从库不会马上知道和主库连接不能，从库有一个<br>salve_net_timeout=多少秒，从库会通过这个参数定时的检测是否与主库保持通讯，所以这个参数应该设为小一点。slave_net_timeout=10(单位是秒).<br>或者用pt-hearbeat来检测主从延迟。<br><br>老师，请教一个题外问题，mysql的主从复制，到底是主库把binlog事件推送给从库，还是从库请求主库把binlog事件推送给从库。<br>除了start slave;这个动作表示从库请求把某一个binlog事件推送给它。因为一般情况下主库的binlog推送给从库是异步模式，不需要从库告诉主库我接收这个事件.<br>如果主从之间网络不通，主库会多次发送已经执行过的binlog事件吗？网络不好可能多次提交 实在抱歉</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不用抱歉，这是好问题呀<br><br>连接的时候，从库告诉主库信息，<br>之后是主库主动发的。<br><br>网络如果断开，重连的时候是从库重新告诉主库<br><br>主库只是“根据要求发日志”</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 13:37:08</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>崔伟协</span>
 </div><div class=_2_QraFYR_0>发生主从切换的时候，主有的最新数据没同步到从，会出现这种情况吗，出现了会怎么样</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 异常切换有可能的<br><br>要根据你的处理策略了，如果不能丢，有几个可选的<br>1.不切换（等这个库自己恢复起来）<br>2. 使用semi-sync策略<br>3. 启动后业务做数据对账（这个一般用得少，成本高）<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-11 14:25:12</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>xm</span>
 </div><div class=_2_QraFYR_0>一般主从延时多少算是合理的？是秒级别吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 一般大于1就不好 ^_^</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-10 11:09:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>7号</span>
 </div><div class=_2_QraFYR_0>老师，生产环境有一张表需要清理，该表大小140G。要保留最近一个月的数据，又不能按时间直接用detele删（全表扫描），本来想通过清空分区表删，但是分区表又是哈希的。。有没好的办法呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 估计下一个月占多少比例，如果比较小就建新表，把数据导过去吧<br>如果一个月占比高的话，只能一点点删了。<br><br>时间字段有索引的话，每个分区按时间过滤出来删除</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 19:42:41</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>aliang</span>
 </div><div class=_2_QraFYR_0>老师，我有一个问题：（1）seconds_behind_master的计算方法是通过从库的系统时间戳减去sql_thead线程正在执行的binlog_event上的时间戳的差值。当从库系统时间不准时也不会影响seconds的值，因为从库连接到主库时会通过select unix_timestamp（）查询主库的系统时间，若发现和从库不一致会在计算seconds这个值时作调整（2）我的疑惑是在主从网络正常时，select unix_timestamp执行的频率和触发条件是怎样的（换句话说（1）中描述的从库连接到主库这个行为是一直存在的还是有其他触发条件？）。如果这个频率不高，那在两次select unix_timestamp期间从库系统时间发生变化，seconds的值岂不是不准了？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯，取时间这个动作只发生在“主从建立连接”的过程中，<br>如果已经连着的时候，时间戳改掉，是会不准的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-23 13:12:56</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Long</span>
 </div><div class=_2_QraFYR_0>老师，您好：<br><br>一直追这个课程，解决了我自己的很多知识盲点，或者更加深入的了解一些知识点，已经在试读留言下推荐了这个课程。<br><br>但是有的时候在分析问题的时候，看很多日志，比如error log中的死锁日志，报错日志中每个字段是什么意思，以及show innodb engine status中每个日志段的意思，比如在将redo log的时候innodb status就会记录，这样就可以结合课程中的log write，page cahce和fsync逻辑到数据库中实际感受到学到的原因，在应用中怎么一一对应。<br>比如，show innodb engine status中：<br> --------<br> FILE I/O<br> --------<br>***<br>***<br> Pending normal aio reads: 0 [0, 0, 0, 0, 0, 0, 0, 0] , aio writes: 0 [0, 0, 0, 0, 0, 0, 0, 0] ,<br> ibuf aio reads: 0, log i/o's: 0, sync i/o's: 0<br> Pending flushes (fsync) log: 1; buffer pool: 0<br> 14321192292 OS file reads, 120057595 OS file writes, 60413577 OS fsyncs<br> 10 pending preads, 1 pending pwrites<br> 4648.01 reads/s, 16383 avg bytes/read, 48.09 writes/s, 34.98 fsyncs/s<br><br><br> ---<br> LOG<br> ---<br> Log sequence number 3893849611607<br> Log flushed up to 3893849603096<br> Pages flushed up to 3893705803837<br> Last checkpoint at 3893705803837<br> 1 pending log writes, 0 pending chkp writes<br> 28053287 log i/o's done, 10.15 log i/o's/second<br><br>之前看过网上的一些分析，由于和原理脱离，所以理解的都不深。<br>非常期待老师能结合error log一些常见问题分析比如dead lock，常见crash啊之类的，<br>以及show innodb engine status中的重点内容！<br><br>多谢<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯，这这个建议很好，我会考虑加的哈🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 20:47:54</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>易翔</span>
 </div><div class=_2_QraFYR_0>常见的都讲了，补充几点我遇到过的。<br><br>1,备库做逻辑备份时，有产生MDL锁。然后复制线程刚好被堵塞。。kill掉备份线程，一切都畅快了。。我遇到过，但是感觉那备份期间产生的非共享锁不是短时间就释放的吗？为什么堵的时间那么长，感觉像是遇到死锁。大神讲讲其中原因。<br><br>2，数据库用了共享存储，其它业务的不期待(我们当时是归档程序)占用会导致同样连接该存储上的数据库遇到写入瓶颈，写入不仅仅是应用中继日志产生的数据。还有写中继日志。写中继日志慢，应用日志线程工作却有条不紊。这时候也会产生备库延迟。由于体现没有中继日志滞留，没有想到io问题，当时第一反应是网络带宽被打满了，确认了，没有问题过后。然后找到存储，看存储IOPS。最后定位到归档程序正在批量写入数据。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 22:59:17</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>EAGLE</span>
 </div><div class=_2_QraFYR_0>文中提到“如果一个主库上的语句执行 10 分钟，那这个事务很可能就会导致从库延迟 10 分钟”。这个延迟是针对当前delete事务，还是所有的事务都延迟。<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 要看有没有开并行复制，默认是串行，一个堵全部堵</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 18:11:04</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>undifined</span>
 </div><div class=_2_QraFYR_0>问题答案：<br>1. 备库在执行复杂查询，导致资源被占用<br>2. 备库正在执行一个大事务<br>3. DML 语句执行<br><br>老师我的理解对吗</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1不太准确，明天我会提到哈<br><br>23对的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 20:52:43</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Sr7vy</span>
 </div><div class=_2_QraFYR_0>问题1：T3的解释是：备库执行完这个事物。则：Seconds_Behind_Master=T3-T1。如T1=30min，主执行完成，备没有执行。猜测1：那么Seconds_Behind_Master=30min吗？猜测2：备执需要先把这个30min的事务执行完后，Seconds_Behind_Master=30min？<br>问题2：很多时候是否能把Seconds_Behind_Master当作真正的延迟时间（面试常被问）？如果能，pt-heartbeat存在还有啥意义啊？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 问题1:<br>1.备库没收到，还是收到没执行，前者0，后者30<br>2. 第二问没看懂<br><br>问题2:<br>类似的，主库把日志都发给备库了吗</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 16:15:55</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span> JJ</span>
 </div><div class=_2_QraFYR_0>请问老师，主库断电了，怎么把binlog传给从库同步数据，怎么使的SBM为0主从切换呢？</div><div class=_10o3OAxT_0>
@@ -407,16 +427,16 @@ start slave;
 <a class="nav nav-prev" href=/1/24/ title=24_MySQL是怎么保证主备一致的？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/26/ title=26_备库为什么会延迟好几个小时？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

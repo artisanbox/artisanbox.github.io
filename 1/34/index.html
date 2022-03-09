@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>34_到底可不可以使用join？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>34_到底可不可以使用join？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/34/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -338,101 +338,121 @@ select t1.b,t2.* from  t2  straight_join t1 on (t1.b=t2.b) where t2.id&lt;=100;
 <li>如果前面的语句有更新，意味着它们在占用着行锁，会导致别的语句更新被锁住；</li><li>当然读的事务也有问题，就是会导致undo log不能被回收，导致回滚段空间膨胀。</li></ul><p>评论区留言点赞板：</p><blockquote>
 <p>@老杨同志 提到了更新之间会互相等锁的问题。同一个事务，更新之后要尽快提交，不要做没必要的查询，尤其是不要执行需要返回大量数据的查询；<br>
 @长杰 同学提到了undo表空间变大，db服务堵塞，服务端磁盘空间不足的例子。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>没时间了ngu</span>
 </div><div class=_2_QraFYR_0>join这种用的多的，看完还是有很大收获的。像之前讲的锁之类，感觉好抽象，老是记不住，唉。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯嗯，因为其实每个同学的只是背景不一样。<br>这45讲里，每个同学都能从部分文章感觉到有收获，我觉得也很好了😆<br><br>不过 锁其实用得也多的。。<br>我以前负责业务库的时候，被开发同学问最多的问题之一就是，为啥死锁了^_^</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 11:58:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>信信</span>
 </div><div class=_2_QraFYR_0>老师好，回答本期问题：如果驱动表分段，那么被驱动表就被多次读，而被驱动表又是大表，循环读取的间隔肯定得超1秒，这就会导致上篇文章提到的：“数据页在LRU_old的存在时间超过1秒，就会移到young区”。最终结果就是把大部分热点数据都淘汰了，导致“Buffer pool hit rate”命中率极低，其他请求需要读磁盘，因此系统响应变慢，大部分请求阻塞。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 11:47:14</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>斜面镜子 Bill</span>
 </div><div class=_2_QraFYR_0>因为 join_buffer 不够大，需要对被驱动表做多次全表扫描，也就造成了“长事务”。除了老师上节课提到的导致undo log 不能被回收，导致回滚段空间膨胀问题，还会出现：1. 长期占用DML锁，引发DDL拿不到锁堵慢连接池； 2. SQL执行socket_timeout超时后业务接口重复发起，导致实例IO负载上升出现雪崩；3. 实例异常后，DBA kill SQL因繁杂的回滚执行时间过长，不能快速恢复可用；4. 如果业务采用select *作为结果集返回，极大可能出现网络拥堵，整体拖慢服务端的处理；5. 冷数据污染buffer pool，block nested-loop多次扫描，其中间隔很有可能超过1s，从而污染到lru 头部，影响整体的查询体验。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍很赞<br>之前知识点的也都加进来啦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-31 11:46:48</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>对被驱动表进行全表扫描，会把冷数据的page加入到buffer pool.,并且block nested-loop要扫描多次，两次扫描的时间可能会超过1秒，使lru的那个优化失效，把热点数据从buffer pool中淘汰掉，影响正常业务的查询效率</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 漂亮👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 10:17:30</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Zzz</span>
 </div><div class=_2_QraFYR_0>林老师，我没想清楚为什么会进入young区域。假设大表t大小是M页>old区域N页，由于Block Nested-Loop Join需要对t进行k次全表扫描。第一次扫描时，1~N页依次被放入old区域，访问N+1页时淘汰1页，放入N+1页，以此类推，第一次扫描结束后old区域存放的是M-N+1~M页。第二次扫描开始，访问1页，淘汰M-N+1页，放入1页。可以把M页想象成一个环，N页想象成在这个环上滑动的窗口，由于M>N，不管是哪次扫描，需要访问的页都不会在滑动窗口上，所以不会存在“被访问的时候数据页在 LRU 链表中存在的时间超过了 1 秒“而被放入young的情况。我能想到的会被放入young区域的情况是，在当次扫描中，由于一页上有多行数据，需要对该页访问多次，超过了1s，不管这种情况就和t大小没关系了，而是由于page size太大，而一行数据太少。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你说得对，分两类情况，<br>小于bp 3/8的情况会跑到young，<br>大于3/8的会影响young部分的更新</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 15:41:38</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>清风浊酒</span>
 </div><div class=_2_QraFYR_0>老师您好，left join 和 right join 会固定驱动表吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不会强制，但是由于语义的关系，大概率上是按照语句上写的关系去驱动，效率是比较高的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 11:00:20</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>泡泡爱dota</span>
 </div><div class=_2_QraFYR_0>explain select * from t1 straight_join t2 on (t1.a=t2.a) where t1.a &lt; 50; <br>老师, 这条sql为什么t1.a的索引没有用上, t1还是走全表<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 如果数据量不够多，并且满足a&lt;50的行，占比比较高的话，优化器有可能会认为“还要回表，还不如直接扫主键id”</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-31 18:00:24</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>萤火虫</span>
 </div><div class=_2_QraFYR_0>年底了有一种想跳槽的冲动 身在武汉的我想出去看看 可一想到自身的能力和学历 又不敢去了 苦恼... </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 今年这情况还是要先克制一下^_^ <br>先把内功练起来😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 08:50:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>郝攀刚จุ๊บ</span>
 </div><div class=_2_QraFYR_0>业务逻辑关系，一个SQL中left join7，8个表。这我该怎么优化。每次看到这些脑壳就大！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 😓<br>Explain下，没用用index nested-loop 的全要优化</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 23:24:29</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>amazon1011</span>
 </div><div class=_2_QraFYR_0>这个专栏受益匪浅，老师再搞个内核源码专栏：）</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 13:39:53</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>抽离の❤️</span>
 </div><div class=_2_QraFYR_0>早上听老师一节课感觉获益匪浅</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好早呀🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 08:21:25</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>呵呵</span>
 </div><div class=_2_QraFYR_0>老师，新年好！<br>优化器会自动选择小表作为驱动表，那么我们人为把小表写成驱动表还有意义吗？ </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年好<br><br>嗯优化器大部分时候会选对，如果选不对，我们就得自己强行指定了哈<br><br>其实了解这个原理主要还是指导我们根据最优的join顺序，来创建被驱动表字段上的索引<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 10:25:08</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>思考特～</span>
 </div><div class=_2_QraFYR_0>老师，这边想请教一个困扰很久的问题，用mysql经常会制定这么一个规则，不允许多表join。从实际情况看，几乎不太可能遵守这个规则，有个交易的业务场景涉及 用户表 300W、订单表 900W、支付表 900W，每次需要查一个用户下面的订单信息可能就有点慢了，但是还能接受，如果是查询一个团体的订单信息，这个量就非常可观了,查询有时候根本返回不了结果。根本无法避免多表Join，所以想问问老师，在这种需要多表Join业务场景下，如何设计表，来提升性能？或者有这方面推荐的资料可以参考的</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 我的建议就是用好NLJ和BKA算法😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-03 12:42:19</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>403</span>
 </div><div class=_2_QraFYR_0>用那个作为驱动表，mysql会自己优化么？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 会的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-09 22:51:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>柚子</span>
 </div><div class=_2_QraFYR_0>join在热点表操作中，join查询是一次给两张表同时加锁吧，会不会增大锁冲突的几率？<br>业务中肯定要使用被驱动表的索引，通常我们是先在驱动表查出结果集，然后再通过in被驱动表索引字段，分两步查询，这样是否比直接join委托点？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: join也是普通查询，都不需要加锁哦，参考下MVCC那篇；<br><br>就是我们文中说的，“分两步查询，先查驱动表，然后查多个in”，如果可以用上被驱动表的索引，我觉得可以用上Index Nested-Loop Join算法，其实效果是跟拆开写类似的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 09:06:19</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>啊啊啊哦哦</span>
 </div><div class=_2_QraFYR_0>NLJ join算法下。 驱动表假设全表先扫描。 这个全表扫描的数据存放在哪。 buffer bool中还是。全表扫描到单独的read buffer中？ 我的理解是。 驱动表全表扫描的数据。是从buffer bool中找驱动表的数据到 read buffer中。如果buffer bool 没有。那么从磁盘。到buffer bool 然后在到read buffer 中。 我的理解对吗。 </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不是的<br><br>如果是NLJ，就是遍历过程中直接到被驱动表去匹配，匹配满足条件的行，就直接作为结果集发出去了，不需要临时内存</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-31 20:56:23</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Franis</span>
 </div><div class=_2_QraFYR_0>老师，想问一下，如果是“一对多”的多个表进行join的话，应该选择“多”的表作为驱动表，还是选择“一”的表作为驱动表呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 如果有严格的一对多，而且要join够快一般都会在join 字段上创建索引，<br>这时候应该选“一”为驱动表</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-03 15:20:59</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>1024</span>
 </div><div class=_2_QraFYR_0>文中解释NLJ和BNL时间复杂度相同，都是M*N。但是对于BNL性能好于NLJ的原因只是提到:"BNL的判断是在内存中操作，速度上会快很多，性能也更好"。请问老师？这句话的言外之意是: NLJ的判断不是在内存中操作吗？不将数据加载到内存，CPU如何进行判断呢?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个我在答疑文章中展开哈，其实还是“内存数据是从哪里来的”的问题。<br><br>我们这里说的是BNL比Simple nested loop 快哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-19 14:05:32</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ryoma</span>
 </div><div class=_2_QraFYR_0>上文中使用索引时扫描行数为200，但是根据字段a去做树搜索时，由于字段a是普通索引，在找到匹配值后还会继续匹配，实际上每个循环都做了至少两次的行扫描。<br>老师，这么理解对么？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，不过在MySQL 里面，这样算“扫描一行”，实际上确实做了两次树搜索</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-31 09:59:30</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>felix</span>
 </div><div class=_2_QraFYR_0>不让用join，那用什么呢，用逗号分隔两表？<br>join有多个条件的话，写在on后面和where后面有什么区别吗？</div><div class=_10o3OAxT_0>
@@ -442,16 +462,16 @@ select t1.b,t2.* from  t2  straight_join t1 on (t1.b=t2.b) where t2.id&lt;=100;
 <a class="nav nav-prev" href=/1/33/ title=33_我查这么多数据，会不会把数据库内存打爆？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/35/ title=35_join语句怎么优化？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>43_要不要使用分区表？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>43_要不要使用分区表？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/43/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -280,101 +280,121 @@ insert into t values('2017-4-1',1),('2018-4-1',1);
 <li>
 <p>分区并不是越细越好。实际上，单表或者单分区的数据一千万行，只要没有特别大的索引，对于现在的硬件能力来说都已经是小表了。</p></li><li>
 <p>分区也不要提前预留太多，在使用之前预先创建即可。比如，如果是按月分区，每年年底时再把下一年度的12个新分区创建上即可。对于没有数据的历史分区，要及时的drop掉。</p></li></ol><p>至于分区表的其他问题，比如查询需要跨多个分区取数据，查询性能就会比较慢，基本上就不是分区表本身的问题，而是数据量的问题或者说是使用方式的问题了。</p><p>当然，如果你的团队已经维护了成熟的分库分表中间件，用业务分表，对业务开发同学没有额外的复杂性，对DBA也更直观，自然是更好的。</p><p>最后，我给你留下一个思考题吧。</p><p>我们举例的表中没有用到自增主键，假设现在要创建一个自增字段id。MySQL要求分区表中的主键必须包含分区字段。如果要在表t的基础上做修改，你会怎么定义这个表的主键呢？为什么这么定义呢？</p><p>你可以把你的结论和分析写在留言区，我会在下一篇文章的末尾和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>上篇文章后面还不够多，可能很多同学还没来记得看吧，我们就等后续有更多留言的时候，再补充本期的“上期问题时间”吧。</p><p>@夹心面包 提到了在grant的时候是支持通配符的："_"表示一个任意字符，“%”表示任意字符串。这个技巧在一个分库分表方案里面，同一个分库上有多个db的时候，是挺方便的。不过我个人认为，权限赋值的时候，控制的精确性还是要优先考虑的。</p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>夹心面包</span>
 </div><div class=_2_QraFYR_0>我说下我的感想<br>1 经典的利用分区表的场景<br> 1 zabbix历史数据表的改造,利用存储过程创建和改造<br> 2 后台数据的分析汇总,比如日志数据,便于清理<br>这两种场景我们都在执行,我们对于分区表在业务采用的是hash 用户ID方式,不过大规模应用分区表的公司我还没遇到过<br>2 分区表需要注意的几点<br>总结下<br>1 由于分区表都很大,DDL耗时是非常严重的,必须考虑这个问题<br>2 分区表不能建立太多的分区,我曾被分享一个因为分区表分区过多导致的主从延迟问题<br>3 分区表的规则和分区需要预先设置好,否则后来进行修改也很麻烦<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍 非常好<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-20 14:42:04</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>aliang</span>
 </div><div class=_2_QraFYR_0>老师，mysql还有一个参数是innodb_open_files，资料上说作用是限制Innodb能打开的表的数量。它和open_files_limit之间有什么关系吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题。<br><br>在InnoDB引擎打开文件超过 innodb_open_files这个值的时候，就会关掉一些之前打开的文件。<br><br>其实我们文章中 ，InnoDB分区表使用了本地分区策略以后，即使分区个数大于open_files_limit ，打开InnoDB分区表也不会报“打开文件过多”这个错误，就是innodb_open_files这个参数发挥的作用。<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-21 14:47:17</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>1：啥是分区表？<br>创建表的时候，使用了数据分区相关的语法，存储数据的时候，存储引擎会根据分区规则将不同的数据存入不同的分区文件。<br>2：使用分区表的劣势？<br>2-1：MySQL 在第一次打开分区表的时候，需要访问所有的分区——打开的表较多，性能糟糕也可能报打开的表超过设置的问题。<br>2-2：在 server 层，认为这是同一张表，因此所有分区共用同一个 MDL 锁——锁粒度大，影响并发度，站在Server看也是合理的，不过站在存储引擎的角度看就不合理了。<br>2-3：在引擎层，认为这是不同的表，因此 MDL 锁之后的执行过程，会根据分区表规则，只访问必要的分区——被访问到的分区。<br>3：使用分区表的优势？<br>分区表的一个显而易见的优势是对业务透明，相对于用户分表来说，使用分区表的业务代码更简洁。还有，分区表可以很方便的清理历史数据。<br>4：啥时候适合使用分区表？<br>单表过大时，使用时注意一下两点<br>4-1：分区并不是越细越好。实际上，单表或者单分区的数据一千万行，只要没有特别大的索引，对于现在的硬件能力来说都已经是小表了。<br>4-2：分区也不要提前预留太多，在使用之前预先创建即可。比如，如果是按月分区，每年年底时再把下一年度的 12 个新分区创建上即可。对于没有数据的历史分区，要及时的 drop 掉。<br>5：使用分区表，有其特点的根本原因？<br>对于Server层，分区表还是一个表<br>对于存储引擎层，分区表会是多张表</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-09 09:17:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>万勇</span>
 </div><div class=_2_QraFYR_0>老师，请问add column after column_name跟add column不指定位置，这两种性能上有区别吗？我们在add column 指定after column_name的情况很多。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 仅仅看性能，是没什么差别的<br><br>但是建议尽量不要加after column_name，<br>也就是说尽量加到最后一列。<br><br>因为其实没差别，但是加在最后有以下两个好处：<br>1. 开始有一些分支支持快速加列，就是说如果你加在最后一列，是瞬间就能完成，而加了after column_name，就用不上这些优化（以后潜在的好处）<br><br>2. 我们在前面的文章有提到过，如果怕对线上业务造成影响，有时候是通过“先做备库、切换、再做备库”这种方式来执行ddl的，那么使用after column_name的时候用不上这种方式。<br><br>实际上列的数据是不应该有影响的，还是要形成好习惯😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-21 17:41:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>郭江伟</span>
 </div><div class=_2_QraFYR_0>此时主键包含自增列+分区键，原因为对innodb来说分区等于单独的表，自增字段每个分区可以插入相同的值，如果主键只有自增列无法完全保证唯一性。<br>测试表如下：<br>mysql> show create table t\G<br> Table: t<br>Create Table: CREATE TABLE `t` (<br> `id` int(11) NOT NULL AUTO_INCREMENT,<br> `ftime` datetime NOT NULL,<br> `c` int(11) DEFAULT NULL,<br> PRIMARY KEY (`id`,`ftime`),<br> KEY `ftime` (`ftime`)<br>) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4<br>/*!50100 PARTITION BY RANGE (YEAR(ftime))<br>(PARTITION p_2017 VALUES LESS THAN (2017) ENGINE = InnoDB,<br> PARTITION p_2018 VALUES LESS THAN (2018) ENGINE = InnoDB,<br> PARTITION p_2019 VALUES LESS THAN (2019) ENGINE = InnoDB,<br> PARTITION p_others VALUES LESS THAN MAXVALUE ENGINE = InnoDB) */<br>1 row in set (0.00 sec)<br>mysql> insert into t values(1,'2017-4-1',1),(1,'2018-4-1',1);<br>Query OK, 2 rows affected (0.02 sec)<br>mysql> select * from t;<br>+----+---------------------+------+<br>| id | ftime | c |<br>+----+---------------------+------+<br>| 1 | 2017-04-01 00:00:00 | 1 |<br>| 1 | 2018-04-01 00:00:00 | 1 |<br>+----+---------------------+------+<br>2 rows in set (0.00 sec)<br><br>mysql> insert into t values(null,'2017-5-1',1),(null,'2018-5-1',1);<br>Query OK, 2 rows affected (0.02 sec)<br><br>mysql> select * from t;<br>+----+---------------------+------+<br>| id | ftime | c |<br>+----+---------------------+------+<br>| 1 | 2017-04-01 00:00:00 | 1 |<br>| 2 | 2017-05-01 00:00:00 | 1 |<br>| 1 | 2018-04-01 00:00:00 | 1 |<br>| 3 | 2018-05-01 00:00:00 | 1 |<br>+----+---------------------+------+<br>4 rows in set (0.00 sec)</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-20 09:36:55</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>☞</span>
 </div><div class=_2_QraFYR_0>老师确认下，5.7.9之后的innodb分区表，是访问第一个表时不会去打开所有的分区表了吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 第一次访问的时候，要打开所有分区的<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 16:35:20</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>wljs</span>
 </div><div class=_2_QraFYR_0><br>老师我想问个问题 我们公司一个订单表有110个字段 想拆分成两个表 第一个表放经常查的字段 第二个表放不常查的 现在程序端不想改sql，数据库端来实现 当查询字段中 第一个表不存在 就去关联第二个表查出数据 db能实现不</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 用view可能可以实现部分你的需求，但是强烈不建议这么做。<br>业务不想修改，就好好跟他们说，毕竟这样分（常查和不常查的垂直拆分）是合理的，对读写性能都有明显的提升的。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-20 08:48:51</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>权恒星</span>
 </div><div class=_2_QraFYR_0>这个只适合单机吧？集群没法即使用innodb引擎，又支持分区表吧，只能使用中间件了。之前调研了一下，官方只有ndb cluster才支持分区表？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对这篇文章讲的是单机上的单表多分区</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-20 20:34:51</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>怀刚</span>
 </div><div class=_2_QraFYR_0>请教下采用”先做备库、切换、再做备库”DDL方式不支持AFTER COLUMN是因为BINLOG原因吗？<br>以上DDL方式会存在影响“有损”的吧？“无损”有哪些方案呢？如果备库承载读请求但又不能接受“长时间”延时</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 对，binlog对原因<br>2. 如果延迟算损失，确实是有损的。备库上的读流量要先切换到主库（也就是为什么需要在低峰期做做个操作）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-09 10:01:56</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>千木</span>
 </div><div class=_2_QraFYR_0>老师您好，你在文章里面有说通用分区规则会打开所有引擎文件导致不可用，而本地分区规则应该是只打开单个引擎文件，那你不建议创建太多分区的原因是什么呢？如果是本地分区规则，照例说是不会影响的吧，叨扰了</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: “本地分区规则应该是只打开单个引擎文件”，并不是哈，我在文章末尾说了，也会打开所有文件的，只是说本地分区规则有优化，比如如果文件数过多，就会淘汰之前打开的文件句柄（暂时关掉）。<br><br>所以分区太多，还是会有影响的<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-20 09:46:22</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Q</span>
 </div><div class=_2_QraFYR_0>老师 请问下 网站开发数据库表是myisam和innodb混合引擎 考虑管理比较麻烦 想统一成innodb 请问是否影响数据库或带来什么隐患吗？ 网站是网上商城购物类型的</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 应该统一成innodb<br>网上商城购物类型更要用InnoDB，因为MyISAM并不是crash-safe的。<br><br>测试环境改完回归下</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-20 21:25:25</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>分清云淡</span>
 </div><div class=_2_QraFYR_0>阿里云的DRDS就是分库分表的中间件典型代表。自己实现了一个层Server访问层在这一层进行分库分表（对透明），然后MySQL只是相当于存储层。一些Join、负载Order by/Group by都在DRDS中间件这层完成，简单的逻辑插叙计算完对应的分库分表后下推给MySQL https://www.aliyun.com/product/drds</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 17:01:18</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>helloworld.xs</span>
 </div><div class=_2_QraFYR_0>请教个问题，一般mysql会有查询缓存，但是update操作也有缓存机制吗？使用mysql console第一次执行一个update SQL耗时明显比后面执行相同update SQL要慢，这是为什么？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: update的话，主要应该第一次执行的时候，数据都读入到了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-21 18:37:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>布衣骇客</span>
 </div><div class=_2_QraFYR_0>这次竟然只需要再读两次就能读懂，之前接触过mycat和sharding-jdbc实现分区,老师能否谈谈这方面的呢</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 赞两次 😆<br><br>这个就是我们文章说的“分库分表中间件”<br>不过看到不少公司都会要在这基础上做点定制化</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-20 15:51:23</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>zc</span>
 </div><div class=_2_QraFYR_0>alter table t drop partition 不加元数据锁吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 要加 不过因为时间很短，可以认为是安全操作</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-02-10 16:19:14</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>daka</span>
 </div><div class=_2_QraFYR_0>本期提到了ndb，了解了下，这个存储引擎高可用及读写可扩展性功能都是自带，感觉是不错，为什么很少见人使用呢？生产不可靠？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-21 22:55:06</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>NICK</span>
 </div><div class=_2_QraFYR_0>老师，如果用户分区，业务要做分页过滤查询怎么做才好？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 分区表的用法跟普通表，在sql语句上是相同的。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 15:00:00</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>undifined</span>
 </div><div class=_2_QraFYR_0>老师，有两个问题<br>1. 图三的间隙锁，根据“索引上的等值查询，向右遍历时且最后一个值不满足等值条件的时候，next-key lock 退化为间隙锁”，不应该是 (-∞,2017-4-1],(2017-4-1,2018-4-1)吗，图4左边的也应该是 (-∞,2017-4-1],(2017-4-1, supernum)，是不是图画错了<br>2. 现有的一个表，一千万行的数据， InnoDB 引擎，如果以月份分区，即使有 MDL 锁和初次访问时会查询所有分区，但是综合来看，分区表的查询性能还是要比不分区好，这样理解对吗<br><br>思考题的答案 <br>ALTER TABLE t<br> ADD COLUMN (id INT AUTO_INCREMENT ),<br> ADD PRIMARY KEY (id, ftime);<br><br>麻烦老师解答一下，谢谢老师</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 我们语句里面是 where ftime='2017-5-1' 哈，不是“4-1”<br>2. “分区表的查询性能还是要比不分区好，这样理解对吗”，其实还是要看表的索引情况。<br> 当然一定存在一个数量级N，把这N行分到10个分区表，比把这N行放到一个大表里面，效率高</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-20 10:53:49</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>何霖</span>
 </div><div class=_2_QraFYR_0>尊敬的作者，你说“分区并不是越细越好。实际上，单表或者单分区的数据一千万行，只要没有特别大的索引，对于现在的硬件能力来说都已经是小表了”，怎么判断索引是大索引还是小索引啊。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-05-19 09:40:15</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>程辉</span>
 </div><div class=_2_QraFYR_0>奇哥，我们现在有个表的数据量上亿了，每个月百万+的数据量，考虑做分区。表结构：<br>id bigint(20) auto_increment,<br>imei varchar(32),<br>atime timestamp,<br>primary key (id),<br>unique key imei (imei)<br>经讨论后考虑对atime做range分区，然后因为分区字段必须被包含在主键和唯一索引上，imei的唯一索引已经没有意义了，变成下面的表结构：<br>id bigint(20) primary key,<br>imei varchar(32),<br>atime timestamp,<br>primary key (id, atime),<br>key imei (imei)<br>partition by range ( UNIX_TIMESTAMP(atime) ) (<br>partition p2018_01_06 values less than ( UNIX_TIMESTAMP('2018-07-01') ),<br>partition p2018_07_12 values less than ( UNIX_TIMESTAMP('2019-01-01') ),<br>...<br>)<br>之前imei有唯一索引，是可以用REPLACE INTO做批量插入的，这样插入很快。<br>但是分区之后，因为imei失去了唯一性，在插入的时候要先去查这个imei存不存在，不存在再插入，没办法做批量插入了，性能下降很多。<br>这个有办法解决吗？</div><div class=_10o3OAxT_0>
@@ -384,16 +404,16 @@ insert into t values('2017-4-1',1),('2018-4-1',1);
 <a class="nav nav-prev" href=/1/42/ title=42_grant之后要跟着flushprivileges吗？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/44/ title=44_答疑文章（三）：说一说这些好问题 style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

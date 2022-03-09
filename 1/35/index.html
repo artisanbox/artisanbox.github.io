@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>35_join语句怎么优化？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>35_join语句怎么优化？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/35/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -325,101 +325,121 @@ create table t3 like t2;
 insert into &hellip; //初始化三张表的数据
 </code></pre><p>语句的需求实现如下的join逻辑：</p><pre><code>select * from t1 join t2 on(t1.a=t2.a) join t3 on (t2.b=t3.b) where t1.c&gt;=X and t2.c&gt;=Y and t3.c&gt;=Z;
 </code></pre><p>现在为了得到最快的执行速度，如果让你来设计表t1、t2、t3上的索引，来支持这个join语句，你会加哪些索引呢？</p><p>同时，如果我希望你用straight_join来重写这个语句，配合你创建的索引，你就需要安排连接顺序，你主要考虑的因素是什么呢？</p><p>你可以把你的方案和分析写在留言区，我会在下一篇文章的末尾和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>我在上篇文章最后留给你的问题，已经在本篇文章中解答了。</p><p>这里我再根据评论区留言的情况，简单总结下。根据数据量的大小，有这么两种情况：</p><ul></p><li>@长杰 和 @老杨同志 提到了数据量小于old区域内存的情况；</li><li>@Zzz 同学，很认真地看了其他同学的评论，并且提了一个很深的问题。对被驱动表数据量大于Buffer Pool的场景，做了很细致的推演和分析。</li></ul><p>给这些同学点赞，非常好的思考和讨论。</p><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>IceGeek17</span>
 </div><div class=_2_QraFYR_0>节后补课，有几个问题：<br><br>问题一：<br>对于BKA算法的流程理解，用文中的例子，先把t1表（小表）中查询需要的字段放入join_buffer, 然后把join_buffer里的字段值批量传给t2表，先根据索引a查到id，然后得到一批主键id，再根据主键id排序，然后再根据排完序的id去主键索引查数据（这里用到MRR）<br>理解是否正确？<br>这里对于主键id排序是在哪里做的，是在join_buffer里，还是另外再开辟一块临时内存？如果在join_buffer里，那join_buffer里的每行内容是不是：t2.id + t1查询必须的字段，并且join_buffer里是根据id排序的？<br><br>问题二：<br>虽然MySQL官方没有支持hash join，但是之前看到文章说，MariaDB已经支持hash join，能不能后续在答疑文章中简单总结下mariaDB支持的join算法<br><br>问题三：<br>在实际项目中，一个比较困惑的问题，看到过这样的类似写法：<br>select xxx from t1 join t2 on t1.id = t2.id for update （目的是获取几个表上最新的数据，并且加上锁，防止数据被更新）<br>这里有几个问题：<br>1) 像这样 join + for update，表上的加锁规则是怎么样的？是不是在需要join的两个表上根据具体的查询执行过程都加上锁？<br>2）像这样 join + for update 的用法是否合理？碰到这样的场景，应该怎么去做？<br><br>问题四：<br>看过阿里输出的开发手册里，强调 “最多不超过三表join”，实际项目中，给我感觉很难做到所有业务都不超过三表join，那这里的问题就是，有什么相关的经验方法，可以尽量降低参与join的数据表？<br>比如，在数据表里添加冗余字段，可以降低参与join的数据表数量，还有什么其他好的方法？<br><br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-18 17:02:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>我准备给<br>t1增加索引c<br>t2增加组合索引b,c<br>t3增加组合索引b,c<br>select * from t1 straight_join t2 on(t1.a=t2.a) straight_join t3 on (t2.b=t3.b) where t1.c>=X and t2.c>=Y and t3.c>=Z;<br><br>另外我还有个问题，开篇提到的这句sql select * from t1 where a>=1 and a&lt;=100;<br>a是索引列，如果这句索引有order by a，不使用MRR 优化，查询出来就是按a排序的，使用了mrr优化，是不是要额外排序<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对，好问题，用了order by就不用MRR了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 15:36:47</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>老师您好，新年快乐~~<br><br>关于三表join有一个疑惑点需要确认：<br><br>老师您在评论中说到，三表join不会是前两个表join后得到结果集，再和第三张表join。<br>针对这句话，我的理解是：<br>假设我们不考虑BKA，就按照一行行数据来判断的话，流程应该如下（我会将server端和innodb端分的很清楚）：<br>表是t1 ,t2 ,t3。 t1 straight_join t2 straight_join t3，这样的join顺序。<br>1. 调用innodb接口，从t1中取一行数据，数据返回到server端。<br>2. 调用innodb接口，从t2中取满足条件的数据，数据返回到server端。<br>3. 调用innodb接口，从t3中取满足条件的数据，数据返回到server端。<br>上面三步之后，驱动表 t1的一条数据就处理完了，接下来重复上述过程。<br>（如果采用BKA进行优化，可以理解为不是一行行数据的提取，而是一个范围内数据的提取）。<br><br>按照我上面的描述，确实没有前两表先join得结果集，然后再join第三张表的过程。<br>不知道我上面的描述的流程对不对？（我个人觉得，将innodb的处理和server端的处理分隔清晰，对于sql语句的理解，会透彻很多）</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年快乐，分析得很好。<br><br>可以再补充一句，会更好理解你说的这个过程 ：<br> 如果采用BKA进行优化,每多一个join，就多一个join_buffer</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-02 13:18:22</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>天王</span>
 </div><div class=_2_QraFYR_0>join语句的优化，NLJ算法的优化，MRR优化器会在join_buffer进行主键的排序，然后去主键索引树上一个个的查找，因为按照主键顺序去主键索引树上查找，性能会比较高，MRR优化接近顺序读，性能会比较高。BKA算法是对NLJ算法的优化，一次取出一批数据的字段到join_buffer中，然后批量join，性能会比较好。BKA算法依赖于MRR，因为批量join找到被驱动表的非聚集索引字段通过MRR去查找行数据</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-13 08:54:57</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>郭健</span>
 </div><div class=_2_QraFYR_0>老师，有几个问题还需要请教一下:<br>1.上一章t1表100条数据，t21000条数据，mysql会每次都会准确的找出哪张表是合理的驱动表吗？还是需要人为的添加straight_join。<br>2.像left join这种，左边一定是驱动表吧？以左边为标准查看右边有符合的条件，拼成一条数据，看到你给其他同学的评论说可能不是，这有些疑惑。<br>3.在做join的时候，有些条件是可以放在on中也可以放在where中，比如(t1.yn=1 和t2.yn=1)这种简单判断是否删除的。最主要的是，需要根据两个条件才能join的(productCode和custCode),需要两个都在on里，还是一个在on中，一个在where中更好呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 正常是会自己找到合理的，但是用前explain是好习惯哈<br>2. 这个问题的展开我放到答疑文章中哈<br>3. 这也是好问题，需要分析是使用哪种算法，也放到答疑文章展开哈。<br><br>新年快乐~<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-07 00:05:16</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>asdf100</span>
 </div><div class=_2_QraFYR_0>最近遇到这个需求，in里面的值个数有5万左右，出现的情况很少但存在，这种情况怎么处理。？手动创建临时表再join？<br><br>另外in内的值用不用手动排序？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不需要手动排序<br><br>不过5万个值太凶残了，语句太长不太好<br><br>这种就是手动创建内存临时表，建上hash索引，填入数据，然后join</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 11:00:21</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>纸片人</span>
 </div><div class=_2_QraFYR_0>知识点总结<br>1、翻译嵌套查询过程<br>Join = 嵌套查询<br>示例：t1 join t2 on t1.a=t2.a where t1.id>=X and t2.id>=Y<br>已知：驱动表t1的规模是N，被驱动表t2的规模是M<br>伪代码：<br>SNLJ: 扫描次数NxM, 计算次数NxM<br>for r1 in t1 /* read from ~~disk~~ InnoDB(storage engine) */<br> for r2 in t2<br> if r1.a=r2.a<br> if r1.id>=X and r2.id>=Y<br> add r1+r2 into result_set<br> end<br>end<br><br><br>BNLJ: 扫描次数N+KxM，计算次数NxM，K = Nxrow_size/join_buffer_size+1<br>for r1 in t1<br> add r1 into join_buffer<br>end<br>for r2 in t2<br> for r1 in join_buffer /* read from ~~memory~~ join_buffer which is controlled by Server */<br> if r1.a=r2.a<br> if r1.id>=X and r2.id>=Y<br> add r1+r2 into result_set<br> end<br>end<br><br><br>INLJ: 扫描次数&lt;N+N，计算次数N + Nx2xlnM/ln2<br>for r1 in t1<br> locate r1.a on t2 with index a /* search B+Tree */<br> if r1.id>=X and r2.id>=Y<br> add r1+r2 into result_set<br>end<br><br><br><br>2、Join优化思路<br>MRR优化思想：回表前，按主键排序，执行读取操作，以保证顺序读。<br>BKA算法：先按BNLJ的思想批量扫描驱动表数据，再将之按被驱动表上的索引排序，取值。<br>示例：t1 join t2 on t1.a=t2.b where t1.id>=X and t2.id>=Y<br>伪代码：<br>for r1 in t1<br> add r1 into join_buffer<br>end <br>sort join_buffer by r1.a<br>for r1 in sort_buffer<br> locate r1.a on t2 with index b /* search B+Tree */<br> if r1.id>=X and r2.id>=Y<br> add r1+r2 into result_set<br>end<br><br><br>3、BNLJ转BKA<br>方案一：在被驱动表的join字段上添加索引，相当于BNLJ先转INLJ再转BKA。<br>方案二：不适宜添加索引的情况（查询语句使用频率较低），引入临时表。具体操作步骤如下：<br> a. 先根据where过滤被驱动表t2，并将结果存入临时表tmp_t；<br> b. 在临时表上为join字段b添加索引；<br> c. 让驱动表t1连接临时表tmp_t。<br>（注意，由于步骤b中需要为临时表创建索引，所以此方案当且仅当tmp_t规模远小于t2时才划算！）<br><br><br>4、扩展hash-join<br>可视为BNLJ进阶，将join_buffer变成Hash表，处理流程如下：<br><br>hash-join:<br>for r1 in t1<br> add &lt;key:r1.a,value:r1> into join_buffer<br>end<br>for r2.a in t2 <br> locate r2.a in t1 with hash index /* read from join_buffer */<br> if r1.id>=X and r2.id>=Y<br> add r1+r2 into result_set<br>end<br><br><br>分析：<br> a. 驱动表在内环，以降低内存占用率。<br> b. 如果t1的尺寸大于join_buffer，那么我们就不得不多次全表扫描t2了。因为过滤条件的逻辑运算符号是and，所以还有优化的余地，可将驱动表的过滤提前，来降低t1的大小。<br>for r1 in t1<br> if r1.id>=X<br> add &lt;key:r1.a,value:r1> into join_buffer<br>end<br>for r2.a in t2 <br> locate r2.a in t1 with hash index /* read from join_buffer */<br> if r2.id>=Y<br> add r1+r2 into result_set<br>end<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-11 04:41:07</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>HuaMax</span>
 </div><div class=_2_QraFYR_0>前提假设：t1.c>=X可以让t1成为小表。同时打开BKA和MRR。<br>1、t1表加（c,a)索引。理由：A、t1.c>=X可以使用索引；B、加上a的联合索引，join buffer里放入的是索引（c,a）而不是去主键表取整行，用于与表t2的t1.a = t2.a的join查询，不过返回SELECT * 最终还是需要回表。<br>2、t2表加(a,b,c)索引。理由：A、加上a避免与t1表join查询的BNL；B、理由同【1-B】；C、加上c不用回表判断t2.c>=Y的筛选条件<br>3、t3表加（b,c）索引。理由：A、避免与t2表join查询的BNL;C、理由同【2-C】<br><br>问题：<br>1、【1-B】和【2-B】由于select *要返回所有列数据，不敢肯定join buffer里是回表的整行数据还是索引（c,a)的数据，需要老师解答一下；不过值得警惕的是，返回的数据列对sql的执行策略有非常大的影响。<br>2、在有join查询时，被驱动表是先做join连接查询，还是先筛选数据再从筛选后的临时表做join连接？这将影响上述的理由【2-C】和【3-C】<br><br>使用straight_join强制指定驱动表，我会改写成这样:select * from t2 STRAIGHT_JOIN t1 on(t1.a=t2.a) STRAIGHT_JOIN t3 on (t2.b=t3.b) where t1.c>=X and t2.c>=Y and t3.c>=Z;<br>考虑因素包括：<br>1、驱动表使用过滤条件筛选后的数据量，使其成为小表，上面的改写也是基于t2是小表<br>2、因为t2是跟t1,t3都有关联查询的，这样的话我猜测对t1,t3的查询是不是可以并行执行，而如果使用t1,t3作为主表的话，是否会先跟t2生成中间表，是个串行的过程？<br>3、需要给t1加（a,c)索引，给t2加（c,a,b）索引。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍 很深入的思考哈<br>1. select * ，所以放整行；你说得对，select * 不是好习惯；<br>2. 第一次join后就筛选；第二次join再筛选；<br>新春快乐~</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-02 11:42:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>请教老师两个问题:<br>1. 通过主键索引找到的数据会会不会先在内存中查询, 如果没有再去磁盘查询?<br>2. 为什么在通过主键索引查询数据时, 符合条件的数据以单条数据的方式读到内存中而不是以一整个数据页的方式读到内存中? </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 通过普通索引也会，InnoDB的访问模式都是先内存，不在内存中，才到磁盘找；<br>2. 是以数据页的方式读到内存的，然后在从内存的这个数据页（默认16k）里面找到数据。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 15:00:06</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>涛哥哥</span>
 </div><div class=_2_QraFYR_0>老师，对于现在的固态硬盘，这样类似顺序读写的数据库优化，不就不起作用了啊？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 固态硬盘的顺序写还是比随机写快的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-20 08:46:54</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>TKbook</span>
 </div><div class=_2_QraFYR_0>BNL 算法效率低，建议你都尽量转成 BKA 算法。优化的方向就是给驱动表的关联字段加上索引；<br>老师最后总结的时候，这句话后面那句，应该是给被驱动表的关联字段加上索引吧。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对的，👍细致<br><br>已经发起勘误，谢谢你哦，新年快乐</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 15:00:25</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>憶海拾貝</span>
 </div><div class=_2_QraFYR_0>节后开工宜补课.<br><br>按照文中说明的MRR设计思路, 是否可以反推出: 被驱动表使用非递增主键(比如UUID作为主键),就没有必要开启MRR?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 如果是非随机的主键，确实没必要了😅<br><br>优化第一步还是应该把主键处理一下<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-13 11:43:27</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>poppy</span>
 </div><div class=_2_QraFYR_0>select * from t1 join t2 on(t1.a=t2.a) join t3 on (t2.b=t3.b) where t1.c>=X and t2.c>=Y and t3.c>=Z;<br>老师，我的理解是真正做join的三张表的大小实际上是t1.c>=X、t2.c>=Y、t3.c>=Z对应满足条件的行数，为了方便快速定位到满足条件的数据，t1、t2和t3的c字段最好都建索引。对于join操作，按道理mysql应该会优先选择join之后数量比较少的两张表先来进行join操作，例如满足t1.a=t2.a的行数小于满足t2.b=t3.b的行数，那么就会优先将t1和t2进行join，选择t1.c>=X、t2.c>=Y中行数少的表作为驱动表，另外一张作为被驱动表，在被驱动表的a的字段上建立索引，这样就完成了t1和t2的join操作并把结果放入join_buffer准备与t3进行join操作，则在作为被驱动表的t3的b字段上建立索引。不知道举的这个例子分析得是否正确，主要是这里不知道t1、t2、t3三张表的数据量，以及满足t1.c>=X ，t2.c>=Y ，t3.c>=Z的数据量，还有各个字段的区分度如何，是否适合建立索引等。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯 这个问题就是留给大家自己设定条件然后分析的，分析得不错哦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 15:24:30</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>林肯</span>
 </div><div class=_2_QraFYR_0>可喜的是：MySQL8.0已经支持hash join了</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-08-21 18:19:54</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>dzkk</span>
 </div><div class=_2_QraFYR_0>老师，记得我之前看mysql的join是和版本有关系的，另外NLJ是一个统称，被分为了SNLJ(Simple Nested-Loop Join，5.5版本之前采用的，当被驱动表上没有索引的时候使用，该方法比较粗暴，所以后来通过BNLJ进行了优化)、INLJ(Index Nested-Loop Join，被驱动表上有索引)、BNLJ(Block Nested-Loop Join，被驱动表上没有索引)，另外了解到mariadb是支持了hash join的Block Nested Loop Hash (BNLH) join，没有使用过，不知道效果怎么样。不知道我了解的信息对不对。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你了解得比较全面哈<br><br>不过我怕在文章中写这么多概念，会看得晕。<br><br>实际上现在 Simple Nested-Loop Join 已经不会用了（太慢），有使用的就是 Index Nested-Loop Join 和 BKA优化哈。<br><br>MariaDB在优化器上做了很多工作，之前的文章本来也想介绍，后来发现得先把官方版本的说明白，然后我们可以在评论区扩展讨论。<br><br>BNLH 在MariaDB 5.3就引入了，流程跟我们“扩展-hash join”这段类似，对于等值join的效果还是很好的。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 09:56:09</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>bluefantasy3</span>
 </div><div class=_2_QraFYR_0>请教老师一个问题：innodb的Buffer Pool的内存是innodb自己管理还是使用OS的page cache? 我理解应该是innodb自己管理。我在另一个课程里看到如果频繁地把OS的/proc/sys/vm/drop_caches 改成 1会影响MySQL的性能，如果buffer pool是MySQL自己管理，应该不受这个参数影响呀？请解答。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 是MySQL 自己管理的<br>2. 一般只有数据文件是o_direct的，redo log 和 binlog 都是有用到文件系统的page cache, 因此多少有影响的<br><br>好问题👍🏿 </p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-02 17:05:33</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>老师你好，今天在回顾这篇文章做总结的时候，突然有一个疑惑：<br><br>我们假设t2的b上面有索引，该语句是左连接<br><br>select * from t1 left join t2 on (t1.b=t2.b) where t2.b>=1 and t2.b&lt;=2000;<br><br>和<br><br>select * from t1 left join t2 on (t1.b=t2.b) and t2.b>=1 and t2.b&lt;=2000;<br><br>到底在内部执行流程上到底有什么区别？？<br>因为实际工作中左连接用得挺多的。<br>（这篇文章都是直连，所以使用on和where最后的结果都一样，但是左连接就不是了）<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你这两个语句是一样的。。是不是第二个语句多了left？<br><br>left join因为语义上要求所有左边表的数据行都必须存在结果里面，所以执行流程不太一样，我在答疑文章中说哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-13 11:21:49</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>库淘淘</span>
 </div><div class=_2_QraFYR_0>set optimizer_switch='mrr=on,mrr_cost_based=off,batched_key_access=on';<br>create index idx_c on t2(c);<br>create index idx_a_c on t1(a,c);<br>create index idx_b_c on t3(b,c);<br>mysql> explain select * from t2 <br> -> straight_join t1 on(t1.a=t2.a)<br> -> straight_join t3 on(t2.b=t3.b) <br> -> where t1.c> 800 and t2.c>=600 and t3.c>=500;<br>+----+-------------+-------+------------+---------------------------------------<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra +----------------------------------------<br>| 1 | SIMPLE | t2 | NULL | range | idx_c | idx_c | 5 | NULL | 401 | 100.00 | Using index condition; Using where; Using MRR |<br>| 1 | SIMPLE | t1 | NULL | ref | idx_a_c | idx_a_c | 5 | test.t2.a | 1 | 33.33 | Using index condition; Using join buffer (Batched Key Access) |<br>| 1 | SIMPLE | t3 | NULL | ref | idx_b_c | idx_b_c | 5 | test.t2.b | 1 | 33.33 | Using index condition; Using join buffer (Batched Key Access) |<br>+----+-------------+-------+------------+-----+---------------------------------------<br>3 rows in set, 1 warning (0.00 sec)<br>以自己理解如下，有问题请老师能够指出<br>1.根据查询因是select * 肯定回表的，其中在表t2创建索引idx_c,为了能够使用ICP,MRR，如果c字段重复率高或取值行数多，可以考虑不建索引<br>2.已t2 作为驱动表，一方面考虑其他两表都有关联,t2表放入join buffer后关联t1后，再关联t2 得出结果 再各回t2,t3表取出 得到结果集（之前理解都是t1和t2join得结果集再与t3join，本次理解太确定）<br>3.t2、t3表建立联合查询目的能够使用ICP</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍<br><br>BKA是从Index Nexted-Loop join 优化而来的，并不是“t1和t2join得结果集再与t3join”，而是直接嵌套循环执行下去。<br><br>这个效果相当不错了，MRR，BKA都用上</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 16:42:36</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>人间</span>
 </div><div class=_2_QraFYR_0>刚刚凌乱了的那个问题，经explain验证，explain SELECT a.* FROM sys_xxtx a JOIN baq_ryxx r ON a.ryid = r.ID WHERE a.dwbh = '7E0A13A14101D0A8E0430A0F23BCD0A8' ORDER BY txsj DESC LIMIT 0,20;<br>使用的索引是txsj ；<br>explain SELECT a.* FROM sys_xxtx a JOIN baq_ryxx r ON a.ryid = r.ID WHERE a.dwbh = '7E0A13A14101D0A8E0430A0F23BCD0A8' ORDER BY txsj DESC LIMIT 5000,20;使用的索引是dwbh ；<br>然后回忆起了第10张：MySQL为什么有时候会选错索引？<br>但是从扫描行数、是否使用排序等来看在 LIMIT 5000,20时候也应该优选txsj ?可是这个时候选择的索引是dwbh, 查询时间也大大缩短</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯，这个跟我们第十篇那个例子挺像的<br><br>我们把limit 1 改成limit 100的时候，MySQL认为，要扫描到“100行那么多”，<br>你这里是limit 5000，200， 这个5000会让优化器认为，选txsj会要扫“很多行，可能很久”<br><br>这个确实是优化器还不够完善的地方，有时候不得不用force index~</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 16:30:44</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>人间</span>
 </div><div class=_2_QraFYR_0>order by cjsj desc limit 0,20 explain Extra只是显示 Using where ，执行时间 7秒钟<br>order by cjsj desc limit 5000,20 explain Extra只是显示 Using index condition; Using where; Using filesort, 执行时间 0.1 秒<br>有些许的凌乱了@^^@</div><div class=_10o3OAxT_0>
@@ -429,16 +449,16 @@ insert into &hellip; //初始化三张表的数据
 <a class="nav nav-prev" href=/1/34/ title=34_到底可不可以使用join？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/36/ title=36_为什么临时表可以重名？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>09_普通索引和唯一索引，应该怎么选择？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
-<link href=/css/hybrid.css?1646794261 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
-<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
-<link href=/css/theme.css?1646794261 rel=stylesheet>
-<link href=/css/tabs.css?1646794261 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
-<link href=/css/theme-green.css?1646794261 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646794261></script>
+<title>09_普通索引和唯一索引，应该怎么选择？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646795377 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646795377 rel=stylesheet>
+<link href=/css/hybrid.css?1646795377 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646795377 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646795377 rel=stylesheet>
+<link href=/css/auto-complete.css?1646795377 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646795377 rel=stylesheet>
+<link href=/css/theme.css?1646795377 rel=stylesheet>
+<link href=/css/tabs.css?1646795377 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646795377 rel=stylesheet>
+<link href=/css/theme-green.css?1646795377 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646795377></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/9/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
-<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646795377></script>
+<script type=text/javascript src=/js/auto-complete.js?1646795377></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646794261></script>
+<script type=text/javascript src=/js/search.js?1646795377></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -279,101 +279,121 @@ MySQL实战45讲
 这样，session A看到的就是我截图的效果了。</p><p>其实，还有另外一种场景，同学们在留言区都还没有提到。</p><p><img src=https://static001.geekbang.org/resource/image/e2/fa/e24a0689571337959138d787c408defa.png alt></p><p>这个操作序列跑出来，session A看的内容也是能够复现我截图的效果的。这个session B’启动的事务比A要早，其实是上期我们描述事务版本的可见性规则时留的彩蛋，因为规则里还有一个“活跃事务的判断”，我是准备留到这里再补充的。</p><p>当我试图在这里讲述完整规则的时候，发现第8篇文章<a href=https://time.geekbang.org/column/article/70562>《事务到底是隔离的还是不隔离的？》</a>中的解释引入了太多的概念，以致于分析起来非常复杂。</p><p>因此，我重写了第8篇，这样我们人工去判断可见性的时候，才会更方便。【看到这里，我建议你能够再重新打开第8篇文章并认真学习一次。如果学习的过程中，有任何问题，也欢迎你给我留言】</p><p>用新的方式来分析session B’的更新为什么对session A不可见就是：在session A视图数组创建的瞬间，session B’是活跃的，属于“版本未提交，不可见”这种情况。</p><p>业务中如果要绕过这类问题，@约书亚提供了一个“乐观锁”的解法，大家可以去上一篇的留言区看一下。</p><p>评论区留言点赞板：</p><blockquote>
 <p>@某、人、@夏日雨、@周巘、@李金刚 等同学提了一个很好的问题，就是我们今天答案的session B’ 的情况；<br>
 @justin 提到了提交和未提交版本的区别对待，@倪大人 提到了读提交和当前读的区别，都是经过了思考后提出的好问题，大家可以去留言区看看。</p></blockquote><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>先回答今天的问题,今天的答案应该在文章里就能找到<br>1.change buffer有一部分在内存有一部分在ibdata.<br>做purge操作,应该就会把change buffer里相应的数据持久化到ibdata<br>2.redo log里记录了数据页的修改以及change buffer新写入的信息<br>如果掉电,持久化的change buffer数据已经purge,不用恢复。主要分析没有持久化的数据<br>情况又分为以下几种:<br>(1)change buffer写入,redo log虽然做了fsync但未commit,binlog未fsync到磁盘,这部分数据丢失<br>(2)change buffer写入,redo log写入但没有commit,binlog以及fsync到磁盘,先从binlog恢复redo log,再从redo log恢复change buffer<br>(3)change buffer写入,redo log和binlog都已经fsync.那么直接从redo log里恢复。<br><br>老师,我有几个问题想请教下:<br>1.如果是针对非唯一索引和唯一索引的更新和delete而且条件是where 索引值=这种情况,<br>是否二级索引和唯一索引就没有区别呢<br>2.rr模式下,非唯一索引还会加gap,开销应该也不算小吧<br>3.还有老师你是怎么判断内存命中率的,是hit rate嘛？<br>4.ob好像就是这个思路来做的聚簇索引的insert优化,不知道是怎么判断的唯一性<br><br>特别感谢老师,以前的知识都是很碎片化,没有深入的去思考。<br>经过几期的学习以后,感觉思路越来越开阔,以前觉得很高深的知识点,现在也有点豁然开朗的感觉。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 分析很赞，把02篇和这篇文章贯通了.<br><br>问题<br>1. 这时候要“先读后写”，读的时候数据会读入内存，更新的时候直接改内存，就不需要change buffer了<br><br>2. Gap锁取决于业务怎么用哈。我感觉主要是因为gap锁概念比较难说清，大家有点放大它的意思了哈哈<br><br>3. Hit rate <br><br>4. 我不够熟悉，不能乱回答误导你😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-03 21:51:11</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>林晓斌</span>
 </div><div class=_2_QraFYR_0>抱歉做一个名词勘误，把change buffer应用到旧的数据页，得到新的数据页的过程，应该称为merge更合适。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-04 10:29:44</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>虚爱凯平</span>
 </div><div class=_2_QraFYR_0>感觉今天这篇问题很严重啊, 首先说一下我是第一次接触 change buffer这个概念, 可能产生了什么误会..<br>我理解的文中讲述change buffer的作用体现在 针对普通索引(非主键的都是二级索引, 二级索引又包括了唯一索引和普通索引)在有数据update操作(不包括insert)的时候,能有减少io写操作的功能, 而且这个操作是提现在更新表数据上的. 为什么我在这里会理解成update操作呢.. (InnoDB中表就是按索引的方式存放的, 即使我们不主动创建主键 也会生成一个默认的row_id来当做主键, 意味着表一定是有一个主键, 即唯一索引. insert操作 一定会涉及主键索引的变动, 所以change buffer针对 insert 是完全没有用的吗??) <br><br>针对change buffer 我百度了一下, 有文章描述 change buffer 是针对表中包含普通索引的表在insert操作时, 优化 普通索引的更新(在insert时,不会立即更新普通索引 而是保存到change buffer延迟处理). 这么一个功能. 不知道 这个理解是否正确呢?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 第一段的理解不准确哈。<br>insert的时候，写主键是肯定不能用change buffer了，但是同时也会要写其它索引，而其它索引中的“非唯一索引”是可以用的这个机制的；<br><br>第二段，你搜出来的这个不太完整。是这样的，change buffer的前身是insert buffer,只能对insert 操作优化；后来升级了，增加了update/delete的支持，名字也改叫change buffer.<br><br><br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-03 13:34:37</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>想请教一下老师系统表空间跟数据表空间这两个概念各是什么意思.</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 系统表空间就是用来放系统信息的，比如数据字典什么的，对应的磁盘文件是ibdata1, <br>数据表空间就是一个个的表数据文件，对应的磁盘文件就是 表名.ibd</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-09 10:52:58</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>约书亚</span>
 </div><div class=_2_QraFYR_0>早，请您看看我以下疑问：<br>1. 看完后感觉牵扯到之前的内容，又糊涂了。change buffer相当于推迟了更新操作，那对并发控制相关的是否有影响，比如加锁？我一直以为加锁需要把具体的数据页读到内存中来，才能加锁，然而并不是？<br>2. 在change buffer中有此行记录的情况下，再次更改，是增加一条还是原地修改？<br>3. purge行为之后应该不会再产生redo log了吧？<br><br>从应用开发的角度看，还是由数据库保证唯一好。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1 3 好问题<br><br>1. 锁是一个单独的数据结构，如果数据页上有锁，change buffer 在判断“是否能用”的时候，就会认为否<br><br>2. 增加<br><br>3. 是这样的，这个问题你分成两步来考虑。<br>第一步，merge其实是从磁盘读数据页到内存，然后应用，这一步都是更新的内存，同时写redolog<br><br>现在内存变成脏页了，跟磁盘数据不一样。之后就走刷脏页的流程。刷脏页也不用写。<br><br><br>=====<br><br>是否使用唯一索引，这个要看业务有没有保证，和性能是否有问题。<br><br>有几位同学都提了，我加到文末说明一下。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-03 10:15:12</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>包子木有馅</span>
 </div><div class=_2_QraFYR_0>老师你好，我说下我的理解，不知道有没有问题<br>1、changebuffer跟普通数据页一样也是存在磁盘里，区别在于changebuffer是在共享表空间ibdata1里<br>2、redolog有两种，一种记录普通数据页的改动，一种记录changebuffer的改动<br>3、只要内存里脏页（innodb buffer pool）里的数据发生了变化，就一定会记录2中前一种redolog<br>（对数据的修改记录在changebuffer里的时候，内存里是没有这个物理页的，不存在脏页）<br>3、真正对磁盘数据页的修改是通过将内存里脏页的数据刷回磁盘来完成的，而不是根据redolog</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 非常好，尤其括号里那句和最后一句</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-06 10:51:23</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>永光</span>
 </div><div class=_2_QraFYR_0>会导致change buffer丢失，会导致本次未完成的操作数据丢失，但不会导致已完成操作的数据丢失。<br>1.change buffer中分两部分，一部分是本次写入未写完的，一部分是已经写入完成的。<br>2.针对未写完的，此部分操作，还未写入redo log，因此事务还未提交，所以没影响。<br>2.针对，已经写完成的，可以通过redo log来进行恢复。<br><br>所以，不会对数据库造成影响。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 优秀</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-03 07:22:14</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ivan</span>
 </div><div class=_2_QraFYR_0>回答一下melon的问题。<br>change Buffer和数据页一样，也是物理页的一个组成部分，数据结构也是一颗B+树，这棵B+树放在共享表空间中，默认ibdata1中。change buffer 写入系统表空间机制应该和普通表的脏页刷新到磁盘是相同的机制--Checkpoint机制；<br>之所以change buffer要写入系统表空间，是为了保证数据的一致性，change buffer做修改时需要写redo，在做恢复时需要根据redo来恢复change buffer，若是不进行change buffer写入系统表空间，也就是不进行持久化，那么在change buffer写入内存后掉电（也就是篇尾提出的问题），则无法进行数据恢复。这样也会导致索引中的数据和相应表的相应列中的数据不一致。<br>change buffer 写入到了系统表空间，purge 的时候会先查询change buffer里对应的记录，然后进行purge，因为change buffer B+树的key是表空间ID，所以查询根据表空间ID 查询change buffer会很快。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-03 20:01:34</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>壹笙☞漂泊</span>
 </div><div class=_2_QraFYR_0>前两次学了之后没时间总结。。今天继续<br>总结:<br>选择普通索引还是唯一索引？<br>对于查询过程来说：<br>a、普通索引，查到满足条件的第一个记录后，继续查找下一个记录，知道第一个不满足条件的记录<br>b、唯一索引，由于索引唯一性，查到第一个满足条件的记录后，停止检索<br>但是，两者的性能差距微乎其微。因为InnoDB根据数据页来读写的。<br>对于更新过程来说：<br>概念：change buffer<br>当需要更新一个数据页，如果数据页在内存中就直接更新，如果不在内存中，在不影响数据一致性的前提下，InnoDB会将这些更新操作缓存在change buffer中。下次查询需要访问这个数据页的时候，将数据页读入内存，然后执行change buffer中的与这个页有关的操作。<br><br>change buffer是可以持久化的数据。在内存中有拷贝，也会被写入到磁盘上<br><br>purge:将change buffer中的操作应用到原数据页上，得到最新结果的过程，成为purge<br>访问这个数据页会触发purge，系统有后台线程定期purge，在数据库正常关闭的过程中，也会执行purge<br><br>唯一索引的更新不能使用change buffer<br><br>change buffer用的是buffer pool里的内存，change buffer的大小，可以通过参数innodb_change_buffer_max_size来动态设置。这个参数设置为50的时候，表示change buffer的大小最多只能占用buffer pool的50%。<br><br>将数据从磁盘读入内存涉及随机IO的访问，是数据库里面成本最高的操作之一。 <br>change buffer 因为减少了随机磁盘访问，所以对更新性能的提升很明显。<br><br>change buffer使用场景<br>在一个数据页做purge之前，change buffer记录的变更越多，收益就越大。<br>对于写多读少的业务来说，页面在写完以后马上被访问到的概率比较小，此时change buffer的使用效果最好。这种业务模型常见的就是账单类、日志类的系统。<br><br>反过来，假设一个业务的更新模式是写入之后马上会做查询，那么即使满足了条件，将更新先记录在change buffer,但之后由于马上要访问这个数据页，会立即触发purge过程。<br>这样随机访问IO的次数不会减少，反而增加了change buffer的维护代价。所以，对于这种业务模式来说，change buffer反而起到了副作用。<br><br>索引的选择和实践：<br>尽可能使用普通索引。<br>redo log主要节省的是随机写磁盘的IO消耗(转成顺序写)，而change buffer主要节省的则是随机读磁盘的IO消耗。<br><br>思考题：<br>change buffer不会丢失，因为change buffer是可以持久化的数据，在磁盘上占据了系统表空间ibdata，对应的内部系统表名为SYS_IBUF_TABLE。因此在异常关机的时候，不会丢失。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 赞👍🏿<br><br>不会丢失还有redolog的功劳哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-03 09:46:46</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>ging_96</span>
 </div><div class=_2_QraFYR_0>首先明确一个观点，redo log最大的作用，就是用于数据库异常宕机的恢复工作。<br>如果数据库永远不会宕机，那么不需要 redo log。redo log 和 change buffer其实关注的是两个事情，不能混为一谈。<br><br>其次，数据库缓冲池中有如下内容：数据页，索引页，插入缓冲，等等其他页（其他页目前不需要了解），数据页可以理解为叶子节点，索引页可以理解为非叶子节点，插入缓冲就是老师这节课讲的 change buffer。<br><br>当做insert update delete操作时，会涉及到两方面的更新，一类是主键索引B+树，另一类的非主键索引B+树。针对，主键索引B+树和 非主键索引中的唯一索引B+树，如果在内存中，直接更新内存；如果不在内存，直接从数据库中读取页到内存中来，更新内存即可。针对非主键索引的普通索引B+树，如果树在内存中，直接更新内存；如果不在内存中，更新change buffer，等到后面需要使用这个树的时候，会从磁盘中读取，然后做merge操作。<br><br>有同学问，到底是依据change buffer磁盘还是依据redo log更新磁盘，我的回答是，他们都不会直接更新磁盘，刷新磁盘的工作是innodb存储引擎中的线程去做的。redo log负责的是 异常宕机的恢复；change buffer用于 提高普通索引更新的性能。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-07-11 18:34:45</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ivan</span>
 </div><div class=_2_QraFYR_0>不会导致change buffer丢失。因为在更改change buffer 时也会写redo log，也需要持久化。<br>change buffer 更新完成并且相应事务提交的情况下，首先要保证redo log落盘（二阶段提交），若此时掉电重启，则可以根据 redo 进行恢复;<br>若change buffer 更新完成但是相应事务未提交的情况下，则redo 有可能落盘了（redo 的组提交），也有可能未落盘，若落盘了，读取redo发现没有commit标志（还会进行lsn，binlog的对比），则回滚；若redo未落盘则也就不会出现前滚和回滚的情况，数据依旧一致。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿<br><br>拆开了分析很好</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-03 17:18:04</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>静以储势·Shuke</span>
 </div><div class=_2_QraFYR_0>要理解change buffer还得先理解buffer pool是啥，顾名思义，硬盘在读写速度上相比内存有着数量级差距，如果每次读写都要从磁盘加载相应数据页，DB的效率就上不来，因而为了化解这个困局，几乎所有的DB都会把缓存池当做标配（在内存中开辟的一整块空间，由引擎利用一些命中算法和淘汰算法负责维护和管理），change buffer则更进一步，把在内存中更新就能可以立即返回执行结果并且满足一致性约束（显式或隐式定义的约束条件）的记录也暂时放在缓存池中，这样大大减少了磁盘IO操作的几率</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 08:41:13</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>虚爱凯平</span>
 </div><div class=_2_QraFYR_0>有点疑惑: 主键id也是唯一索引吧? 那我们的新增操作如何利用 change buffer呢? </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 所以主键索引用不上，都是对于那些二级索引的才有效。 <br><br>一个insert语句要操作所有索引的嘛，收益在二级索引</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-03 03:40:34</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>臧嘞个慧</span>
 </div><div class=_2_QraFYR_0>老师讲的真清楚！但是我突然想到一个问题，文中讲change buffer中存的内容是“在某个数据页更新什么”，但是在update/insert时，确定这条记录更新/插入在哪个数据页，不也是有一个查找的过程么？（肯定有一个一层层查找的过程，会路过很多数据页啊）为了确定在哪个数据页操作而遍历过的数据页也会读进内存作缓存吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，查找过程避不开，但是二级索引树的非叶子节点没多少，主要在磁盘上的还是叶子节点。<br>好问题</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-09-01 18:19:27</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>看不到de颜色</span>
 </div><div class=_2_QraFYR_0>时隔一段时间再来回顾一遍，突然有了一个小问题，还望老师可以解答一下。<br>总觉得将 change buffer落盘意义不大。毕竟redo log中也会记录。当数据库崩溃时可以通过redo log将change buffer内容回放出来。如果说因为内存不足需要回收change buffer这部分内存，那也应当将数据merge后刷入磁盘吧。<br>不知道理解的是不是有误，还望老师指点迷津。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: “总觉得将 change buffer落盘意义不大。毕竟redo log中也会记录，当数据库崩溃时可以通过redo log将change buffer内容回放出来。” 是的，所以change buffer其实也是用了WAL机制。<br><br>“内存不足需要回收change buffer这部分内存“，只需要让change buffer本身持久化可以，不需要执行merge操作。merge操作是在读数据页的时候做的<br><br>赞回顾的习惯哈👍<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-26 16:15:58</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>侯占山</span>
 </div><div class=_2_QraFYR_0>这是到目前为止我唯一一篇看不懂的文章</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 22:59:00</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>yy</span>
 </div><div class=_2_QraFYR_0>老师好 看评论看蒙了 评论里说的purge与merge是一个意思吗 </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 抱歉，这里说的都是merge哈，是因为我之前写错了，你在这里看到的讨论都当作merge</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 18:17:35</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>晨思暮语</span>
 </div><div class=_2_QraFYR_0>丁老师，有一个问题不是很明白！最后小结之前，而change buffer 主要节省的则是随机读磁盘的IO消耗。这句话怎么理解，因为看前面的讲解，change buffer对性能的主要提升，是在一个写多读少的系统中，使用普通索引的情况下，合并多次写为一次来更新磁盘！</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-04 13:55:03</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Scott</span>
 </div><div class=_2_QraFYR_0>这一篇看得糊里糊涂，有两个问题<br>1. 真正把数据更新到磁盘，是由change buffer做还是redo log做？<br>2. 插入新的一行的话，一定会有唯一primary key的啊，这样是不是插入就不能用change buffer?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 数据更新到磁盘是这两个都不少，是内存直接写到磁盘的。<br>2. 插入数据的时候，主键索引用不上，但是普通索引可以<br><br>看得糊里糊涂的时候可以看看评论区哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-02 23:34:04</div></div></div></div></li><li>
+<div class=_2sjJGcOH_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>。。。。。</span>
 </div><div class=_2_QraFYR_0>update操作不是先读后写吗？如果是先读的话，不是应该把数据已经读到内存了吗？那这样的话直接更新内存不就好了，为什么还要写change buffer</div><div class=_10o3OAxT_0>
@@ -383,16 +403,16 @@ MySQL实战45讲
 <a class="nav nav-prev" href=/1/8/ title=08_事务到底是隔离的还是不隔离的？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/10/ title=10_MySQL为什么有时候会选错索引？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.min.js?1646794261></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
-<script src=/js/jquery.sticky.js?1646794261></script>
-<script src=/js/featherlight.min.js?1646794261></script>
-<script src=/js/highlight.pack.js?1646794261></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.min.js?1646795377></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646795377></script>
+<script src=/js/jquery.sticky.js?1646795377></script>
+<script src=/js/featherlight.min.js?1646795377></script>
+<script src=/js/highlight.pack.js?1646795377></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
-<script src=/js/learn.js?1646794261></script>
-<script src=/js/hugo-learn.js?1646794261></script>
-<script src=/mermaid/mermaid.js?1646794261></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646795377></script>
+<script src=/js/learn.js?1646795377></script>
+<script src=/js/hugo-learn.js?1646795377></script>
+<script src=/mermaid/mermaid.js?1646795377></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>
