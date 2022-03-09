@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>45_自增id用完怎么办？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>45_自增id用完怎么办？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/45/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -297,121 +297,101 @@ show create table t;
 <p>Xid只需要不在同一个binlog文件中出现重复值即可。虽然理论上会出现重复值，但是概率极小，可以忽略不计。</p></li><li>
 <p>InnoDB的max_trx_id 递增值每次MySQL重启都会被保存起来，所以我们文章中提到的脏读的例子就是一个必现的bug，好在留给我们的时间还很充裕。</p></li><li>
 <p>thread_id是我们使用中最常见的，而且也是处理得最好的一个自增id逻辑了。</p></li></ol><p>当然，在MySQL里还有别的自增id，比如table_id、binlog文件序号等，就留给你去验证和探索了。</p><p>不同的自增id有不同的上限值，上限值的大小取决于声明的类型长度。而我们专栏声明的上限id就是45，所以今天这篇文章也是我们的最后一篇技术文章了。</p><p>既然没有下一个id了，课后也就没有思考题了。今天，我们换一个轻松的话题，请你来说说，读完专栏以后有什么感想吧。</p><p>这个“感想”，既可以是你读完专栏前后对某一些知识点的理解发生的变化，也可以是你积累的学习专栏文章的好方法，当然也可以是吐槽或者对未来的期望。</p><p>欢迎你给我留言，我们在评论区见，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/33/4b/71905da9.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>克劳德</span>
 </div><div class=_2_QraFYR_0>本人服务端工程师，在学习这门课之前数据库一直是我的短板，曾听朋友说MySQL或数据库中涉及了很多方面的知识点，每一个拿出来展开讲几乎都能出一本书了，对数据库是越来越忌惮，同时也因为工作上并没有过多接触，水平便一直停留在编写简单SQL层面。<br>在面试中被问到数据库问题，只能无奈的说这块不太清楚，也曾在网上自学过，但网上的文章知识点比较零散，很多都是给出一些结论性的观点，由于不了解其内部原理，记忆很难深刻。<br>老实说，当初报这门课的时候就像买技术书籍一样，我相信大家都有这样的体会，以为买到了就等于学到了，所以有一段时间没有点开看过，以至于后面开始学的时候都是在追赶老师和大家的进度，唯一遗憾的地方就是没能跟老师及时留言互动。<br>这门课虽然是文字授课，但字里行间给我的感觉就是很亲切很舒服，为什么呢，因为老师可以把晦涩的知识变得通俗易懂，有时我在思考，如果让我来讲一个自己擅长的领域是否也能做到这一点，如果要做到的话需要什么样的知识储备呢。<br>最后真要感谢老师的这门课，让我从心里不再惧怕数据库问题，不管是工作还是面试中信心倍增，现在时不时都敢和我们DBA“切磋切磋“了，哈哈。<br>祝好~</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍“切磋切磋“<br><br>留言不会“过时”哈，在对应的章节下面提出相关的问题，我会持续关注评论区<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 10:25:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/10/e8/172b5915.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>张珂</span>
 </div><div class=_2_QraFYR_0>我觉得是这样的，人的记忆是结构化的。<br><br>如果用纯文字做读书笔记，那么一段时间之后，再来看笔记，还得根据文字重建该结构。<br>倒不如直接看结构化的读书笔记，省去大脑再次重建的繁琐过程。<br><br>真是文不如表，表不如图，图不如动画啊。<br><br>下面是我的《MySQL实战》的PPT形式的读书笔记，如果想复习，就快速浏览PPT，就能快速重建记忆。<br>https://github.com/zhangkekf/reading-notes/tree/master/MySQL%E5%AE%9E%E6%88%98<br><br>目前才更新到了39小节，当然会持续更新，如果有时间会做成动画。再次感谢林老师！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这也太棒了吧，👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-19 16:10:42</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/13/cd/db3e4640.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Continue</span>
 </div><div class=_2_QraFYR_0>跟着学了三个多月，受益匪浅，学到了很多新的知识和其中的原理！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 早🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 07:52:23</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/57/6e/b6795c44.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>夜空中最亮的星</span>
 </div><div class=_2_QraFYR_0>不知道是最后一篇，否则的话就慢些读完了；<br>我是一名运维，公司也没有DBA，所以MySQL库也归我收拾；<br>读了老师的专栏，操作起数据库来，心情更好了；<br>老师的课，让我有了想看完《高性能MySQL》的兴趣；<br>听了老师的课，开发都来问我数据库的问题了，高兴；<br>老师你会有返场吗？我猜会 😄<br>可否透漏下接下来的安排，会有续集吗？进阶吗？<br>不想这一别就是一生。<br>您的从未谋面的学生。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 谢谢你<br><br>“开发都来问我数据库的问题了”，当年我也是这么开始“入坑”，加油</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 11:46:27</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/67/f4/9a1feb59.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>第一遍到今天就结束了，感谢老师的辛勤付出。<br>专栏的买的多，怕这个太长没时间学别的，也怕它太短让人意犹未尽。看评论的数量和质量，就能清晰的分辨一个专栏的优劣，老师的这个无疑是佼佼者中的佼佼者。<br>这个专栏学起来好像看《少年包青天》一样，<br>提出问题——谁是问题的凶手<br>分析问题——寻找问题的凶手<br>解决问题——找出问题的凶手<br>总结问题——记录抓住问题凶手的始末<br>真是精彩绝伦，我们程序员都是问题的终结者，发现问题、解决问题、总结问题是我们的责任。老师的指导，让我们的见识和技能得到了提升，这样便能解决更多的问题创造更多的价值。<br>而且我觉得技术的存在也是为了解决各种问题的，<br>数据库——解决数据存储的问题<br>WAL——解决数据一致性问题<br>多线程——解决性能差异的问题<br>锁——解决多线程并发导致数据不一致的问题<br>索引——解决数据查询或者操作慢的问题<br>日志——解决数据备份、同步、恢复等问题<br>数据库主备——解决数据高可用的问题<br>数据库读写分离——解决数据库压力的问题<br>数据库分库分表——解决数据量大的问题<br>从简单到复杂，解决一个问题就会引入一些新的问题，然后再想办法解决新的问题，事情就变得越来越复杂啦！但主体没变，附加值在一直增加，并且衍生出了许多新的东西，东西一多就需要分一下类，否则很难理解。所以，数据库按公司有分类，按存储引擎特点有分类，按功能特点有分类等等。<br>它的核心就是存储数据，剩下的就是怎么操作舒服怎么操作快的问题啦！想必其他工具也是如此？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 赞总结能力</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-10 21:29:50</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>坚持去学习</span>
 </div><div class=_2_QraFYR_0>菜鸟一枚才学浅<br>走马观花看专栏<br>一生运维甚可叹<br>点滴积累玩不转<br>老师功底很深厚<br>尔等求学莫欺骗<br>谦虚从容学知识<br>十年寒窗磨一剑<br>运维坎坷路漫长<br>风雨无阻永相伴<br>尔等成名归来时<br>扶摇直上亦无怨<br>感谢老师传知识<br>功德无量真佛现</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-28 17:52:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>很遗憾没能坚持到最后,但是也很庆幸能遇到这么好的专栏。以前了解mysql都是一些零散的知识点,通过学习完专栏,不论是mysql整体架构还是基础的知识点,都有了更深的认识。以后就把老师的文档当官方文档查,出现问题先来看看专栏。<br>感触特别深的是,老师对于提到的每一个问题,都会严谨又认真的去回答,尽量帮助每一位同学都能有所收获。要做到这一点，是特别耗费精力的。<br>感谢老师的传道授业解惑,希望以后有机会能当面向老师请教问题。期待老师下一部杰作</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 刚过完年都是很忙的， 找时间补上哈，等你的评论区留言^_^</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-26 18:08:51</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/15/52/67/fcba0967.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>zapup</span>
 </div><div class=_2_QraFYR_0>和朋友开玩笑说：<br>- 以前用 mysql 觉得常用的功能都够用就行了<br>- 看了《高性能mysql》后，了解了一些原理知识觉得更稳了，面试也不怕了<br>- 专栏学到一半时，再也不敢跟人说「我会 MySQL」<br><br>跟下来半个月了，酣畅淋漓，茅塞顿开<br>信息量巨大，配图的笔记都有90+页，明天开始复习，值得多刷<br><br>再次感谢林老师与幕后编辑工作者的辛勤付出！</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-07-27 21:46:06</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/1b/49/ddefc656.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>MrVito</span>
 </div><div class=_2_QraFYR_0>一度想放弃，一度又再拿起，看到这里如释重负，一刷刷到28讲，就停了，因为当时感觉总是没跟上，心浮气躁，二刷从第一讲又开始刷，一个月我就刷完了，而且还能看得懂，对于一个小白来说不容易，曾经留言想放弃，没想到，晓斌老师竟然留言回我叫我加油，当时老脸一红，硬着头皮，再刷一次。而后，也坚持回答问题，虽然回答不怎么样，有时候看了评论，感觉大神太多了，真的，路漫漫兮及其修远兮，我欲上下而求索。谢谢老师，以后面试MySQL的问题我都不会怎么害怕了，遇到不懂的问题我就回来看，回来刷，成长在于点滴，细水才能长流。始终养得根深，枝繁叶茂。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍 坚持不易</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-09-04 11:19:25</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/1hp9kzzuLUVHzmmddIPIO2OgUWr1ibJRr8cMoB7K0fwx8Vmn34L8yN2NoYUtgNicfPGaXKF02pQ2huXd59r2I0kw/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>三胖</span>
 </div><div class=_2_QraFYR_0>老师，我才学了四分之一的课程，但是这门课已经更新完了，我是直接跑到最后一节技术篇来留言的！很想知道，后来者比如我在学到后面的课程时遇到问题留言，老师还会看会回复吗？（老师的课程超值！！）</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 会看的<br><br>后台系统是按照留言时间显示的<br>而且我在这事情上有强迫症，一定会让“未处理问题”变成0的😆<br><br>只是说如果是其他同学评论区问过的问题，我可能就不会重复回复了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 10:21:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/46/56/5e83f44b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>东青</span>
 </div><div class=_2_QraFYR_0>当前系统并无其他事务存在时，启动一个只读事务时（意味没有事务id），它的低高水位是怎么样的老师。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 假设当前没有其他事务存在，假设当前的max_trx_id=N,<br>这时候启动一个只读事务，它的高低水位就都是N。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 08:57:48</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/03/e2/5768d26e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>inrtyx</span>
 </div><div class=_2_QraFYR_0>我都看了五遍了，每次都有收获。期待老师出新的作品。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-04-06 14:15:36</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/d4/fd/43802282.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>IceGeek17</span>
 </div><div class=_2_QraFYR_0>感谢老师，课程受益匪浅，<br>课程结束后，如果有问题，是继续在这里的评论区提问，还是会有另外一条答疑通道？<br><br>另外，在第35篇我提了几个问题，老师还没有回答，我这里再贴一下，老师看一下<br>问题一：<br>对于BKA算法的流程理解，用文中的例子，先把t1表（小表）中查询需要的字段放入join_buffer, 然后把join_buffer里的字段值批量传给t2表，先根据索引a查到id，然后得到一批主键id，再根据主键id排序，然后再根据排完序的id去主键索引查数据（这里用到MRR）<br>理解是否正确？<br>这里对于主键id排序是在哪里做的，是在join_buffer里，还是另外再开辟一块临时内存？如果在join_buffer里，那join_buffer里的每行内容是不是：t2.id + t1查询必须的字段，并且join_buffer里是根据id排序的？<br><br>问题二：<br>虽然MySQL官方没有支持hash join，但是之前看到文章说，MariaDB已经支持hash join，能不能后续在答疑文章中简单总结下mariaDB支持的join算法<br><br>问题三：<br>在实际项目中，一个比较困惑的问题，看到过这样的类似写法：<br>select xxx from t1 join t2 on t1.id = t2.id for update （目的是获取几个表上最新的数据，并且加上锁，防止数据被更新）<br>这里有几个问题：<br>1) 像这样 join + for update，表上的加锁规则是怎么样的？是不是在需要join的两个表上根据具体的查询执行过程都加上锁？<br>2）像这样 join + for update 的用法是否合理？碰到这样的场景，应该怎么去做？<br><br>问题四：<br>看过阿里输出的开发手册里，强调 “最多不超过三表join”，实际项目中，给我感觉很难做到所有业务都不超过三表join，那这里的问题就是，有什么相关的经验方法，可以尽量降低参与join的数据表？<br>比如，在数据表里添加冗余字段，可以降低参与join的数据表数量，还有什么其他好的方法？<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 就在我们评论区，提跟文章相关的内容，会继续关注。<br><br>问题一、前面的过程理解正确，MRR过程用的是read_rnd_buffer <br><br>问题二、其实我们文中最后那个过程，你把他设想成在MySQL内部执行。。<br><br>问题三、这种复杂的语句，你要把我们两部分知识点连起来看。一个原则：for update的话，执行语句过程中扫到的间隙和记录都要加锁。 当然最好是不这么做，拆成两个语句会好些。<br><br>问题四、还是我文中的建议，如果都用NLJ或BKA算法的join其实还好，所以看看explain。<br>降低join表数量的方法，基本上行就是冗余字段和拆成多个语句这两个方向了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 10:25:22</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/cc/25/8c6eab2c.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>ArtistLu</span>
 </div><div class=_2_QraFYR_0>相遇恨晚😆，安慰下自己，种树的最好时机是十年前，其次是现在！！！谢谢老师</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-08 22:16:00</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/e3/12/fd02db2e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>NoDBA</span>
 </div><div class=_2_QraFYR_0>低版本thread_id超过2^32-1后，在general log显示是负数，高版本貌似没有这个问题，是否高版本的thread_id是8字节呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 主要不是定义的问题，而是打印的时候代码问题，按照这个代码输出的：<br>"%5ld ", (long) thread_id<br><br>是个bug， 超过2^31就变成负数了，<br>新版本改了<br><br>好问题😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-27 22:46:12</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/05/d4/e06bf86d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>感谢老师，通过本课程的学习，加深了mysql原理上的理解，特别是间隙锁，nextkeylock，join操作上，事物的一致性以及binlog和redolog的配合。感觉还意犹未尽，希望后续还能在这里和老师互动，为我们答疑解惑，再次感谢老师！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 会的，<br>也感谢你们一路相伴🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-26 08:23:53</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/36/d2/c7357723.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>发条橙子 。</span>
 </div><div class=_2_QraFYR_0>作为开发 一开始对于数据库的知识就是大学那一些 ，等到毕业后（17年毕业）实际开发中就使用到了增删改 ， 对于事务之类的知识全都差不多忘记 ， 随着项目开发深知降低数据库压力的重要性 。 于是开始上网找数据库相关的书来看 ， 从 深入理解innodb 、 高性能MySQL 、索引设计与优化 。 有些知识很深 ，没有人指导对于理解也可能造成了偏差 。 几本书挑着章节看完了，但是总感觉差些什么，很多知识都没发和生产中联系起来 。<br><br>这时候老师的课程出来了 ，没有犹豫直接下单。跟着老师一点点学 ， 不但把之前的知识全部串了起来。之前比较难理解的知识点全部打通 ，甚至有些理解有偏差的知识点都被纠正过来 。 每个问题都被老师翻牌耐心的解答更是增加了学习的动力 ，非常的感谢老师，老师真的很认真的对待这个专栏<br><br>整个专栏从开始到结束没想到时间过的这么快，甚至还有些不舍哈哈哈 。有很多心情言语不能表达 ， 同在杭州不知以后会不会有机会见到老师呢哈哈哈哈</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍 你在评论区的留言也给提升了专栏质量哦😆，还记得有一篇的内容里面直接用了你评论的内容</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 09:48:47</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>shawn</span>
 </div><div class=_2_QraFYR_0>受益匪浅，最后几讲还想了解下null值如何建立索引，由于null直接不能比较和排序，MySQL能区分出每一个null值吗</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 可以，因为普通索引上都有主键值对吧，<br><br>所以其实是 (null, id1), (null, id2) ....</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 08:31:56</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTK8oWca0FXerDicV5k7h0GD9MOibsy9D3c086WWB053iaBUw1IZQ1PSIMvcV7cmDw5jvQY9mnzosdYDg/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>天夙</span>
 </div><div class=_2_QraFYR_0>时隔一年，为了找工作二刷而且认认真真的看完了，真的是收获太多了，谢谢老师！</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-04-23 23:16:59</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/bf/e4/45758517.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>hal</span>
 </div><div class=_2_QraFYR_0>老师好，我是一个刚毕业的实习生，这是我买的第一个专栏，感觉质量非常非常高，老师的功底真的太深厚了，而且真的能解决线上的问题，前两天客户有个主从延迟了2天多，当时同事慌得不行，当时参考老师之前第23篇文章和第26篇文章<br><br>环境：MySQL5.7.24<br><br>(1)打算在主库把下面两个参数调高，增加同时处于prepare阶段的事务，来提高主库并发度<br>binlog_group_commit_sync_delay<br>binlog_group_commit_sync_no_delay_count<br><br>(2)以及取消双1，用安全性换性能，因为在从库设置，只是为了追上主库<br>sync_binlog=0<br>innodb_flush_log_at_trx_commit=0<br><br>当时做的选择只有(2)因为主库正在跑虽然是测试环境，也不太敢动手，但是根据老师的文章感觉上事可以提高并发性能的。结果就是在5分钟之内，，，Seconds_Behind_Master从187986到0了，可以说感觉很舒服了， 不过解决之后也有一点疑问，如下：<br><br>a. (2)中的两个参数对主从延迟优化有这么明显吗，感觉太明显了我有点慌<br>b. 如果在从库设置(1)中的2个参数，是不是也能提高从库执行sql的效率，通过减少写binlog的写盘效率，<br>c.是不是在从库追上主的时候（2）两个参数就需要设置为0，不然会由于等待的逻辑从库会有"追不上"主库的假象<br><br><br>最后祝老师身体健康，天天开心，准备二刷巩固知识，感谢老师的辛苦付出！</div><div class=_10o3OAxT_0>
@@ -421,16 +401,16 @@ show create table t;
 <a class="nav nav-prev" href=/1/44/ title=44_答疑文章（三）：说一说这些好问题> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/47/ title=开篇词_这一次，让我们一起来搞懂MySQL style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

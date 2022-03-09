@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>05_深入浅出索引（下） :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>05_深入浅出索引（下） :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/5/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -297,121 +297,101 @@ engine=InnoDB;
 </code></pre><p>公司的同事告诉他说，由于历史原因，这个表需要a、b做联合主键，这个小吕理解了。</p><p>但是，学过本章内容的小吕又纳闷了，既然主键包含了a、b这两个字段，那意味着单独在字段c上创建一个索引，就已经包含了三个字段了呀，为什么要创建“ca”“cb”这两个索引？</p><p>同事告诉他，是因为他们的业务里面有这样的两种语句：</p><pre><code>select * from geek where c=N order by a limit 1;
 select * from geek where c=N order by b limit 1;
 </code></pre><p>我给你的问题是，这位同事的解释对吗，为了这两个查询模式，这两个索引是否都是必须的？为什么呢？</p><p>你可以把你的思考和观点写在留言区里，我会在下一篇文章的末尾和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>上期的问题是，通过两个alter 语句重建索引k，以及通过两个alter语句重建主键索引是否合理。</p><p>在评论区，有同学问到为什么要重建索引。我们文章里面有提到，索引可能因为删除，或者页分裂等原因，导致数据页有空洞，重建索引的过程会创建一个新的索引，把数据按顺序插入，这样页面的利用率最高，也就是索引更紧凑、更省空间。</p><p>这道题目，我给你的“参考答案”是：</p><p>重建索引k的做法是合理的，可以达到省空间的目的。但是，重建主键的过程不合理。不论是删除主键还是创建主键，都会将整个表重建。所以连着执行这两个语句的话，第一个语句就白做了。这两个语句，你可以用这个语句代替 ： alter table T engine=InnoDB。在专栏的第12篇文章《为什么表数据删掉一半，表文件大小不变？》中，我会和你分析这条语句的执行流程。</p><p>评论区留言中， @壹笙☞漂泊 做了很详细的笔记，@高枕 帮同学解答了问题，@约书亚 提了一个很不错的面试问题。在这里，我要和你们道一声感谢。</p><p>PS：如果你在面试中，曾有过被MySQL相关问题难住的经历，也可以把这个问题发到评论区，我们一起来讨论。如果解答这个问题，需要的篇幅会很长的话，我可以放到答疑文章展开。</p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/64/05/6989dce6.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>我来也</span>
 </div><div class=_2_QraFYR_0>老师的每一篇都会讲到平常工作用遇到的事情. 这个专栏真的很值.<br>今天这个 alter table T engine=InnoDB 让我想到了我们线上的一个表, 记录日志用的, 会定期删除过早之前的数据. 最后这个表实际内容的大小才10G, 而他的索引却有30G. 在阿里云控制面板上看,就是占了40G空间. 这可花的是真金白银啊.<br>后来了解到是 InnoDB 这种引擎导致的,虽然删除了表的部分记录,但是它的索引还在, 并未释放.<br>只能是重新建表才能重建索引.<br>如果当时看到了这个专栏,把这个语句拿来用,就可以省下不少钱了.</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 😄确实例子都是血泪史，有些是我的血泪、有些是帮助人擦眼泪💧<br><br>也鼓励大家把平时碰到的问题提出来，大家一起未雨绸缪🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-24 09:34:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/36/d2/c7357723.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>发条橙子 。</span>
 </div><div class=_2_QraFYR_0>老师， 因为正文不能无限细节和篇幅的缘故， 有些细节点没有说， 我也一直很困惑， 希望能帮忙解答下，辛苦了<br>1. 表的逻辑结构 ，表 —> 段 —> 段中存在数据段(leaf node segment) ，索引段( Non-leaf node segment）,请问数据段就是主键索引的数据， 索引段就是二级索引的数据么<br>2. 建立的每个索引都有要维护一个数据段么 ？？ 那么新插入一行值 ， 岂不是每个索引段都会维护这个值<br>3. 索引的n阶表示n个数据页么。那是不是插入第一行数据树高1 ，就是一个数据页， 插入二三行，树高是二，那就是两个数据页，而且B+树只有leaf node存数据，所以父节点实际上有没有数据，但是占一个页 ，好浪费 ， 是我理解有误么 <br>4. 树高取决于数据页的大小么 ， 这个不是很能理解 ，数据页为16k 。 那么树高不是一个定值了么，难道还和里面存数据的大小有关么<br>5. 查询数据的时候，大致的流程细化来说 ,我这么理解对么 。 通过优化器到表里的数据段／索引段取数据 ，数据是按照段->区->页维度去取 ， 取完后先放到数据缓冲池中，再通过二分法查询叶结点的有序链表数组找到行数据返回给用户 。 当数据量大的时候，会存在不同的区，取范围值的时候会到不同的区取页的数据返回用户。 <br><br>这块知识有点比较难理解，看书和一些文章的时候也比较晦涩，希望老师能解答下，感觉这块啃不透 是不是索引设计起来就比较吃力</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 这样理解也算对，不过要记得 主键也是索引的一种哈<br>2. 是的，所以说索引越多，“维护成本”越大<br>3. 如果是几百个儿子节点共用一个父节点，是不是就不会看上去那么浪费啦<br>4. 树高其实取决于叶子树（数据行数）和“N叉树”的N。 而N是由页大小和索引大小决定的。<br>5. 基本是你说的流程。不过不是“优化器”去取的，是执行器调用引擎，引擎内部才管理了你说的 段、页这些数据</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-24 11:25:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/cc/af/25509210.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>loCust</span>
 </div><div class=_2_QraFYR_0>老师，有这么个问题<br>一张表两个字段id, uname,id主键，uname普通索引<br>SELECT * FROM test_like WHERE uname LIKE 'j'/ 'j%' / '%j'/ '%j%'<br>模糊查询like后面四种写法都可以用到uname的普通索引<br><br>添加一个age字段<br>like后面的'%j'/ '%j%' 这两种情况用不到索引<br>把select * 改为 select id / select uname / select id,uname<br>like后面'j'/ 'j%' / '%j'/ '%j%' 这四种情况又都可以用到uname普通索引<br><br>建立uname,age的联合索引<br>模糊查询还是 LIKE 'j'/ 'j%' / '%j'/ '%j%'四种情况<br>其中select id / select uname / select id,uname <br>会用到uname的普通索引<br>select * 会用到uname,age的组合索引<br><br>看到好些文章会说模糊查询时以%开头不会用到索引，实践后发现结论跟文章描述的有出入。<br>看了索引的这两节内容对上面的各种情况有的可以解释通了，有的仍然有些模糊，想问下老师上面这些情况使用索引时为什么是这样的？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，这个是关于“用索引” 和 “用索引快速定位记录”的区别。<br><br>08 篇讲到这个问题了，周五关注一下。<br><br>简单回答：“用索引”有一种用法是 “顺序扫描索引”<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 10:21:21</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/a1/78/71d37164.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老北</span>
 </div><div class=_2_QraFYR_0>背景:<br>我们现在有一张表,每天生成300W数据, 然后每天用delete xx where id = x 这样的方式来删除.<br>不用truncate是因为DBA说truncate会重建自适应哈希索引,可能对整个库性能有影响.<br><br>操作:<br>这个表的主键id是递增的.<br>当我执行 explain select min(id) from t 时,是走的全表扫描.<br>而且我目前在从库执行这个sql,直接就卡住了.<br>执行 explain select max(id) from t 时, 结果是 Select tables optimized away<br>(目前最大id 5亿左右,实际数据量只有300W)<br><br>问题:<br>想问下老师<br>1. 为什么 min(id) 会是全表扫描呢? 是和存在大量的delete后未释放空间有关系吗?<br>2. 像这种业务场景,mysql怎么处理比较快速呢? 使用rename 表名有什么风险吗?<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 额你们DBA可能对自适应哈希索引（AHI）有误解…有其他同学也在评论中有提到AHI，我答疑文章会安排说明。<br><br>看你的描述，最好就是rename 重建一个新的，然后找低峰期删掉旧的表。<br><br>还有你这么说，应该id就是这个表的自增主键了，正常即使删除也不会全表扫描。不过我现在怀疑可能删的事务有没提交的，导致MySQL 没法回收复用旧空间。（这个可以简单从文件大小判断）<br><br>不过总之，rename +新建表，上面这个问题也自动解决了😓</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-24 17:29:06</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/f8/ba/14e05601.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>约书亚</span>
 </div><div class=_2_QraFYR_0>疑问：<br>1. 有些资料提到，在不影响排序结果的情况下，在取出主键后，回表之前，会在对所有获取到的主键排序，请问是否存在这种情况？<br>2. 索引下推那个例子，感觉5.6之前的机制很匪夷所思：感觉判断'张%'之后再“看age的值”是顺理成章的事。难道联合索引的底层实现结构在这期间发生了变化？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 有的， Multi-Range Read (MRR) 由于不论是否使用这个策略，SQL语句写法不变，就没有在正文中提<br><br>2. 不是，是接口能力发生了变化，以前只能传“搜索关键字” 。<br><br>如果你用过5.1 甚至5.0， 在从现在的观点看，你会发现很多“匪夷所思”。还有：并行复制官方5.6才引入、MDL 5.5 才有、Innodb 自增主键持久化、多源复制、online DDL ... <br><br>只能说，持续进化，幸甚至哉😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-23 09:01:37</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/2e/53/bf62683f.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>狼的诱惑</span>
 </div><div class=_2_QraFYR_0>踩过坑：有人问我联合索引的技巧，回答的不是很好<br>总结：<br>1、覆盖索引：如果查询条件使用的是普通索引（或是联合索引的最左原则字段），查询结果是联合索引的字段或是主键，不用回表操作，直接返回结果，减少IO磁盘读写读取正行数据<br>2、最左前缀：联合索引的最左 N 个字段，也可以是字符串索引的最左 M 个字符<br>3、联合索引：根据创建联合索引的顺序，以最左原则进行where检索，比如（age，name）以age=1 或 age= 1 and name=‘张三’可以使用索引，单以name=‘张三’ 不会使用索引，考虑到存储空间的问题，还请根据业务需求，将查找频繁的数据进行靠左创建索引。<br>4、索引下推：like 'hello%’and age >10 检索，MySQL5.6版本之前，会对匹配的数据进行回表查询。5.6版本后，会先过滤掉age&lt;10的数据，再进行回表查询，减少回表率，提升检索速度<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 赞，下次再问你就这么答，棒棒哒</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-27 15:38:41</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>先回答老师的问题:<br>如果c列上重复率很低的情况下,两个索引都可以不用建。因为如果过滤只剩下几条数据,排序也不影响<br>如果C列重复度比较高,就需要建立(c,b)的联合索引了,来消除排序了。因为在数据量大的情况下,排序是一个非常耗时的操作,<br>很有可能还需要磁盘临时表来做排序。而且如果没有(c,b)联合索引,limit 1仅仅表示返回给客户端一条数据,没有起到限制扫描行数的作用<br>ca列上的索引,由于满足最左前缀,不用加。因为c是固定值,那么a列就是有序的.那么这里limit 1就很好限制了只用精准扫描一条数据.<br>所以有时候如果在where条件建立索引的效率差的情况下,在order by limit这一列建索引也是很好的方案,排好序,在回表,只要过滤出满足条件的limit行,就能及时停止扫描<br>老师我有几个问题:<br>1.using where的时候,需要回表,然后把数据传输给server层,server层来过滤数据。那么这些数据是存在server层的哪个地方呢？<br>2.limit起到限制扫描行数作用并且有using where的时候,limit这个操作时在存储引擎层做的还是在server层做的？<br>3.ICP是不是做得不太好,感觉很多地方没有用到索引下推,都会显示using index condition</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 回答得很好。<br>1. 没有存，就是一个临时内存，读出来马上判断，然后扫描下一行可以复用<br>2. Server层。 接上面的逻辑，读完以后顺便判断一下够不够limit 的数了，够就结束循环<br>3. 嗯，你很细心，其实它表示的是“可以下推”，实际上是“可以，但没有”😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-23 16:59:13</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/03/f7/3a493bec.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>表记录<br>--a--|--b--|--c--<br> 1 2 3<br> 1 3 2<br> 1 4 3<br> 2 1 3<br> 2 2 2<br> 2 3 4<br>主键 a，b的聚簇索引组织顺序相当于 order by a,b <br>也就是先按a排序，再按b排序，c无序<br> <br>索引 ca 的组织是先按c排序，在按a排序，同时记录主键<br>--c--|--a--|--主键ab--<br> 2 1 1,3<br> 2 2 2,2<br> 3 1 1,2<br> 3 1 1,4<br> 3 2 2,1<br> 4 2 2,3<br>索引 cb 的组织是先按c排序，在按b排序，同时记录主键<br>--c--|--b--|--c--|--主键ab--<br> 2 1 2,2<br> 2 3 1,3<br> 3 1 2,1<br> 3 2 1,2<br> 3 4 1,4<br> 4 3 2,3<br> <br>对于下面的语句 <br>select ... from geek where c=N order by a <br>走ca,cb索引都能定位到满足c=N主键<br>而且主键的聚簇索引本身就是按order by a,b排序，无序重新排序。所以ca可以去掉<br><br>select ... from geek where c=N order by b <br>这条sql如果只有 c单个字段的索引，定位记录可以走索引，但是order by b的顺序与主键顺序不一致，需要额外排序<br>cb索引可以把排序优化调<br><br> </div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-23 10:16:48</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epHiaHaVRLsqRpT2aJRN7xZkmcZgglgwREhgrPs6vicXSpKI0FhG8ODvXDRVMqeLXuCo3ZpHaG36foA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>不二很二</span>
 </div><div class=_2_QraFYR_0>老师，下面两条语句有什么区别，为什么都提倡使用2:<br>1.select * from T where k in(1,2,3,4,5) <br>2.select * from T where k between 1 and 5<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，<br>第一个要树搜素5次<br>第二个搜索一次</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 15:14:59</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/9f/1d/ec173090.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>melon</span>
 </div><div class=_2_QraFYR_0>关于联合索引我的理解是这样的：比如一个联合索引(a,b,c)，其实质是按a,b,c的顺序拼接成了一个二进制字节数组，索引记录是按该字节数组逐字节比较排序的，所以其是先按a排序，再按b排序，再按c排序的，至于其为什么是按最左前缀匹配的也就显而易见了，没看过源码，不知道理解的对不对，希望老师指正。<br><br>给表创建索引时，应该创建哪些索引，每个索引应该包含哪些字段，字段的顺序怎么排列，这个问题没有标准答案，需要根据具体的业务来做权衡。不过有些思路还是可供参考的：<br>1.既然是一个权衡问题，没有办法保证所有的查询都高效，那就要优先保证高频的查询高效，较低频次的查询也尽可能的使用到尽可能长的最左前缀索引。可以借助pt-query-digest来采样统计业务查询语句的访问频度，可能需要迭代几次才能确定联合索引的最终字段及其排序。<br>2.业务是在演进的，所以索引也是要随着业务演进的，并不是索引建好了就万事大吉了，业务发生变化时，我们需要重新审视当初建的索引是不是还依然高效，依然能满足业务需求。<br>3.业内流传的有一些mysql 军规，其实这些并不是真正的军规，只是典型场景下的最佳实践。真正的军规其实就一条：高效的效满足业务需求。比如有个军规规定一个表上的索引数不超过5个，但如果我们现在有一些历史数据表、历史日志表，我们很明确的知道这些表上不会再有数据写入了，但我们的查询需求很多也很多样化，那我们在这些表上的索引数能不能超过5个？当然是没有任何问题的。当然关于这份军规还是要认真看一下的，但看的重点不是去记住它，而是要弄明白每一条军规它为什么这么规定，它这样规定是基于什么考虑，适用的场景和前提是什么，这些都弄明白了，你记不记得住这些军规都无所谓了，因为你已经把它溶化到了你的血液中，具体到自己的具体业务时游刃有余将是必然。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 非常赞，尤其是第三段对“军规”的理解👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-27 11:46:07</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/75/94/8f0ada2c.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>司徒公子</span>
 </div><div class=_2_QraFYR_0>面试官问：说下怎么让mysql的myisam引擎支持事务，网上搜了下，也没有结果！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: ……… 面试官是魔鬼吗😄<br><br>我怀疑他是想说用lock table 来实现，但是这样只能实现串行化隔离级别，<br><br>其它隔离都实现不了。<br><br>但是因为mysiam不支持崩溃恢复，所以即使用lock table硬实现，也是问题多多：<br><br>ACID里面， 原子性和持久性做不到；<br>隔离性只能实现基本用不上的串行化；<br>一致性在正常运行的时候依赖于串行化，在异常崩溃的时候也不能保证。<br><br>这样实现的事务不要也罢。<br><br>你这么答复面试官，应该能加到分吧😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-19 12:37:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/7f/e4/990dcd8e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>gether</span>
 </div><div class=_2_QraFYR_0> ca索引可以去掉，cb索引可以保留。<br>ca索引，通过索引对数据进行筛选，回表的时候，a本身就是主键索引，所以可以保证有序；<br>cb索引，b上并没有索引，ab索引也无法满足最左匹配原则，可以保留加快排序速度。<br>但如果查询结果很少的话，内存中排序也够了吧，也没必要建立cb索引。老师，我理解的对不？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-23 08:52:19</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q8tVHVrialm0x9iaF9aLoibq8MQ7oI1QPZMHz4EabKPkHdy6gFklQTUXIEAp3iaRKficRLhCravEp56u6euXMOgavbA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_cxz</span>
 </div><div class=_2_QraFYR_0>老师，请问一下，覆盖索引必须要覆盖所有的查询条件中的列吗，我经过试验发现，覆盖索引不能只覆盖要查询的列，同时必须将WHERE后面的查询条件的列都覆盖，能解释一下这个原因吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你的发现是对的，<br>因为覆盖索引的目的就是”不回表“，<br>所以只有索引包含了where条件部分和select返回部分的所有字段，才能实现这个目的哦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-04 11:54:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/21/30/8ecce1e1.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>北天魔狼</span>
 </div><div class=_2_QraFYR_0>老师，我是非科班做开发的小白（公司没有DBA），最近一直认为数据库和程序运行环境都比开发语言本身重要。尤其是数据库，数据行上亿必须在数据库上想办法。也买了一本高性能MySQL，看完类型，索引，查询，后面就看不懂了。特别期待后面的章节，六点上地铁，看的入迷差点坐过站</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-23 07:17:59</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELZPnUAiajaR5C25EDLWeJURggyiaOP5GGPe2qlwpQcm5e3ybib8OsP4tvddFDLVRSNNGL5I3SFPJHsA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>null</span>
 </div><div class=_2_QraFYR_0>【备忘】<br><br>locust 童鞋 like 'j' 或 'j%' 或 '%j' 或 '%j%' 使用索引的问题：<br>a. 只有 id 和 uname 字段。<br>b. 添加了 age 字段，即 id、uname、age 字段。<br><br>----<br><br>老师回复：<br>好问题，这个是关于“用索引” 和 “用索引快速定位记录”的区别。<br><br>简单回答：“用索引”有一种用法是 “顺序扫描索引”。<br><br>----<br><br>自己理解：<br>1. like 'j' 或 'j%' 可以使用索引，并且快速定位记录。<br>2. like '%j' 或 '%j%'，只是在二级索引树上遍历查找记录，并不能快速定位（扫描了整棵索引树）。<br>3. 只有 id 和 uname 字段时，上述 4 种 like 查询，uname 索引能满足 id 和 uname 的查询情况，不需要回表，所以选择了使用 uname 的索引树解决问题。<br>4. 添加了 age 但无联合索引 (uname, age) 的情况，如果使用 uname 索引树，需要回表。在 like '%j' 或 '%j%' 直接扫描主键索引树，现象就是没有使用 uname 索引。<br>5. 添加了 age 字段，也添加了 (uname, age) 索引，和第 3 点同理，使用覆盖索引就能满足 select * 的字段查询，不需要回表，因此使用了 (uname, age) 索引树。但是只有 like 'j' 和 'j%'<br>能快速定位记录，而 like '%j' 和 '%j%' 也能使用该索引树，但是不能快速定位，需要顺序遍历。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 赞，很好的总结</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-08 09:49:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/CqF8eiaanNteyu2U7FibYicjoz9626ARmtbCK5WMdGeoTB8eTGlPPIJ6NoAT252cvzSsplWS3byPc7dnsMk65DCsA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>benson42</span>
 </div><div class=_2_QraFYR_0>这两个语句，你可以用这个语句代替 ： alter table T engine=InnoDB。可以解释一下原理吗。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-23 07:07:29</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/a0/fe/ac5a62f3.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>suhui</span>
 </div><div class=_2_QraFYR_0>老师你好，上篇文章中有人提问“数据量很大的时候，二级索引比主键索引更快”，这个结论是只有在使用覆盖索引时才成立吧，非覆盖索引还是要回表查询。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-23 17:38:06</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/ab/e1/f6b921fa.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>壹笙☞漂泊</span>
 </div><div class=_2_QraFYR_0>总结：<br>回表：回到主键索引树搜索的过程，称为回表<br>覆盖索引：某索引已经覆盖了查询需求，称为覆盖索引，例如：select ID from T where k between 3 and 5<br>在引擎内部使用覆盖索引在索引K上其实读了三个记录，R3~R5(对应的索引k上的记录项)，但对于MySQL的Server层来说，它就是找引擎拿到了两条记录，因此MySQL认为扫描行数是2<br>最左前缀原则：B+Tree这种索引结构，可以利用索引的"最左前缀"来定位记录<br>只要满足最左前缀，就可以利用索引来加速检索。<br>最左前缀可以是联合索引的最左N个字段，也可以是字符串索引的最左M个字符<br>第一原则是：如果通过调整顺序，可以少维护一个索引，那么这个顺序往往就是需要优先考虑采用的。<br>索引下推：在MySQL5.6之前，只能从根据最左前缀查询到ID开始一个个回表。到主键索引上找出数据行，再对比字段值。<br>MySQL5.6引入的索引下推优化，可以在索引遍历过程中，对索引中包含的字段先做判断，直接过滤掉不满足条件的记录，减少回表次数。<br><br>课后题：<br>ca没有必要，cb有必要。因为a、b联合索引，直接查询b不会使用主键联合索引。<br><br>疑问：<br>以前看过某些文章上面写：如果查询顺序和联合索引的顺序不一致，优化器会自动做优化，是这样的吗老师？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，查询语句的where里面各个判断调换顺序没关系的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-23 17:48:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/6f/06/82d8bdfb.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>D.L</span>
 </div><div class=_2_QraFYR_0>老师您好：针对索引下推有两个问题请教您<br>1.之前一般认为range查询比如"a > 5 and b = '123'"在联合索引（a,b）中b是不起作用的，在ICP下是不是意味着b就可以起到作用了，我们还是应该尽量将查询中用到的字段放入联合索引中。<br>2.针对1的问题，“a > 5 and a &lt; 10 and b='123'”在ICP作用下的执行过程是什么样子的？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题<br><br>1. 是的<br>2. 流程是这样的：<br> a) 把 a>5 and b='123'传入引擎，<br> b)引擎找到第一个a>5的行（这里是快速定位），如果发现b&lt;>'123',找下一个，直到满足b='123', <br> c)把找到的行返回给server层， server层根据a是否小于10决定要不要取下一个</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-27 22:01:27</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>把该讲内容总结为几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br><br> 1. <br>select * from T where k betwee 3 and 5 这条语句的执行流程是什么样的?<br> 2. <br>回表的概念是什么?<br> 3. <br>索引覆盖的概念是什么, 索引覆盖的优点是什么?<br> 4. <br>最左前缀原则的概念是什么? 说明最左前缀原则的执行过程.<br> 5. <br>索引下推的概念是什么? MySQL 5.6 的下推优化是怎么做的? <br><br></div><div class=_10o3OAxT_0>
@@ -421,16 +401,16 @@ select * from geek where c=N order by b limit 1;
 <a class="nav nav-prev" href=/1/4/ title=04_深入浅出索引（上）> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/6/ title=06_全局锁和表锁：给表加个字段怎么有这么多阻碍？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>39_自增主键为什么不是连续的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>39_自增主键为什么不是连续的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/39/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -330,121 +330,101 @@ alter table tbl_name engine=innodb;
 <p>大家在春节期间还坚持看专栏，并且深入地思考和回复，给大家点赞。<br>
 @长杰 同学提到的将数据保存到InnoDB表用来持久化，也是一个方法。不过，我还是建议釜底抽薪，直接修改备库的内存表的引擎。<br>
 @老杨同志 提到的是主库异常重启的场景，这时候是不会报主备不一致的，因为主库重启的时候写了delete from tbl_name，主备的内存表都清空了。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/05/d4/e06bf86d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>在最后一个例子中，执行 insert into t2(c,d) select c,d from t; 这个语句的时候，如果隔离级别是可重复读（repeatable read），binlog_format=statement。这个语句会对表 t 的所有记录和间隙加锁。<br>你觉得为什么需要这么做呢？<br>假如原库不对t表所有记录和间隙加锁，如果有其他事物新增数据并先与这个批量操作提交，由于事物的隔离级别是可重复读，t2是看不到新增的数据的。但是记录的binlog是statement格式，备库或基于binlog恢复的临时库，t2会看到新增的数据，出现数据不一致的情况。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍 这是一个典型的场景</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 15:57:57</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/67/f4/9a1feb59.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>最喜欢这样的文章，以为比较简单和熟悉，也能打开一扇窗，让人看到一个不同的世界，并且无比丰富多彩。<br>在什么场景下自增主键可能不连续？<br>1：唯一键冲突<br>2：事务回滚<br>3：自增主键的批量申请<br>深层次原因是，不判断自增主键是否已存在和减少加锁的时间范围和粒度->为了更高的性能->自增主键不能回退->自增主键不连续<br>自增主键是怎么做的唯一性的？<br>自增值加1，自增锁控制并发<br>自增主键的生成性能如何？<br>这个需要测试一下，数据库的自增主键也用做生成唯一数字，作为其他单号，比如：并发量小的订单号，性能可能一般。<br>自增主键有最大值嘛？如果有，到了咋弄？<br>最大值应该有，因为数字总有个范围，到了当做字符串的一部分，然后再自增拼接上另一部分，貌似也可以。<br>自增主键的作用？保存机制？修改机制？<br>作用：让主键索引尽量地保持递增顺序插入，避免页分裂，使索引更紧凑。<br>保存机制：不同的存储引擎不一样。<br>MyISAM 引擎的自增值保存在数据文件中。<br>InnoDB 引擎的自增值，先是保存在了内存里，到了 MySQL 8.0 版本后，才有了“自增值持久化”的能力，放在了redolog里。<br>修改机制：<br>在 MySQL 里面，如果字段 id 被定义为 AUTO_INCREMENT，在插入一行数据的时候，自增值的行为如下：<br>1：如果插入数据时 id 字段指定为 0、null 或未指定值，那么就把这个表当前的 AUTO_INCREMENT 值填到自增字段；<br>2：如果插入数据时 id 字段指定了具体的值，就直接使用语句里指定的值。<br><br>根据要插入的值和当前自增值的大小关系，自增值的变更结果也会有所不同。假设，某次要插入的值是 X，当前的自增值是 Y。<br>1：如果 X&lt;Y，那么这个表的自增值不变；<br>2：如果 X≥Y，就需要把当前自增值修改为新的自增值。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-07 07:32:07</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/e8/ea/a4568138.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Nomius</span>
 </div><div class=_2_QraFYR_0>不知道老师还关不关注. <br>(1)问一下为什么一张表上面只能有一个自增的字段? (这个大概能从文章中分析出来,因为autoincrement是定义在表结构中,如果有多个的话实现自增的时候逻辑太复杂了)<br>(2)为什么自增的字段上面必须要有索引? </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 是的<br>2. 我觉得最初的一个原因是，由于以前（8.0版本前）自增主键值是不持久化的，只放在内存里面。每次重启后，重新打开表时，需要计算“自增字段里面的最大值”，然后加1，作为当前的autoincrement的值。<br>如果没有索引，算这个值就要做全表扫描，性能可能很差，影响访问表的速度。<br>好问题。不过这个只是我个人猜测，也可能还有别的原因。😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-05 14:06:54</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/ec/fd/bad2abf5.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>帽子掉了</span>
 </div><div class=_2_QraFYR_0>老师您好，我有一个时序问题，想请教一下。<br>从这篇文章的介绍来看，获取自增id和写binlog是有先后顺序的。<br>那么在binlog为statement的情况下。<br>语句A先获取id=1，然后B获取id=2，接着B提交，写binlog，再A写binlog。<br>这个时候如果binlog重放，是不是会发生B的id为1，而A的id为2的不一致的情况？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，不会<br>因为binlog在记录这种带自增值的语句之前，会在前面多一句，用于指定“接下来这个语句要需要的 自增ID值是多少”，而这个值，是在主库上这一行插入成功后对应的自增值，所以是一致的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-13 20:49:18</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/8a/3e/30c05bce.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>aliang</span>
 </div><div class=_2_QraFYR_0>老师，我们这边有的开发不喜欢用mysql自带的主键自增功能，而是在程序中控制主键（时间+业务+机器+序列，bigint类型，实际长度有17位，其中序列保存在内存中，每次递增，主键值不连续）。理由是<br>（1）通过这样的主键可以直接定位数据，减少索引（2）如果自增，必须先存数据得到主键才可继续下面的程序，如果自己计算主键，可以在入库前进行异步处理<br>（3）a表要insert得到主键，然后处理b表，然后根据条件还要update a表。如果程序自己控制，就不用先insert a表，数据可以在内存中，直到最后一次提交。（对于a表，本来是insert+update，最后只是一条insert，少一次数据库操作）<br>我想请问的是：<br>（1）针对理由1，是否可以用组合索引替代？<br>（2）针对理由2，是否mysql自身的主键自增分配逻辑就已经能实现了？<br>（3）针对理由3，主键更长意味着更大的索引（主键索引和普通索引），你觉得怎样做会更好呢</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: “（时间+业务+机器+序列，bigint类型，实际长度有17位，其中序列保存在内存中，每次递增，主键值不连续）。” ----bigint就是8位，这个你需要确定一下。如果是8位的还好，如果是17位的字符串，就比较耗费空间；<br><br>（1）如果“序列”是递增的，还是不能直接用来体现业务逻辑吧？ 创建有业务意义的字段索引估计还是省不了的 ？<br>（2）mysql确实做不到“插入之前就先算好接下来的id是多少”，一般都是insert执行完成后，再执行select last_insert_id<br> (3) 先insert a再update b再update a，确实看上去比较奇怪，不过感觉这个逻辑应该是可以优化的，不应该作为“主键选择”的一个依据。你可否脱敏一下，把模拟的表结构和业务逻辑说下，看看是不是可以优化的。<br><br>总之，按照你说的“时间+业务+机器+序列”这种模式，有点像用uuid，主要的问题还是，如果这个表的索引多，占用的空间比较大</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-12 16:34:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/40/5e/b8fada94.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ryoma</span>
 </div><div class=_2_QraFYR_0>在8.0.3版本后，innodb_autoinc_lock_mode默认值已是2，在binlog_format默认值为row的前提下，想来也是为了增加并发。 <br><br>https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_autoinc_lock_mode</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍 大势所趋😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-14 22:21:23</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/87/dd/4f53f95d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>进阶的码农</span>
 </div><div class=_2_QraFYR_0>课后题<br>在最后一个例子中，执行 insert into t2(c,d) select c,d from t; 这个语句的时候，如果隔离级别是可重复读（repeatable read），binlog_format=statement会加记录锁和间隙锁。啥我的binlog_format=row也加锁了</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-12 10:43:39</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/03/c9/9a9d82ab.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Aaron_涛</span>
 </div><div class=_2_QraFYR_0>老师，能如果两个事务同时并发插入，主键没有指明的话，加锁的情况能说明下吗</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是说自增主键没指定？<br><br>两个语句分别去申请自增主键，申请到的值是不一样的，所以并不冲突</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-21 22:31:33</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/1d/7f/aabc1b66.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>hetiu</span>
 </div><div class=_2_QraFYR_0>老师，请问下innodb_autoinc_lock_mode配置是库级别的还是实例级别的？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 全局的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-05 10:18:43</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/76/f5/e3f5bd8d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>宝仔</span>
 </div><div class=_2_QraFYR_0>老师这种情况<br>insert into t (id,c,d) values (1,1,1),(2,2,2),(3,3,3),(null,4,4);<br>或者<br>insert into t (id,c,d) values (1,1,1),(null,2,2),(3,3,3),(null,4,4);<br>能解释下吗？<br>第一种情况自增id变成8了<br>第二种情况自增id变成6了</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-12-10 20:56:59</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/0c/0f/93d1c8eb.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>mickey</span>
 </div><div class=_2_QraFYR_0>在讲 insert … select 要使用语句级的锁 的例子时，Session A和B 是不是讲反了？？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-03-16 10:34:53</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/72/89/1a83120a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>yihang</span>
 </div><div class=_2_QraFYR_0>主键 id 出现自增 id 不连续的第三种原因 没有实验出来啊innodb_autoinc_lock_mode=0，1，2 都试了，mysql 版本是8.0, 最后自增列还是连续的</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-02-09 08:53:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/87/dd/4f53f95d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>进阶的码农</span>
 </div><div class=_2_QraFYR_0>上期问题解答，有点疑问<br>set sql_log_bin=off;<br>alter table tbl_name engine=innodb;<br><br>为什么备库需要执行set sql_log_bin=off这一句<br>把表的引擎改成innodb不就能解决重启后内存表被删除的问题吗？<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-12 11:33:17</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/5b/fc/5c24080b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>牛在天上飞</span>
 </div><div class=_2_QraFYR_0>老师，请问产生大量的event事件会对mysql服务器有什么影响？主要是哪几个方面的影响？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 也没啥，主要就是不好管理。。<br>毕竟event是写在MySQL里的，写程序的同学不一定会记得。<br>比较建议将这类逻辑写在应用程序里面</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-12 09:00:08</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/19/30/3c/0668d6ae.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>盘胧</span>
 </div><div class=_2_QraFYR_0>https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html<br>这里面有说规则，自增id不连续的情况，也给了demo。好家伙，老师这这这</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-10-11 17:32:52</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/JKKWS6TzhncvAA0p0NDiaATPIvMicSM76vNAg9IG1ibibcJYPAiaicYjZfq4gAV8GRtcTpOibfRD8vzqHBtL0ibmhwQsbg/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>唐名之</span>
 </div><div class=_2_QraFYR_0>老师，如果我业务场景必须需要一个带有序自增值，设业务为表A，另外添加一张表记录自增为表B，表B包含3个字段（自增主键，表A唯一键，自增列）；伪代码如下；这样能实现吗？或者有其他什么好的方案？<br>begin；<br>insert into A values（字段1, 唯一键）；<br>insert into B value (表A唯一键，自增列)；<br>commit；</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这样思路上是ok的，<br><br>不过表b怎么有两个自增列？一个表只能有一个自增列。<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 16:27:37</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e2/c7/d6a0927a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>AstonPutting</span>
 </div><div class=_2_QraFYR_0>老师，innodb_autoinc_lock_mode = 2，binlog_format = statement 不也会出现数据不一致的问题吗？不是很理解 binlog_format = statement 的情况下，1 与 2 的区别。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: innodb_autoinc_lock_mode = 2的时候就要binlog_format = row才好</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-21 15:28:57</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f1/84/7d21bd9e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Goal</span>
 </div><div class=_2_QraFYR_0>赶上了进度，把春节期间的补回来了</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-12 11:49:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/f7/b1/982ea185.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Frank</span>
 </div><div class=_2_QraFYR_0>insert into t values(null,1,1);<br>begin;<br>insert into t values(null,2,2);<br>rolllack;<br>insert into t values(null,2,2);<br>// 插入的行是 (3,2,2)<br><br>老师 里面是 rollback 吧</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，我手残了。。<br><br>多谢指出，发起勘误了哈<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-12 10:09:16</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_35fe0b</span>
 </div><div class=_2_QraFYR_0>距离老师写这篇文章过了这么久，不知道老师还能不能看到我的评论，有个问题想请教一下：<br>RR隔离级别下，insert ... select 这类语句中的select是否遵循可重复读的限制？<br>如果遵循那select查询的结果是能确定行数的，既然能确定行数，那mysql为什么还要使用1+2+4+8这种申请方式？直接按查询结果申请行数不省事吗？</div><div class=_10o3OAxT_0>
@@ -454,16 +434,16 @@ alter table tbl_name engine=innodb;
 <a class="nav nav-prev" href=/1/38/ title=38_都说InnoDB好，那还要不要使用Memory引擎？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/40/ title=40_insert语句的锁为什么这么多？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

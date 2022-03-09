@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>37_什么时候会使用内部临时表？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>37_什么时候会使用内部临时表？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/37/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -310,121 +310,101 @@ select id%100 as m, count(*) as c from t1 group by m order by null limit 10;
 <p>如果group by需要统计的数据量不大，尽量只使用内存临时表；也可以通过适当调大tmp_table_size参数，来避免用到磁盘临时表；</p></li><li>
 <p>如果数据量实在太大，使用SQL_BIG_RESULT这个提示，来告诉优化器直接使用排序算法得到group by的结果。</p></li></ol><p>最后，我给你留下一个思考题吧。</p><p>文章中图8和图9都是order by null，为什么图8的返回结果里面，0是在结果集的最后一行，而图9的结果里面，0是在结果集的第一行？</p><p>你可以把你的分析写在留言区里，我会在下一篇文章和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>上期的问题是：为什么不能用rename修改临时表的改名。</p><p>在实现上，执行rename table语句的时候，要求按照“库名/表名.frm”的规则去磁盘找文件，但是临时表在磁盘上的frm文件是放在tmpdir目录下的，并且文件名的规则是“#sql{进程id}_{线程id}_序列号.frm”，因此会报“找不到文件名”的错误。</p><p>评论区留言点赞板：</p><blockquote>
 <p>@poppy 同学，通过执行语句的报错现象推测了这个实现过程。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/03/f7/3a493bec.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>请教一个问题：如果只需要去重，不需要执行聚合函数，distinct 和group by那种效率高一些呢？<br><br>课后习题:<br>图8，把统计结果存内存临时表，不排序。id是从1到1000，模10的结果顺序就是1、2、3、4、5。。。<br>图9，老师把tmp_table_size改小了，内存临时表装不下，改用磁盘临时表。根据老师讲的流程，id取模的结果，排序后存入临时表，临时的数据应该是0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,......<br>从这个磁盘临时表读取数据汇总的结果的顺序就是0,1,2,3,4,5。。。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年好<br><br>好问题，我加到后面文章中。<br>简单说下结论，只需要去重的话，如果没有limit，是一样的；<br>有limit的话，distinct 快些。<br><br>漂亮的回答👍<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-06 22:03:50</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/05/d4/e06bf86d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>图九使用的是磁盘临时表，磁盘临时表使用的引擎是innodb，innodb是索引组织表，按主键顺序存储数据，所以是按照m字段有序的。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿<br>春节快乐</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-06 08:38:02</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/e9/29/629d9bb0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>天王</span>
 </div><div class=_2_QraFYR_0>内部临时表，和sort buffer,join buffer一样，都用来存放语句执行过程中的中间数据，辅助语句的执行。<br>使用用法 using temporary。<br><br>使用场景：1 数据一边查询，一边直接得到结果，不需要额外内存。比如：group by 需要计算。<br><br> 2 join_buffer 是无序数组（单字段，可以重复），sort_buffer 有序数组，内部临时表是二维结构<br><br> 3 用到二维表的特性需要用到内部临时表，比如 distinct ，group by <br><br>优化：1 group by 字段加索引<br><br> 2 扩大临时表内存大小<br><br> 3 如果数据量比较大，直接使用磁盘临时表<br><br> 4 如果分组之后，不需要排序，手工 order by null<br><br><br><br>group by 的顺序<br><br>1 创建一个内部临时表，初始化字段 a(分组字段) b(数量)<br><br>2 扫描表，一个个的判断，a字段值在临时表不存在，则插入(2,1)，如果存在，比如（2,1），则加1，成为（2,2）<br><br>3 分组之后，默认会进行排序，如果不需要顺序，用 order by null。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍很好的总结</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-28 11:32:11</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJAibnPX9jW8kqLcIfibjic8GbkQkEUYyFKJkc39hZhibVlNrqwTjdLozkqibI2IwACd5YzofYickNxFnZg/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Sinyo</span>
 </div><div class=_2_QraFYR_0>老师好，<br>我用infobright列式存储引擎explain出来一个group by语句，<br>发现也会用到内存临时表和文件排序、然后使用SQL_BIG_RESULT也有同样优化效果；<br>这是不是说明sort_buffer、join_buffer、内存临时表和磁盘临时表与数据库引擎类型其实是独立开的呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，非常好的验证和思考👍<br><br>sort_buffer、join_buffer、内存临时表和磁盘临时表 都是server层的，引擎间共用</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-28 23:59:57</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/d4/fd/43802282.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>IceGeek17</span>
 </div><div class=_2_QraFYR_0>文中说，SQL_BIG_RESULT这个hint，用来告诉优化器直接用磁盘临时表，<br>对于文中的例子 select SQL_BIG_RESULT id%100 as m, count(*) as c from t1 group by m;<br>则没有使用临时表，直接用了排序算法，这里有点不太明白，SQL_BIG_RESULT这个hint到底用来提示的是什么（是用磁盘临时表，还是就是直接使用排序，不用临时表）？<br><br>文中 “MySQL优化器一看，磁盘临时表B+数存储，存储效率不如数据来的高。那从磁盘空间考虑，还是直接用数组来存”，这段怎么理解？<br>是指MySQL优化器，直接忽略B+数的磁盘临时表（这里忽略的依据是什么？），并且从文中后续的分析来看，也没有用内存临时表，而是直接sort buffer排序，老师再详细解释下？<br><br>对于InnoDB的磁盘临时表，索引结构是B+数；那对于内存临时表，是不是就是数组结构？数组临时表的主键就是每个数组元素？<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 最后的结果是“直接使用排序”<br>2. 就是认为用sort_buffer直接排序性能更好，所以就没有使用内存临时表或磁盘临时表<br>3. 没有索引的内存表可以认为就是数组； 主键不是，内存表的表结构，可以看一下38篇</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-21 15:54:31</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/0a/dd/88fa7b52.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_41d472</span>
 </div><div class=_2_QraFYR_0>老师您好,课课后小结 <br>2.尽量让 group by 过程用上表的索引，确认方法是 explain 结果里没有 Using temporary 和 Using filesort；<br>这里我有个疑问,文章的例子中explain 结果里,既出现了using index ,又出现了Using temporary 和 Using filesort,好像也是使用了所以啊,如果用你这个方法判断,那到底有没有使用索引呢?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 只要是有Using filesort就表示有排序；<br>Using index是表示使用了覆盖索引；<br><br>三个都出现就是使用了覆盖索引，但是覆盖索引的顺序扫描不能满足需求，只能排序，而排序过程用到了临时表</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-21 13:25:05</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/a8/e2/f8e51df2.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Li Shunduo</span>
 </div><div class=_2_QraFYR_0>请问Group By部分的第一个语句 explain select id%10 as m, count(*) as c from t1 group by m；为什么选择的是索引a，而不是primary key？如果字段a上有空值，使用索引a岂不是就不能取到所有的id值了？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 因为索引c的信息也足够，而且比主键索引小，使用索引c更会好。<br><br>“如果字段a上有空值，使用索引a岂不是就不能取到所有的id值了？”，不会的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-07 12:23:14</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/20/3a/90db6a24.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Long</span>
 </div><div class=_2_QraFYR_0>老师，新年好！ :-)<br><br>有几个版本差异的问题：<br>（1）图1中的执行计划应该是5.7版本以后的吧，貌似没找到说在哪个环境，我在5.6和5.7分别测试了，id = 2的那个rows，在5.6版本（5.6.26）是1000，在5.7版本是2行。应该是5.7做的优化吧？<br><br>（2）图 9 group + order by null 的结果（此盘临时表），这里面mysql5.6里面执行的结果是（1，10），（2，10）...(10，10)，执行计划都是只有一样，没找到差异。<br>跟踪下了下optimizer trace，发现问题应该是在临时表空间满的的时候，mysql5.7用的是：converting_tmp_table_to_ondisk "location": "disk (InnoDB)",，而mysql 5.6用的是converting_tmp_table_to_myisam "location": "disk (MyISAM)"的原因导致的。<br>查了下参数：<br>default_tmp_storage_engine。（5.6，5.7当前值都是innodb）<br>internal_tmp_disk_storage_engine（只有5.7有这个参数，当前值是innodb），5.6应该是默认磁盘临时表就是MyISAM引擎的了，由于本地测试环境那个临时表的目录下找不到临时文件，也没法继续分析了。。。<br><br>至于为什么MySQL 5.6中结果展示m字段不是0-9而是1-10，还得请老师帮忙解答下了。<br><br><br>还有几个小问题，为了方便解答，序号统一了：<br>（3）在阅读mysql执行计划的时候，看了网上有很多说法，也参考了mysql官网对id（select_id）的解释：<br>id (JSON name: select_id)<br>The SELECT identifier. This is the sequential number of the SELECT within the query.（感觉这个读起来也有点歧义，这个sequential字面解释感觉只有顺序的号码，并咩有说执行顺序）<br>比如图1，文中解释就是从ID小的往大的执行的，网上有很多其他说法，有的是说ID从大到小执行，遇到ID一样的，就从上往下执行。有的说是从小往大顺序执行。不知道老师是否可以官方讲解下。<br><br>（4）我发现想搞懂一个原理，并且讲清楚让别人明白，真的是很有难度，非常感谢老师的分享。这次专栏结束，还会推出的新的专栏吗？ 非常期待。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 是的，我默认是用5.7做的验证，这里5.7做了优化。<br>2. 其实你已经找到原因了，就是因为5.6的默认临时表是myisam表，而myisam表是堆表，这里的堆表，跟38篇介绍的memory引擎是类似的，你看了那篇应该就能知道为什么堆表是最后显示0那行了<br>3. 好问题，不同id从大到小，相同id从上到下<br>4. 多谢你的鼓励，还没定，先休息下^_^<br><br>不好意思，你发的第一天就看到了，回复晚了😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-10 08:24:30</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/31/c8/a64e4aef.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>兔斯基</span>
 </div><div class=_2_QraFYR_0>老师，关于排序有几个问题。<br>order by id，主键<br>order by null，<br>不加order by<br>这三种写法哪种执行效率更高一些？后面两者是不是等价的？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这三种写法语义上不一样。。<br><br>如果对返回结果没有顺序要求，那写上order by null肯定是好的。<br><br>“order by null”和“不加order by”不等价，咱们文中有说哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 07:55:52</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/51/c8/83852d5a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>梦康</span>
 </div><div class=_2_QraFYR_0>实践发现文中描述的 group by 执行过程中解释不通。案例如下<br><br>select `aid`,sum(`pv`) as num from article_rank force index(idx_day_aid_pv) where `day`>20190115 group by aid order by num desc LIMIT 10;<br><br>内存临时表不够，需要写入磁盘<br><br>select `aid`,sum(`pv`) as num from article_rank force index(idx_aid_day_pv) where `day`>20190115 group by aid order by num desc LIMIT 10;<br><br>内存临时表足够。<br><br>选的索引不一样，但是最后筛选出来的总行应该是一样的呀，所以现在更加困惑了。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 看索引的名字猜测， idx_aid_day_pv 就是(adid, day,pv)这三个字段的联合索引？<br><br>这样的话，第二个语句就会顺序遍历索引，只要找到10个不同的aid就可以了，这个索引不用全部遍历；这样可以减少很多写入临时表的数据；<br><br>但是第一个语句是day开头的， 这样就必须将所有`day`&amp;gt;20190115的记录都存到临时表中，这个要写入内存表的数据行数肯定比第二个语句多的<br><br>所以核心就是这两个语句需要放入临时表的行数不同。<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 17:27:01</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJAibnPX9jW8kqLcIfibjic8GbkQkEUYyFKJkc39hZhibVlNrqwTjdLozkqibI2IwACd5YzofYickNxFnZg/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Sinyo</span>
 </div><div class=_2_QraFYR_0>谢谢老师解惑，<br>再次请教老师，那其他引擎数据库在server层建的磁盘临时表是什么引擎呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 需要创建临时表的时候，与当前访问数据的引擎无关，都是默认创建内存临时表，内存不够了转磁盘临时表（默认是innodb 表）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-01 18:01:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/15/f6/7b/b6abcbbe.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>否极泰来</span>
 </div><div class=_2_QraFYR_0>请教一个问题：mysql正常一条sql的基本执行顺序是：from > where > group by > select > order by<br>select id%10 as m, count(*) as c from t1 group by m;<br>为什么这条SQL语句没有m字段能正常执行了？是因为select as 语句先于group by执行吗？？<br>感觉比较奇怪不是太理解</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-04-19 15:37:35</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/16/31/ae8adf82.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>路过</span>
 </div><div class=_2_QraFYR_0>请教：<br>文章中的第一个案例语句，如果把limit 2去掉，即如下：<br>(select 1000 as f) union (select id from t1 order by id desc);<br>按照我的理解，应该得到从1000到1的降序排列数据。但结果出乎意料：<br>1000<br>1<br>2<br>。。。<br>999<br>这是为何啊？<br>如果把上面的语句加上limit 1000，即：<br>(select 1000 as f) union (select id from t1 order by id desc limit 1000);<br>结果就是从1000到1的降序排列。搞不懂，请老师解惑！</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-28 22:31:11</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/87/dd/4f53f95d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>进阶的码农</span>
 </div><div class=_2_QraFYR_0>select id%10 as m, count(*) as c from t1 group by m;<br>我执行这条语句 第一行是1 没有经过排序，我explain 这条语句也没有显示sort 但是显示用了临时表，可能是什么原因的，和mysql版本有关吗？还是配置？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-07 21:19:12</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e1/10/6a1fe19a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>黄文韬</span>
 </div><div class=_2_QraFYR_0>老师，有两个问题不是很清楚:<br>1. 图三显示union all没有使用临时表，但是我本地explain看到union all和union的执行计划是一样的，不知道为什么？是和版本有关系还是其他设置？本地版本5.6<br>2.图四 不太理解为什么会用filesort，因为我看你后面执行流程是说会创建一个临时表，主键是m，那为啥不可以直接根据m来排序，而要用到filesort外部排序，还是这个filesort是指的不是按表中索引的排序都会是filesort？？<br>感谢</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 啊 比较奇怪，你可否给一下截图，（比如发个微博，贴图at我），带上表结构哈<br>2. 好问题，其实这个是要结合下一篇文章的知识点，内存表的主键不是保证有序的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-15 13:12:09</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/94/59/ac2aa72b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Smile</span>
 </div><div class=_2_QraFYR_0>当碰到第一个 2 的时候，已经知道累积了 Y 个 1，结果集里的第一行就是 (1,Y);<br>---- <br>应该是 结果集里的第 二 行 吧<br><br><br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对的，👍🏿细致<br><br>发起勘误了，新年快乐</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 00:30:03</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/0c/48/ba59d28d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>poppy</span>
 </div><div class=_2_QraFYR_0>老师，春节快乐，过年还在更新，辛苦辛苦。<br>关于思考题，我的理解是图8中的查询是使用了内存临时表，存储的顺序就是id%10的值的插入顺序，而图9中的查询，由于内存临时表大小无法满足，所以使用了磁盘临时表，对于InnoDB来说，就是对应B+树这种数据结构，这里会按照id%100(即m)的大小顺序来存储的，所以返回的结果当然也是有序的</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年好~ <br><br>👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-06 20:17:43</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/27/1f/1a/78fc275d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>W_波</span>
 </div><div class=_2_QraFYR_0>老师你好，请问一下使用union all的时候不会产生临时表吗？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-11-05 18:04:07</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELZPnUAiajaR5C25EDLWeJURggyiaOP5GGPe2qlwpQcm5e3ybib8OsP4tvddFDLVRSNNGL5I3SFPJHsA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>null</span>
 </div><div class=_2_QraFYR_0>疑问：<br>set tmp_table_size=1024;<br>select id%100 as m, count(*) as c from t1 group by m order by null limit 10;<br><br>结果不需要排序，为什么不像第 17 章《如何正确显示随机消息》，采用优先队列排序算法。这里只需要维护一个 10 个元素的堆就可以了。<br><br>----<br><br>课后思考题：<br>使用磁盘临时表（engine=innodb），排首位的是 0，而内存临时表（engine=memory）却是 1。为何会有这种区别？<br><br>扫描计算的过程都是一样的，扫描 a 索引的时候，都是先扫描 1，再扫描 10。<br>m 字段是磁盘临时表和内存临时表的主键。<br><br>磁盘临时表是以 B+ 树存储数据，插入 m=0 时，会被动态调整到首位。而内存临时表是以数组保存数据，每次都是往数组末端添加元素，不会动态调整。因此产生了这个差异。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-09 13:00:25</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJAibnPX9jW8kqLcIfibjic8GbkQkEUYyFKJkc39hZhibVlNrqwTjdLozkqibI2IwACd5YzofYickNxFnZg/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Sinyo</span>
 </div><div class=_2_QraFYR_0>老师好，好奇怪我用infobright列式存储引擎explain一条union语句，发现是不用临时表的，测试了很多次：<br>比如：<br>EXPLAIN <br>(SELECT 111)<br>UNION <br>(SELECT 222)<br>；<br>EXPLAIN <br>(SELECT 111)<br>UNION <br>(SELECT id from aaa)<br>；<br>EXPLAIN <br>(SELECT id from bbb)<br>UNION <br>(SELECT id from aaa)<br>以上都没有用到临时表；<br>这应该说明不同引擎的逻辑层还是存在差异的把。</div><div class=_10o3OAxT_0>
@@ -434,16 +414,16 @@ select id%100 as m, count(*) as c from t1 group by m order by null limit 10;
 <a class="nav nav-prev" href=/1/36/ title=36_为什么临时表可以重名？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/38/ title=38_都说InnoDB好，那还要不要使用Memory引擎？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

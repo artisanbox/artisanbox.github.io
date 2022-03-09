@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>07_行锁功过：怎么减少行锁对性能的影响？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>07_行锁功过：怎么减少行锁对性能的影响？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/7/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -289,121 +289,101 @@ Q6:ROLLBACK TO SAVEPOINT sp;
 <p>@Aurora 给了最接近的答案；<br>
 @echo＿陈 问了一个好问题；<br>
 @壹笙☞漂泊 做了很好的总结。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/38/e2/28aa8e6c.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>会玩code</span>
 </div><div class=_2_QraFYR_0>老师，关于死锁检测innodb_deadlock_detect我想请教一下，是每条事务执行前都会进行检测吗？如果是这样，即使简单的更新单个表的语句，当每秒的并发量达到上千的话，岂不是也会消耗大量资源用于死锁检测吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是个好问题<br>如果他要加锁访问的行上有锁，他才要检测。<br><br>这里面我担心你有两个误解，说明下：<br>1. 一致性读不会加锁，就不需要做死锁检测；<br><br>2. 并不是每次死锁检测都都要扫所有事务。比如某个时刻，事务等待状态是这样的：<br><br> B在等A，<br> D在等C，<br> 现在来了一个E，发现E需要等D，那么E就判断跟D、C是否会形成死锁，这个检测不用管B和A</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-03 14:28:07</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>bluefantasy3</span>
 </div><div class=_2_QraFYR_0>请教老师一个问题：<br>innodb行级锁是通过锁索引记录实现的。如果update的列没建索引，即使只update一条记录也会锁定整张表吗？比如update t set t.name='abc' where t.name='cde'; name字段无索引。为何innodb不优化一下，只锁定name='cde'的列？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 第一个问题是好问题，我加到答疑文章中。简单的回答：是的。但是你可以再往前考虑一下，如果是 你的update 语句后面加个limit 1, 会怎么锁？<br><br><br>Innodb支持行锁，没有支持“列锁” 哈😄<br><br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 08:17:33</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/04/96/dcb9504b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>荒漠甘泉</span>
 </div><div class=_2_QraFYR_0>老师，本节课讲的不支持行锁的引擎，只能使用表锁，而表锁同一张表在同一时刻只能有一个更新。但是上节课讲的表级锁中的MDL锁，dml语句会产生MDL读锁，而MDL读锁不是互斥的，也就是说一张表可以同时有多个dml语句操作。感觉这两种说法有点矛盾，请老师解惑！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不矛盾，MDL锁和表锁是两个不同的结构。<br><br>比如：<br>你要在myisam 表上更新一行，那么会加MDL读锁和表的写锁；<br>然后同时另外一个线程要更新这个表上另外一行，也要加MDL读锁和表写锁。<br><br>第二个线程的*MDL读锁是能成功加上*的，但是被表写锁堵住了。从语句现象上看，就是第二个线程要等第一个线程执行完成。<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 19:29:51</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/1f/2e/27d8b06d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>蓝天</span>
 </div><div class=_2_QraFYR_0>老师：上一节讲的dml时会产生读MDL锁（表锁），也就是update会持有读MDL。读和读不互斥。但是对于行锁来说。两个update同时更新一条数据是互斥的。这个是因为多种锁同时存在时，以粒度最小的锁为准的原因么？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不是“以粒度最小为准”<br>而是如果有多种锁，必须得“全部不互斥”才能并行，只要有一个互斥，就得等。<br><br>好问题<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 17:51:42</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/ed/d2/e3ae7ddd.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>三木禾</span>
 </div><div class=_2_QraFYR_0>老师，如果开启事务，然后进行死锁检测，如果发现有其它线程因为这个线程的加入，导致其它线程的死锁，这个流程能帮着分析一下么</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题<br><br>理论上说，之前没死锁，现在A加进来，出现了死锁，那么死锁的环里面肯定包含A，<br>因此只要从A出发去扫就好了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 07:56:52</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>老师，针对我的第一个问题。我就是想问怎么能拿到比较全得死锁信息以及把这些信息保存到文件里。<br>第二个问题，如果reset以后，是不是就失去了长连接的意义了呢？相当于再次进行连接。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 就是持续监控，发现新的就存起来<br><br>2. 不会，reset_connection只是复位状态，恢复到连接和权限验证之后的状态，没有重连</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 23:15:57</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/0b/70/a2c1723c.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>武者</span>
 </div><div class=_2_QraFYR_0>老师 你好 <br>有以下情况 帮忙分析下会锁表不<br><br>update a，b set a.name = b.name where a.uid=b.uid and b.group=1；<br>update c，b set c.age=b.age where c.uid=b.uid and b.group = 1；<br><br>如果两个语句同时执行期间 是不是有个执行不了 要等b解锁。还是说没有更新b的字段b不会锁，两个可并行执行<br>请老师指导下<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个你得同时贴表结构。<br><br>还有，会不会锁，不是验证一下就可以吗，两个都用begin + 语句，<br><br>两阶段锁协议会帮助你😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-29 18:14:11</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/48/bd/6c7d4230.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Tony Du</span>
 </div><div class=_2_QraFYR_0>方案一，事务相对较长，则占用锁的时间较长，会导致其他客户端等待资源时间较长。<br>方案二，串行化执行，将相对长的事务分成多次相对短的事务，则每次事务占用锁的时间相对较短，其他客户端在等待相应资源的时间也较短。这样的操作，同时也意味着将资源分片使用（每次执行使用不同片段的资源），可以提高并发性。<br>方案三，人为自己制造锁竞争，加剧并发量。<br>方案二相对比较好，具体还要结合实际业务场景。<br><br>另，对于innodb的行锁，我觉得可以增加一讲，如何加锁（依赖于具体的隔离级别，是否有索引，是否是唯一索引，SQL的执行计划），特别是在RR隔离级别下的GAP锁，对于innodb，RR级别是可以防止幻读的。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 分析得很好。<br><br>嗯嗯索引和锁的内容很多，也是需要慢慢安排😄<br>突然上概念怕大家看得不开心😓</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 11:31:50</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>继续把该讲内容总结为几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br> 1. <br>两阶段锁的概念是什么? 对事务使用有什么帮助?<br> 2. <br>死锁的概念是什么? 举例说明出现死锁的情况.<br> 3. <br>死锁的处理策略有哪两种? <br> 4. <br>等待超时处理死锁的机制什么?有什么局限?<br> 5. <br>死锁检测处理死锁的机制是什么? 有什么局限?<br> 6. <br>有哪些思路可以解决热点更新导致的并发问题?<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 继续手动👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-01 11:36:18</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/34/3d/51762e76.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>岁月安然</span>
 </div><div class=_2_QraFYR_0>总结：<br>两阶段锁：在 InnoDB 事务中，行锁是在需要的时候才加上的，但并不是不需要了就立刻释放， 而是要等到事务结束时才释放。<br>建议：如果你的事务中需要锁多个行，要把最可能造成锁冲突、最可能影响并发度的锁尽量往后放。<br>死锁：当并发系统中不同线程出现循环资源依赖，涉及的线程都在等待别的线程释放资源时，就会导致这几个线程都进入无限等待的状态。<br>解决方案：<br>1、通过参数 innodb_lock_wait_timeout 根据实际业务场景来设置超时时间，InnoDB引擎默认值是50s。<br>2、发起死锁检测，发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 innodb_deadlock_detect 设置为 on，表示开启这个逻辑（默认是开启状态）。<br>如何解决热点行更新导致的性能问题？<br>1、如果你能确保这个业务一定不会出现死锁，可以临时把死锁检测关闭掉。一般不建议采用<br>2、控制并发度，对应相同行的更新，在进入引擎之前排队。这样在InnoDB内部就不会有大量的死锁检测工作了。<br>3、将热更新的行数据拆分成逻辑上的多行来减少锁冲突，但是业务复杂度可能会大大提高。<br><br>innodb行级锁是通过锁索引记录实现的，如果更新的列没建索引是会锁住整个表的。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿这个总结</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-29 11:05:04</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>suynan</span>
 </div><div class=_2_QraFYR_0>系列课程看到现在，我能说，这是我看过的最好的mysql课程吗。网上的文章要么漏洞百出小学生水平，要么浅尝辄止并赠送一堆废话，要么千篇一律copy加转载。<br>说实话，真的被误导过，可怕的不是误导我一人，而是千千万万的菜鸟开发者。<br>文章很用心，感谢作者，超值！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 感谢鼓励🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-06 17:16:19</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/ad/1b/0c558e7e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>泉</span>
 </div><div class=_2_QraFYR_0>我选第二种。<br>第一种，需要锁资源多，事务较大，持有锁时间最长。<br>第三种，多个事务会对同一行产生锁竞争，消耗cpu资源。<br>请指正。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 07:25:34</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/de/8d/99536c5b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Aurora</span>
 </div><div class=_2_QraFYR_0>针对第一层楼主提到的问题，我记得是，如果update 没有走索引，innodb内部是全表根据主键索引逐行扫描 逐行加锁，释放锁。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 逐行加锁，<br><br>事务提交的时候统一释放。— 记得两阶段锁哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 20:13:50</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/4a/45/04a13bf9.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>bing</span>
 </div><div class=_2_QraFYR_0>在开发时一般都是按照顺序加锁来避免死锁。比如都是按照先拿t1,再拿t2.</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是个好的实践经验👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 22:08:02</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/f3/17/76b9d2e5.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>～嗡嗡</span>
 </div><div class=_2_QraFYR_0>个人理解，选择第二种<br>1.直接delete 10000可能使得执行事务时间过长<br>2.效率慢点每次循环都是新的短事务，并且不会锁同一条记录<br>3.效率虽高，但容易锁住同一条记录，发生死锁的可能性比较高<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 23:46:12</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJjbYMNwhsazDAUyxNkEFkcCs3ics3RetwSn92aquTwczx6ej4FPpANpZWSCich32UND3xMhGHv5ODg/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>京南游子</span>
 </div><div class=_2_QraFYR_0>请问老师，本课举的例子，预售一年电影票导致CPU占用率100%，这怎么可能是死锁导致的呢？这种场景会出现互等锁的情景吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不会出现死锁，就是普通的单向锁等待<br><br>但是我们知道不会死锁，InnoDB可不知道，所以它得做死锁检测才能得到“没有死锁”这个结论，<br>我们说吃CPU的就是死锁检测这个逻辑</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-21 07:51:43</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>老师我有几个问题:<br>1.如何在死锁发生时,就把发生的sql语句抓出来？<br>2.在使用连接池的情况下,连接会复用.比如一个业务使用连接set sql_select_limit=1,释放掉以后.其他业务复用该连接时,这个参数也生效.请问怎么避免这种情况,或者怎么禁止业务set session？<br>3.很好奇双11的成交额,是通过redis累加的嘛？<br>4.不会改源码能成为专家嘛？😄<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. show engine innodb status 里面有信息，不过不是很全…<br>2. 5.7的reset_connection接口可以考虑一下<br>3. 用redis的话，为了避免超卖需要增加了很多机制来保证。修改都在数据库里执行就方便点。前提是要解决热点问题<br>4. 我认识几位处理问题和分析问题经验非常丰富的专家，不用懂源码，但是原理还是要很清楚的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 20:58:33</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>shawn</span>
 </div><div class=_2_QraFYR_0>其实关于电影院总额的并发问题，之前我们的系统中遇到了，也需要限制退款是否会成负数;<br>当时的解决方案是异步队列处理，线程池线程数为4，5个节点也就20个并发请求<br>更新余额时增加条件updateTime&lt;now()，如果更新数目等于0就回滚事务，再把请求入队重试(限制了重入队次数防止死循环)<br>客户端提交后即刻返回，然后等服务端通知<br>感觉刚好对应了老师讲的死锁检测限制并发的思路 <br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不错的实践方法</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-29 08:01:55</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/30/28/6e019a7a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>锅子</span>
 </div><div class=_2_QraFYR_0>老师好，关于上一期的问题我有2疑问：<br>1.Q2，WITH CONSISTENT SNAPSHOT语句执行完可以确保得到一个一致性视图，为什么还会备份到Q2时间点之后更改的表结构啊？如果这样那是不是意味着如果有一个数据库一直有数据在写入的话，备份会一直都无法完成。<br>2.Q3设置了保存点，之后读到主库的DDL语句，那Q6又回滚到了Q3设置的保存点，那是不是就主从不一致了啊？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 09:41:39</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/cb/50/66d0bd7f.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>杰之7</span>
 </div><div class=_2_QraFYR_0>昨天和今天学习了锁相关的知识，对锁有了一定的认识。锁分为全局锁，表锁，行锁三类。全局锁在有事物支持的情况下，使用Mysqldump的single - transaction的方法进行备份时的更新。昨天晚上也问了老师一个关于表锁的疑问，通过老师的解答，理解了write比read的权限高。在今天的学习中，学习了行锁，顾名思义，行锁就是在进行行字段操作时，其他操作不能同时对行进行操作。根据这一问题，提出了两阶段锁协议，并发的锁尽量往后排，这样可以提升并发度。在锁中，还有两种情况，一是死锁，就是事物相互等待，直到等待结束可以通过设置innodb_lock_wait_timed的等待时间来控制。另一种情况是死锁检测，正常情况下是开的，可以对锁进行检测，但老师举了一个1000个并发请求，这样相互等待就是1000的平方量级，导致CPU消耗100%的性能，秒执行不到100行的例子。针对这种问题，老师给予了三个解决方法，把锁关了，不一定是最好，，第二是控制并发度，但有可能有几百个客户端并发并发进行，第三是在逻辑上的多行，当然也需要在程序上对特殊情况下的处理。学习到今天，数据库的核心有难度，但我相信自己可以搞定它，这就是我坚持它的理由。</div><div class=_10o3OAxT_0>
@@ -413,16 +393,16 @@ Q6:ROLLBACK TO SAVEPOINT sp;
 <a class="nav nav-prev" href=/1/6/ title=06_全局锁和表锁：给表加个字段怎么有这么多阻碍？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/8/ title=08_事务到底是隔离的还是不隔离的？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

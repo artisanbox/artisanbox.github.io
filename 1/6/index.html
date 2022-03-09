@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>06_全局锁和表锁：给表加个字段怎么有这么多阻碍？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>06_全局锁和表锁：给表加个字段怎么有这么多阻碍？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/6/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -297,121 +297,101 @@ ALTER TABLE tbl_name WAIT N add column ...
 <p>@浪里白条 帮大家总结了复习要点；<br>
 @约书亚 的问题里提到了MRR优化；<br>
 @HwangZHen 留言言简意赅。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/7d/da/780f149e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>echo＿陈</span>
 </div><div class=_2_QraFYR_0>mysql 5.6不是支持online ddl了吗？也就是对表操作增加字段等功能，实际上不会阻塞读写？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Online DDL的过程是这样的：<br>1. 拿MDL写锁<br>2. 降级成MDL读锁<br>3. 真正做DDL<br>4. 升级成MDL写锁<br>5. 释放MDL锁<br><br>1、2、4、5如果没有锁冲突，执行时间非常短。第3步占用了DDL绝大部分时间，这期间这个表可以正常读写数据，是因此称为“online ”<br><br>我们文中的例子，是在第一步就堵住了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-26 09:38:06</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/0e/6c/1f3b1372.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>哈哈哈</span>
 </div><div class=_2_QraFYR_0>MDL作用是防止DDL和DML并发的冲突，个人感觉应该写清楚，一开始理解为select和update之间的并发。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯 特意写了是MDL“读锁”。<br>把你的留言置顶了，希望有疑问的同学能看到这个😆<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-24 17:35:23</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/df/e7/4ce5ed27.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>lionetes</span>
 </div><div class=_2_QraFYR_0>FTWRL 前有读写的话 ,FTWRL 都会等待 读写执行完毕后才执行<br>FTWRL 执行的时候要刷脏页的数据到磁盘,因为要保持数据的一致性 ，理解的执行FTWRL时候是 所有事务 都提交完毕的时候<br><br>mysqldump + -single-transaction 也是保证事务的一致性,但他只针对 有支持事务 引擎,比如 innodb<br>所以 还是强烈建议大家在创建实例,表时候需要innodb 引擎 为好<br>全库只读 readonly = true 还有个情况在 slave 上 如果用户有超级权限的话 readonly 是失效的<br><br>表级别 锁 ：一个直接就是表锁 lock table 建议不要使用, 影响太大，另个就是 MDL 元数据锁<br><br>MDL 是并发情况下维护数据的一致性,在表上有事务的时候,不可以对元数据经行写入操作,并且这个是在server层面实现的<br>当你做 dml 时候增加的 MDL 读锁, update table set id=Y where id=X; 并且由于隔离级别的原因 读锁之间不冲突<br><br>当你DDL 时候 增加对表的写锁, 同时操作两个alter table 操作 这个要出现等待情况。<br><br>但是 如果是 dml 与ddl 之间的交互 就更容易出现不可读写情况,这个情况容易session 爆满,session是占用内存的,也会导致内存升高<br>MDL 释放的情况就是 事务提交.<br><br>主库上的一个小表做了一个 DDL, 同步给slave ,由于这个时候有了先前的 single-transaction,所以slave 就会出现 该表的 锁等待, 并且slave 出现延迟</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 分析得很好。<br>尤其readonly 对 super 权限无效这句。<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-26 16:45:24</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>miche</span>
 </div><div class=_2_QraFYR_0>1. 上面的那个因为mdl锁把整个库搞挂的例子里，如果用pt工具来操作，会出现同样的情况吗？<br>2. 那个例子里显示select语句前加了begin，是不是select的时候不加begin，就不会出现同样的情况呢？<br>3. online ddl 的copy方式和inplace方式，也都是需要 拿MDL写锁、降成读锁、做DDL、升成写锁、释放MDL锁吗？<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. Pt的过程也是有操作表结构的，所以会类似<br><br>2. 对，没有begin的话，这样select执行完成以后，MDL就自动释放了哦<br><br>3. 是，是否online都是第三步（结合置顶评论看哈）的区别，另外四步还是有的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 10:49:45</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/15/84/cb/09455051.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>马涛</span>
 </div><div class=_2_QraFYR_0>索引问题答案解释这个是不是再详细一点，我看还有人和我一样，还是搞不清楚为什么c索引和ca索引一样。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: InnoDB会把主键字段放到索引定义字段后面，<br>当然同时也会去重。<br><br>所以，当主键是(a,b)的时候，<br>定义为c的索引，实际上是（c,a,b);<br>定义为(c,a)的索引，实际上是(c,a,b)<br>你看着加是相同的<br><br>ps 定义为(c,b）的索引，实际上是（c,b,a)<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-02 01:54:49</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/ab/e1/f6b921fa.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>壹笙☞漂泊</span>
 </div><div class=_2_QraFYR_0>总结：<br>根据加锁范围：MySQL里面的锁可以分为：全局锁、表级锁、行级锁<br><br>一、全局锁：<br>对整个数据库实例加锁。<br>MySQL提供加全局读锁的方法：Flush tables with read lock(FTWRL)<br>这个命令可以使整个库处于只读状态。使用该命令之后，数据更新语句、数据定义语句和更新类事务的提交语句等操作都会被阻塞。<br>使用场景：全库逻辑备份。<br>风险：<br>1.如果在主库备份，在备份期间不能更新，业务停摆<br>2.如果在从库备份，备份期间不能执行主库同步的binlog，导致主从延迟<br>官方自带的逻辑备份工具mysqldump，当mysqldump使用参数--single-transaction的时候，会启动一个事务，确保拿到一致性视图。而由于MVCC的支持，这个过程中数据是可以正常更新的。<br><br>一致性读是好，但是前提是引擎要支持这个隔离级别。<br>如果要全库只读，为什么不使用set global readonly=true的方式？<br>1.在有些系统中，readonly的值会被用来做其他逻辑，比如判断主备库。所以修改global变量的方式影响太大。<br>2.在异常处理机制上有差异。如果执行FTWRL命令之后由于客户端发生异常断开，那么MySQL会自动释放这个全局锁，整个库回到可以正常更新的状态。而将整个库设置为readonly之后，如果客户端发生异常，则数据库就会一直保持readonly状态，这样会导致整个库长时间处于不可写状态，风险较高。<br>二、表级锁<br>MySQL里面表级锁有两种，一种是表锁，一种是元数据所(meta data lock,MDL)<br>表锁的语法是:lock tables ... read/write<br>可以用unlock tables主动释放锁，也可以在客户端断开的时候自动释放。lock tables语法除了会限制别的线程的读写外，也限定了本线程接下来的操作对象。<br>对于InnoDB这种支持行锁的引擎，一般不使用lock tables命令来控制并发，毕竟锁住整个表的影响面还是太大。<br>MDL：不需要显式使用，在访问一个表的时候会被自动加上。<br>MDL的作用：保证读写的正确性。<br>在对一个表做增删改查操作的时候，加MDL读锁；当要对表做结构变更操作的时候，加MDL写锁。<br>读锁之间不互斥。读写锁之间，写锁之间是互斥的，用来保证变更表结构操作的安全性。<br>MDL 会直到事务提交才会释放，在做表结构变更的时候，一定要小心不要导致锁住线上查询和更新。<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 早啊今天😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-26 11:27:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/b8/36/542c96bf.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>关于文中小表DDL的疑惑：<br>sessionC（DDL操作）被前面的sessionA和B（查询操作，获取MDL 读锁）所阻塞。这里sessionC的DDL操作任务肯定是处于等待的，后续来的sessionD（查询操作）为什么会被sessionC所阻塞？<br>我理解的是sessionC现在都还没有进行DDL操作，没有获取到MDL写锁，为什么sessionD会被C阻塞？难道mysql Server端对于sessionC，D有一个 队列 来决定谁先执行？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: “难道”正确😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-07 10:28:21</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/48/bd/6c7d4230.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Tony Du</span>
 </div><div class=_2_QraFYR_0>基于文中的例子MDL（metadata lock)，自己做了一个实验（稍微有一些小改动在session D上），<br>session A: begin; select * from t limit 1; 最先启动sessionA<br>session B: begin; select * from t limit 1; 紧接着启动sessionB<br>session C: alter table t add f int; 然后再是启动sessionC<br>session D: begin; select * from t limit 1; 最后是启动sessionD<br>如文中例子，session A和B正常启动，然后session C被block，之后session D也被block。当把 session A 和 session B 都commit掉后，发现session C依然是block的（被 session D阻塞），只有当把 session D 也commit掉后，session C才执行下去。同样的实验，重复了三遍，结果也是一样。<br>从现象上看，session D会先拿到MDL读锁，当session D commit掉后，然后再是session C获得MDL写锁。请问老师，这里对于MDL锁的获取顺序（也就是说 是session C先获取MDL写锁还是session D先获取MDL读锁）有什么原则？是随机的还是有什么讲究？<br><br>另外，在一开始的获取MDL锁的阶段，session A（MDL读锁，正常执行）-> session B (MDL读锁，正常执行) -> session C (MDL写锁，被block) -> session D (MDL读锁，被MDL写锁 block) 。是不是说加MDL锁是看时间先后顺序的，一旦出现过需要获取MDL写锁（即使被block），后续再需要获取MDL读锁，则发现之前已经有获取MDL写锁（即使被block），需要获取读锁的session都会被block。感觉上像进入一个锁的”队列“，根据时间先后顺序。请问老师，这里可以更细节和深入的说明下吗？<br><br> 作者回复<br>你这个例子里面，sessionD 被C堵住后是不能输入命令的，之后是什么动作之后，sessionD才能输入commit语句呢<br><br>我的回复：<br>session D被C堵住后，会卡在select * from t limit 1这句。然后当我把A和B都commit掉，session D就会执行select * from t limit 1这句，此时，session C依旧会被堵着。然后把session D commit掉，session C才能执行。实验的时候，我是把sql语句都写在MySQL workbench里的，通过workbench连服务器的，session D的commit语句是写在workbench里执行的。我的问题是，为什么是session D先获取的MDL读锁，而不是session C先获取MDL写锁，对于MDL锁的获取顺序有什么原则？是随机的还是有什么讲究？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你用MySQL 客户端试试，我跑出来是文中的顺序哈。给我一下你的MySQL 版本号和workbench版本号</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-27 19:14:05</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>继续把该讲内容总结为几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br><br><br> 1. <br>MySQL从加锁范围上分为哪三类?<br> 2. <br>全局锁加锁方法的执行命令是什么?主要的应用场景是什么?<br> 3. <br>做整库备份时为什么要加全局锁?<br> 4. <br>MySQL的自带备份工具, 使用什么参数可以确保一致性视图, 在什么场景下不适用?<br> 5. <br>不建议使用set global readonly = true的方法加全局锁有哪两点原因?<br> 6. <br>表级锁有哪两种类型? 各自的使用场景是什么?<br> 7. <br>MDL中读写锁之间的互斥关系怎样的?<br> 8. <br>如何安全的给小表增加字段?<br><br><br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-01 10:36:19</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/de/8d/99536c5b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Aurora</span>
 </div><div class=_2_QraFYR_0>如果mysqldump 备份的是整个schema，某个小表t1只是该schema上其中有一张表<br>情况1：<br>master上对小表t1的DDL传输到slave去应用的时刻，mysqldump已经备份完了t1表的数据，此时slave 同步正常，不会有问题。<br><br>情况2：<br>master上对小表t1的DDL传输到slave去应用的时刻，mysqldump正在备份t1表的数据,此时会发生MDL 锁，从库上t1表的所有操作都会Hang 住。<br><br>情况3：<br>master 上对小表t1的DDL传输到slave去应用的时刻，mysqldump 还没对t1表进行备份，该DDL会在slave的t1表应用成功，但是当导出到t1表的时候会报“ERROR 1412 (HY000): Table definition has changed, please retry transaction” 错误，导致导出失败！<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-26 18:38:14</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/a4/c7/d1ee69c6.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>柳树</span>
 </div><div class=_2_QraFYR_0>既然session C blocked，拿不到写锁，那么session D为什么会被blocked呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 如果说设计初衷，是为了防饿死吧</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-05 10:39:47</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/5d/01/9cd84003.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>栋能</span>
 </div><div class=_2_QraFYR_0>没搞懂c的索引树为什么和ca是一样的. c索引树中c有序，(a,b)随意序的呀？这能代表c与ca索引树一致吗？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-26 22:03:41</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/34/5c/6b4757a0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>倪大人</span>
 </div><div class=_2_QraFYR_0>思考题：<br>由于先用–single-transaction做备份，所以备份线程会启动一个事务获取MDL读锁，文中也说了“MDL 会直到事务提交才释放”，所以要一直等到备份完成主库来的DDL才会在从库执行生效，且备份的数据里并不会有新增的这个列。<br><br>再补充下，由于主库来的DDL会等待MDL写锁，所以会导致之后从库上的读写请求都阻塞，相当与文中sessionC和sessionD。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-26 11:20:57</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/cd/24/76b56b0b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>S@Y@M</span>
 </div><div class=_2_QraFYR_0>全局锁和表锁是Server层实现的吗</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 11:04:53</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/2a/a5/625c0a2e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>hhhh</span>
 </div><div class=_2_QraFYR_0>表级锁的例子中：<br>lock tables t1 read, t2 write<br>说到“线程A不能读取T2”<br>查了一下MySQL Reference：<br>WRITE lock:<br>The session that holds the lock can read and write the table.<br>Only the session that holds the lock can access the table. No other session can access it until the lock is released.<br>Lock requests for the table by other sessions block while the WRITE lock is held.<br>也就是说表级别write锁，对于本线程是可读可写的，<br>文章中说的线程A不能读取T2，我这里不太理解</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，文中写错了。我刚刚修改上去了。抱歉。谢谢提醒</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-26 10:42:28</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/f8/ba/14e05601.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>约书亚</span>
 </div><div class=_2_QraFYR_0>一刷的时候没注意，二刷看别人回复想起这么个问题：<br>例子里为什么session C之后的所有“读”请求都会被阻塞？毕竟session C还没加上锁。难道这里隐含涉及到了意向锁？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 赞二刷态度哈<br><br>嗯，这个不是读写锁，是锁队列，一进去就开始影响后面的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-27 07:36:13</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/61/57/6f3c81dd.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>包包up</span>
 </div><div class=_2_QraFYR_0>没明白为什么ca索引建出来的模型和c建出来的一样？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-26 00:36:22</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e5/5a/b650ed8c.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>阿豆Dou</span>
 </div><div class=_2_QraFYR_0>Online DDL的过程是这样的：<br>1. 拿MDL写锁<br>2. 降级成MDL读锁<br>3. 真正做DDL<br>4. 升级成MDL写锁<br>5. 释放MDL锁<br><br>1、2、4、5如果没有锁冲突，执行时间非常短。第3步占用了DDL绝大部分时间，这期间这个表可以正常读写数据，是因此称为“online ”<br><br>问题<br>如果第四步升级为MDL写锁的时候，这个表的MDL锁有其他事务占着，那么这个事务会阻塞，等到可以拿到MDL写锁是吧<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，<br>对<br><br>而且如果不幸一直拿不到，最后锁超时了，就只好回滚这个DD了操作</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 21:59:11</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/48/bd/6c7d4230.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Tony Du</span>
 </div><div class=_2_QraFYR_0>基于文中的例子MDL（metadata lock)，自己做了一个实验（稍微有一些小改动在session D上），<br>session A: begin; select * from t limit 1; 最先启动sessionA<br>session B: begin; select * from t limit 1; 紧接着启动sessionB<br>session C: alter table t add f int; 然后再是启动sessionC<br>session D: begin; select * from t limit 1; 最后是启动sessionD<br>如文中例子，session A和B正常启动，然后session C被block，之后session D也被block。当把 session A 和 session B 都commit掉后，发现session C依然是block的（被 session D阻塞），只有当把 session D 也commit掉后，session C才执行下去。同样的实验，重复了三遍，结果也是一样。<br>从现象上看，session D会先拿到MDL读锁，当session D commit掉后，然后再是session C获得MDL写锁。请问老师，这里对于MDL锁的获取顺序（也就是说 是session C先获取MDL写锁还是session D先获取MDL读锁）有什么原则？是随机的还是有什么讲究？<br><br>另外，在一开始的获取MDL锁的阶段，session A（MDL读锁，正常执行）-> session B (MDL读锁，正常执行) -> session C (MDL写锁，被block) -> session D (MDL读锁，被MDL写锁 block) 。是不是说加MDL锁是看时间先后顺序的，一旦出现过需要获取MDL写锁（即使被block），后续再需要获取MDL读锁，则发现之前已经有获取MDL写锁（即使被block），需要获取读锁的session都会被block。感觉上像进入一个锁的”队列“，根据时间先后顺序。请问老师，这里可以更细节和深入的说明下吗？<br><br> 作者回复<br>你这个例子里面，sessionD 被C堵住后是不能输入命令的，之后是什么动作之后，sessionD才能输入commit语句呢<br><br>我的回复：<br>session D被C堵住后，会卡在select * from t limit 1这句。然后当我把A和B都commit掉，session D就会执行select * from t limit 1这句，此时，session C依旧会被堵着。然后把session D commit掉，session C才能执行。实验的时候，我是把sql语句都写在MySQL workbench里的，通过workbench连服务器的，session D的commit语句是写在workbench里执行的。我的问题是，为什么是session D先获取的MDL读锁，而不是session C先获取MDL写锁，对于MDL锁的获取顺序有什么原则？是随机的还是有什么讲究？<br><br> 作者回复<br>你用MySQL 客户端试试，我跑出来是文中的顺序哈。给我一下你的MySQL 版本号和workbench版本号<br><br>我的回复<br>用MySQL客户端试过了（通过命令行），结果和我上面实验的结果是一样的。还是session D先获取的MDL读锁，而不是session C先获取MDL写锁。<br>MySQL版本：Ver 14.14 Distrib 5.7.17, for Linux (x86_64) using EditLine wrapper<br>Workbench版本：<br>MySQL Workbench 6.3<br>Version 6.3.8 build 1228 CE (64 bits) Community<br><br>这里留言回复不太方便，能否留一个邮箱或者微信号，交流起来比较方便。谢谢。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-28 09:53:17</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>李</span>
 </div><div class=_2_QraFYR_0>2. 降级成MDL读锁<br>3. 真正做DDL<br>4. 升级成MDL写锁<br>5. 释放MDL锁<br><br> 1-为什么先拿到写锁又降级成读锁，<br>2- 真正做DDL的时候是读锁，那这中间过程中，查询到的数据和真正的数据结构就不一致了啊<br>3. 为什么要先升级成写锁再释放</div><div class=_10o3OAxT_0>
@@ -421,16 +401,16 @@ ALTER TABLE tbl_name WAIT N add column ...
 <a class="nav nav-prev" href=/1/5/ title=05_深入浅出索引（下）> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/7/ title=07_行锁功过：怎么减少行锁对性能的影响？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

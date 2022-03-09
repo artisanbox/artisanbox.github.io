@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>16_“orderby”是怎么工作的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>16_“orderby”是怎么工作的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/16/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -316,121 +316,101 @@ select @b-@a;
 @郭江伟 同学提到了两个点，都非常好，有去实际验证。结论是这样的：<br>
 第一，hexdump看出来没改应该是WAL机制生效了，要过一会儿，或者把库shutdown看看。<br>
 第二，binlog没写是MySQL Server层知道行的值没变，所以故意不写的，这个是在row格式下的策略。你可以把binlog_format 改成statement再验证下。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>回答下@发条橙子同学的问题:<br>问题一：<br>1)无条件查询如果只有order by create_time,即便create_time上有索引,也不会使用到。<br>因为优化器认为走二级索引再去回表成本比全表扫描排序更高。<br>所以选择走全表扫描,然后根据老师讲的两种方式选择一种来排序<br>2)无条件查询但是是order by create_time limit m.如果m值较小,是可以走索引的.<br>因为优化器认为根据索引有序性去回表查数据,然后得到m条数据,就可以终止循环,那么成本比全表扫描小,则选择走二级索引。<br>即便没有二级索引,mysql针对order by limit也做了优化,采用堆排序。这部分老师明天会讲<br><br>问题二:<br>如果是group by a,a上不能使用索引的情况,是走rowid排序。<br>如果是group by limit,不能使用索引的情况,是走堆排序<br>如果是只有group by a,a上有索引的情况,又根据选取值不同,索引的扫描方式又有不同<br>select * from t group by a --走的是索引全扫描,至于这里为什么选择走索引全扫描,还需要老师解惑下<br>select a from t group by a --走的是索引松散扫描,也就说只需要扫描每组的第一行数据即可,不用扫描每一行的值<br><br>问题三:<br>bigint和int加数字都不影响能存储的值。<br>bigint(1)和bigint(19)都能存储2^64-1范围内的值,int是2^32-1。只是有些前端会根据括号里来截取显示而已。建议不加varchar()就必须带,因为varchar()括号里的数字代表能存多少字符。假设varchar(2),就只能存两个字符,不管是中文还是英文。目前来看varchar()这个值可以设得稍稍大点,因为内存是按照实际的大小来分配内存空间的,不是按照值来预分配的。<br><br>老师我有几个问题:<br>1.我还是想在确认之前问的问题。一个长连接,一条sql申请了sort_buffer_size等一系列的会话级别的内存,sql成功执行完,该连接变为sleep状态。这些内存只是内容会被情况,但是占用的内存空间不会释放?<br>2.假设要给a值加1,执行器先找引擎取a=1的行,然后执行器给a+1,在调用接口写入a+1了数据。那么加锁不应该是在执行器第一次去取数据时，引擎层就加该加的锁？为什么要等到第二次调用写入数据时,才加锁。第一次和第二次之间,难道不会被其他事务修改吗？如果没有锁保证<br>3.始终没太明白堆排序是采用的什么算法使得只需要对limit的数据进行排序就可以,而不是排序所有的数据在取前m条。--不过这里期待明天的文章</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 发条橙子同学的问题：<br>问题1:你回答得比我回复的答案还好！👍🏿<br>问题2:这个后面我们展开哈，要配图才能说得清😄<br>问题3:回答得也很好，需要注意的是255这个边界。小于255都需要一个字节记录长度，超过255就需要两个字节<br><br>你的问题：#好问题_#<br>1. 排序相关的内存在排序后就free掉还给系统了<br>2. 读的时候加了写锁的<br>3. 堆排序要读所有行的，只读一次，我估计你已经理解对了😄<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-20 17:17:09</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/77/fd/c6619535.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>XD</span>
 </div><div class=_2_QraFYR_0>老师，基于早上知道的sort_buffer是在server层，我重新理解了下rowid排序的过程，<br>1，执行器查看表定义，发现name、city、age字段的长度之和超过max_length_for_sort_data，所以初始化sort_buffer的时候只放入id和name字段。<br>2，执行器调用存储引擎的读数据接口，依次获取满足条件的数据的id和name，存入sort_buffer。<br>3，排序。<br>4，执行器根据limit条件筛选出id，再次调用引擎读数据的接口获取相应的数据，返回客户端。<br>整个过程实际上是被执行器拆成了两次查询，共调用两次存储层的读数据接口，所以总的扫描行数需要相加。（@b-@a=5000）<br><br>但是对于using index condition的场景，执行器只调用了一次查询接口，回表是由存储层来完成的，所以扫描行数只算一次，即只算走索引搜索的过程中扫描的行数。（@b-@a只会是4000）<br><br>不知道这么理解对不对？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: <br>不仅对，而且非常好！👍👍<br><br>把两个知识点连起来了。是的：<br>1. rows_examined就是“server层调用引擎取一行的时候”加1；<br>2. 引擎内部自己调用，读取行，不加1；<br><br>再补充一个例子：<br>加索引的时候，也要扫描全表，但如果是inplace DDL（@第13篇），你会看到扫描行数是0，也是因为这些扫描动作都是引擎内部自己调用的。<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-27 01:27:54</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/eb/20/a02c4f61.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>didiren</span>
 </div><div class=_2_QraFYR_0>刚才又测了一下，在binlog-row-image=full的情况下，第二次update是不写redolog的，说明update并没有发生<br>这样我就理解了，当full时，mysql需要读到在更新时读到a值，所以会判断a值不变，不需要更新，与你给出的update t set a=3 where id=1 and a=3原理相同，但binlog-row-image会影响查询结果还是会让人吃一惊</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的。<br><br>这个我也盲点了。<br><br>但是细想MySQL 选择这个策略又是合理的。<br><br>我需要再更新一下专栏内容</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-19 17:24:59</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELZPnUAiajaR5C25EDLWeJURggyiaOP5GGPe2qlwpQcm5e3ybib8OsP4tvddFDLVRSNNGL5I3SFPJHsA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>null</span>
 </div><div class=_2_QraFYR_0>re: 问题3:回答得也很好，需要注意的是255这个边界。小于255都需要一个字节记录长度，超过255就需要两个字节<br><br>11 月过数据库设计方案，总监现场抛了一个问题，就是关于 varchar 255 的。现在回看，木有人回答到点上，都说是历史原因。<br>下回再问，就可以分享这一点了。ꉂ ೭(˵¯̴͒ꇴ¯̴͒˵)౨”哇哈哈～</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 最怕的回答“历史原因”、“大家都这么做的所以…”、“别人要求的” 😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-21 09:45:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/03/f7/3a493bec.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>1)<br>mysql> select * from t where city in ('杭州'," 苏州 ") order by name limit 100;<br>需要排序<br>原因是索引顺序城市、名称 与 单独按name排序的顺序不一致。<br><br>2）如果不想mysql排序<br>方案a<br>可以执行两条语句<br>select * from t where city = '杭州' limit 100;<br>select * from t where city = '苏州' limit 100;<br>然后把200条记录在java中排序。<br>方案b<br>分别取前100，然后在数据端对200条数据进行排序。可以sort buffer就可以完成排序了。<br>少了一次应用程序与数据库的网络交互<br>select * from (<br> select * from t where city = '杭州' limit 100<br> union all<br> select * from t where city = '苏州' limit 100<br>) as tt order by name limit 100<br><br><br>3）对分页的优化。<br> 没有特别好的办法。如果业务允许不提供排序功能，不提供查询最后一页，只能一页一页的翻，基本上前几页的数据已经满足客户需求。<br> 为了意义不大的功能优化，可能会得不偿失。<br> 如果一定要优化可以 select id from t where city in ('杭州'," 苏州 ") order by name limit 10000,100<br> 因为有city\name索引，上面的语句走覆盖索引就可以完成，不用回表。<br> 最后使用 select * from t where id in (); 取得结果<br> 对于这个优化方法，我不好确定的是临界点，前几页直接查询就可以，最后几页使用这个优化方法。<br> 但是中间的页码应该怎么选择不太清楚<br> </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 从业务上砍掉功能，这个意识很好👌👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-19 10:04:27</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f7/95/3ebafd36.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>波波</span>
 </div><div class=_2_QraFYR_0>笔记:<br>1.MySQL会为每个线程分配一个内存（sort_buffer）用于排序该内存大小为sort_buffer_size<br> 1>如果排序的数据量小于sort_buffer_size，排序将会在内存中完成<br> 2>如果排序数据量很大，内存中无法存下这么多数据，则会使用磁盘临时文件来辅助排序，也称外部排序<br> 3>在使用外部排序时，MySQL会分成好几份单独的临时文件用来存放排序后的数据，然后在将这些文件合并成一个大文件<br><br><br>2.mysql会通过遍历索引将满足条件的数据读取到sort_buffer，并且按照排序字段进行快速排序<br> 1>如果查询的字段不包含在辅助索引中，需要按照辅助索引记录的主键返回聚集索引取出所需字段<br> 2>该方式会造成随机IO，在MySQL5.6提供了MRR的机制，会将辅助索引匹配记录的主键取出来在内存中进行排序，然后在回表<br> 3>按照情况建立联合索引来避免排序所带来的性能损耗，允许的情况下也可以建立覆盖索引来避免回表<br><br>全字段排序<br>1.通过索引将所需的字段全部读取到sort_buffer中<br>2.按照排序字段进行排序<br>3.将结果集返回给客户端<br><br><br>缺点：<br>1.造成sort_buffer中存放不下很多数据，因为除了排序字段还存放其他字段，对sort_buffer的利用效率不高<br>2.当所需排序数据量很大时，会有很多的临时文件，排序性能也会很差<br><br>优点：MySQL认为内存足够大时会优先选择全字段排序，因为这种方式比rowid 排序避免了一次回表操作<br><br><br>rowid排序<br>1.通过控制排序的行数据的长度来让sort_buffer中尽可能多的存放数据，max_length_for_sort_data<br>2.只将需要排序的字段和主键读取到sort_buffer中，并按照排序字段进行排序<br>3.按照排序后的顺序，取id进行回表取出想要获取的数据<br>4.将结果集返回给客户端<br><br>优点：更好的利用内存的sort_buffer进行排序操作，尽量减少对磁盘的访问<br><br>缺点：回表的操作是随机IO，会造成大量的随机读，不一定就比全字段排序减少对磁盘的访问<br><br><br>3.按照排序的结果返回客户所取行数</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-19 13:33:31</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/bd/da/3d76ea74.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>看不到de颜色</span>
 </div><div class=_2_QraFYR_0>关于上期问题里的最后一个例子不太明白，还请老师指点一下。按说在更新操作的时候应该是当前读，那么应该能读到id=1 and a = 3的记录并修改。那么为什么再select还会查到a = 2。难道是即便update但是where条件也是快照读？但是如果这样那么幻读的问题不就不会存在了吗？（B insert了一条记录，此时A范围update后再select会把B insert的语句查出来）</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你是说图14这里对吧， <br>这里update语句自己是当前读，但是它没有更新数据；<br>所以之后的查询还是看不到(1,3)这个版本。<br><br>好问题👍<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-02 11:38:43</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/17/d4/d7a4e6f5.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>胡楚坚</span>
 </div><div class=_2_QraFYR_0>不好意思，上个留言没打完。<br>问题一，在跟max_length_for_sort_data坐比较时，mysql是怎么判断一行数据的大小的？是直接根据表定义字段的大小吗？<br><br>问题二，另外这‘一行’的含义是整行数据，还是单单最终引擎层需要返回的字段(即select字段+where字段+order by字段)？<br><br>麻烦老师有空解答下，谢谢哈</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 需要的字段的定义大小的和<br>2. 好问题。首先取决于使用的算法。<br> a) 如果是全字段排序就是select字段+where字段+order by字段,<br> b) 如果是row_id排序，就是order by字段+row_id</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-21 00:17:22</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/36/d2/c7357723.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>发条橙子 。</span>
 </div><div class=_2_QraFYR_0>老师 ， 接前面 create_time的回答 。 语句确实是 select * from t order by create_time desc ;<br><br>老师是指 优化器会根据 order by create_time 来选择使用 create_time 索引么 <br><br>我之前误以为优化器是根据 where 后面的字段条件来选择索引 ，所以上面那条语句没有where 的时候我就想当然地以为不会走索引 。 看来是自己跳进了一个大坑里面 😅<br><br>另 ： 我之前在本地建了张表加了20w数据 ，用explain 查了一次 ，发现走的是全表没有走索引， 老师说会走索引。我想了一下， 可能是统计的数据有误的缘故，用 analyze table重新统计 ，再次查询果然走了索引 。😁</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯 where和 order都会共同影响哦，今天这篇你要再看看最后加了联合索引以后，语句的执行逻辑<br><br><br>Analyze table 立功啦😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-20 20:45:00</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/eb/20/a02c4f61.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>didiren</span>
 </div><div class=_2_QraFYR_0>感谢！针对我之前提出的疑问，我又详细的做了实验，发现一个新的问题，我感觉是个bug，希望解答<br># SessionA<br>mysql> show variables like '%binlog_row_image%';<br>| Variable_name | Value |<br>| binlog_row_image | FULL |<br>mysql> create table t (id int not null primary key auto_increment,<br> -> a int default null)<br> -> engine=innodb;<br>mysql> insert into t values(1,2);<br>mysql> set tx_isolation = 'repeatable-read';<br>mysql> begin;<br>mysql> select * from t where id = 1;<br>| id | a |<br>| 1 | 2 |<br>此时在另一个SessionB执行update t set a=3 where id = 1;成功更新一条记录。通过show engine innodb status看，Log sequence number 2573458<br>然后在SessionA继续。。<br>mysql> update t set a=3 where id = 1;<br>Rows matched: 1 Changed: 0 Warnings: 0<br>Log sequence number 2573467<br>mysql> select * from t where id = 1;<br>| id | a |<br>| 1 | 2 |<br><br>这里与你给出的答案里的实验结果不同<br>可以看到redolog是记录了第二次的update的，但是select却没有看到更新后的值，于是我又换了一个平时测试用的实例，同样的步骤却得到了与你的答案相同的结果<br>然后我对比了2个实例的参数，发现当binlog-row-image=minimal时第二次查询结果a=3，当binlog-row-image=full时第二次查询结果a=2，而且不论哪个参数，redolog都会因为SessionA的update增长，说明redolog都做了记录，update是发生了的，但是binlog-row-image参数会影响查询结果，难以理解，我用的mysql版本是官方的5.7.13<br><br>下面是binlog-row-image = minimal的实验结果<br>mysql> set binlog_row_image=MINIMAL;<br>mysql> drop table t;<br>mysql> create table t (id int not null primary key auto_increment,<br> -> a int default null)<br> -> engine=innodb;<br>insert into t values(1,2);<br>mysql> insert into t values(1,2);<br>mysql> set tx_isolation = 'repeatable-read';<br>mysql> begin;<br>mysql> select * from t where id = 1;<br>| id | a |<br>| 1 | 2 |<br>此时在另一个SessionB执行update t set a=3 where id = 1;成功更新一条记录。<br>mysql> update t set a=3 where id = 1;<br>Rows matched: 1 Changed: 0 Warnings: 0<br>mysql> select * from t where id = 1; <br>| id | a |<br>| 1 | 3 |</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: ！！！<br><br>你说的对<br><br>我验证的是statement格式。<br><br>MySQL 看来选了不错吧路径。<br><br>这个我之前真不知道😓<br><br>多谢<br><br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-19 17:01:45</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>把该讲内容总结为几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br> 1. <br>全字段排序的流程是怎么样的?<br> 2. <br>sort_buffer_size, number_of_tmp_files, packed_additional_fields 这几个参数各是什么含义? <br> 3. <br>rowid排序的流程是怎么样的?<br> 4. <br>通过什么方式可以减少排序对于系统的消耗? <br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-23 16:08:31</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/67/f4/9a1feb59.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0> 课前思考<br><br>1：如果排序的字段有索引，怎么排？<br><br>由于B+树是天然有序的，所以直接取出的数据也是天然有序的，因此依次取数就行不用再排序了。若取出的字段是覆盖索引，则连回表的动作也不必做啦！<br><br>2：如果排序的字段没索引，怎么排？<br><br>非索引字段，取出来的时候是按索引的顺序取出的，针对非索引字段无序，需要在内存中通过排序算法来排序。<br><br>3：如果数据大到内存放不下，怎么排？<br><br>取出的数据无序且体量较大，只能先放到磁盘，然后用外排序的方法排序。<br><br>4：如果排序的字段有多个，怎么排？<br><br>有多个还是一个其实思路没啥变化，如果原本就有序，则直接取出，否则只能进行排序，体量小在内存中排序，体量大则必须借助磁盘排序。<br><br>课后思考<br><br>牛逼的系统对于性能的优化都有着不懈的追求，数据库更是如此。<br><br>性能优化的原则是恒定的，就看各家怎么发挥啦！<br><br>1：就排序而言，如果数据天然有序，则不用排序，如果是覆盖索引，则不用回表，那么这种情况性能应该是最佳的。<br><br>2：对于计算机而言，内存比硬盘快多了，能在内存办的事要尽量在内存办。索引当MySQL认为查询的字段长度过大时会进行一定的优化，会只查出主键id和排序的字段，排序字段用于排序，主键id用于回表查询其他的字段，这样速度可能会快一些。<br><br>疑问？<br><br>1：sort_buffer是MySQL按线程的维度分配的专门用于排序的内存空间，且通过sort_buffer_size可以调整其大小，那么走一下极端情况，若sort_buffer_size=0，是否所有的排序都无法进行啦?若sort_buffer_size=+∞，是否只能有一个线程在同一时刻能排序?另外，sort_buffer设置后是对所有线程都一样限制嘛？其实际分配会根据实际数据量变化呢？还是固定不变?比如：MySQL分配给可用于划分sort_buffer的内存有10m，我设置为10m意味着一个5m的排序会占5m另外5m空着，还是可以跑两个5m的排序？<br><br>2：外部排序归并排序，具体怎么排序的？<br><br>1m的内存排序2m的数据，每次只能在内存中排序1m的数据，想着想着想明白了，这应该是个通用的方法，只有内存小于数据量都可以这么玩。<br><br>3：排序的内存在某线程排完序就释放了，临时文件的回收也是一样的吧？如果数据量大，磁盘不够排序也无法进行的，空间够不够这个判断时机是啥时候？<br><br>4：引擎返回数据结果是一条一条，Server返回给客户端也是一条一条嘛？文中图“结果集”是在哪里组合的，Server层？还是客户端？如果是Server层也会存在空间不够的可能吧？此时是先放入磁盘，等数据到齐，再一起发送给客户端吗？<br><br>非常感谢老师，提高了，我的认知！<br><br><br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-07-04 07:51:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/bd/da/3d76ea74.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>看不到de颜色</span>
 </div><div class=_2_QraFYR_0>图14那个疑问明白了，是因为where条件中存在update的值InnoDB认为值一致所以没有修改，从而导致A的一致性视图中看不到B的修改。<br>这篇又看了一遍，还有个疑问，想请老师解答一下。<br>1.asc和desc会影响使用索引排序吗？<br>2.如果采用rowid也无法放入排序字段还是会转用磁盘排序吧。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年快乐<br><br>1. 不影响<br>2. 再小也用rowid ，对，会转成磁盘排序</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-06 11:33:21</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/57/da/0adccef5.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>coderbee</span>
 </div><div class=_2_QraFYR_0>请教下林老师：<br>以文章中的 t 表，索引 city(city) 其实等价于 city(city, id) ，第2条语句加了 order by id，Extra 列多了 Using where ，为啥还要这个？？两个都是用到了覆盖索引。<br><br>mysql> explain select id from t where city = 'city102' limit 1, 10;<br>+----+-------------+-------+------------+------+---------------+------+---------+-------+------+----------+-------------+<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |<br>+----+-------------+-------+------------+------+---------------+------+---------+-------+------+----------+-------------+<br>| 1 | SIMPLE | t | NULL | ref | city | city | 66 | const | 2 | 100.00 | Using index |<br>+----+-------------+-------+------------+------+---------------+------+---------+-------+------+----------+-------------+<br>1 row in set, 1 warning (0.00 sec)<br><br>mysql> explain select id from t where city = 'city102' order by id limit 1, 10;<br>+----+-------------+-------+------------+------+---------------+------+---------+-------+------+----------+--------------------------+<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |<br>+----+-------------+-------+------------+------+---------------+------+---------+-------+------+----------+--------------------------+<br>| 1 | SIMPLE | t | NULL | ref | city | city | 66 | const | 2 | 100.00 | Using where; Using index |<br>+----+-------------+-------+------------+------+---------------+------+---------+-------+------+----------+--------------------------+<br>1 row in set, 1 warning (0.00 sec)<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Using where 确实是一个有时候让人误解的Extra信息，我后面看看找个文章展开说明哈<br>简单说就是，Using where包含了一个“值比较”的过程。<br><br>好问题</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-20 16:31:49</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/36/d2/c7357723.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>发条橙子 。</span>
 </div><div class=_2_QraFYR_0><br>正好有个 order by 使用场景 ， 有个页面，需要按数据插入时间倒序来查看一张记录表的信息 ，因为除了分页的参数 ， 没有其他 where 的条件 ，所以除了主键外没有其他索引 。 <br><br>这时候 DBA 让我给 create_time 创建索引， 说是按照顺序排列 ，查询会增快 。这篇文章看完后 ， 让我感觉实际上创建 create_time 索引是没用的 。 <br><br>因为查询本身并没有用到 create_time 索引 ，实际上查询的步骤是 ：<br><br>1. 初始化 sort_buffer 内存<br><br>2. 因为没索引 ， 所以扫出全表的数据到 sort_buffer 中<br><br>2. 如果内存够则直接内存按时间排序 <br><br>3. 如果内存不够则按数据量分成不同文件分别按时间排序后整合<br><br>4. 根据数量分页查询数量 回聚集索引中用 ID 查询数据<br><br>5. 返回<br><br>所以我分析create_time索引应该不需要创建。反而增加了维护成本<br><br><br>问题一 ：这种无条件查列表页除了全表扫还有其他建立索引的办法么<br><br>问题二 : 如果加入 group by ， 数据该如何走<br><br>问题三 ：老师之后的文章会有讲解 bigInt(20) 、 tinyint(2) 、varchar(32) 这种后面带数字与不带数字有何区别的文章么 。 每次建字段都会考虑长度 ，但实际却不知道他有何作用 <br><br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你说的这样场景，加上create_time索引的话，是可以加速的呀，<br>语句是这样吗？select * from t order by create_time desk limit 100? 如果是这样，创建索引有用的。<br><br>问题二后面会有文章会说哈<br>问题三 嗯，这个也会安排文章说到</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-20 12:53:33</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/JKKWS6TzhncvAA0p0NDiaATPIvMicSM76vNAg9IG1ibibcJYPAiaicYjZfq4gAV8GRtcTpOibfRD8vzqHBtL0ibmhwQsbg/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>唐名之</span>
 </div><div class=_2_QraFYR_0>1：用@cyberbit 提供的方式，执行计划是不会使用到排序，但执行时间比使用排序消耗的多；<br>2：分页limit过大时会导致大量排序，可以记录上一页最后的ID，下一页查询条件带上 where ID>上一页最后ID limit 100</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 为什么这么说呢？<br>2. 对的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 14:56:33</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e2/9d/fbbd4611.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>cyberbit</span>
 </div><div class=_2_QraFYR_0><br>1.不会有排序，这种情况属于《高性能mysql》里提到的“in技法”，符合索引的最左原则，是2个等值查询，可以用到右边的索引列。<br>2.分页查询，可以用延迟关联来优化：<br>select * from t join <br>(select id from t where city in('杭州','苏州') order by name limit 10000,100) t_id<br>on t.id=t_id.id;<br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-19 11:54:12</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f3/1e/8ea92c76.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>毓殇笳</span>
 </div><div class=_2_QraFYR_0>图 14 可见性验证方式 -- 对照中<br><br>session A 的 update t set a = 3 where id = 1 and a = 3 <br><br>会不会有当前读？如果当前读的话，那是不是会读到session B的更新的值？<br><br>请老师帮忙分析下。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-07 00:02:45</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/RNO4yZyBvic914hewmNNE8iblYDcfv5yGHZ9OnKuCuZXNmGR0F5qV3icKLT2xpMt66GyEpicZVvrmz8A6TIqt92MQg/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>啊啊啊哦哦</span>
 </div><div class=_2_QraFYR_0>假设超过sort buffer 排序是一部分在内存中排序 超出的部分 用临时文件吗。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-17 15:54:41</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/1d/13/31ea1b0b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>峰</span>
 </div><div class=_2_QraFYR_0>由于city有两个值，相当于匹配到了索引树的两段区域，虽然各自都是按name排序，但整体需要做一次归并，当然只是limit100，所以够数就行。再然后如果需要不做排序，业务端就按city不同的取值查询两次，每次都limit100，然后业务端做归并处理喽。再然后要做分页的话，好吧，我的思路是先整出一张临时的结果表，create table as select rownumber,* from t where city=x order by name(写的不对哈，只是表达意思，rownumber为行数,并为主键)然后直接从这张表中按rownumber进行分页查询就好。</div><div class=_10o3OAxT_0>
@@ -440,16 +420,16 @@ select @b-@a;
 <a class="nav nav-prev" href=/1/15/ title=15_答疑文章（一）：日志和索引相关问题> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/17/ title=17_如何正确地显示随机消息？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

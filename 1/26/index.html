@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>26_备库为什么会延迟好几个小时？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>26_备库为什么会延迟好几个小时？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/26/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -332,121 +332,101 @@ select * from t limit 1;
 </code></pre><p>然后就不动了。</p><p>这时候主库对表t做了一个加字段操作，即使这个表很小，这个DDL在备库应用的时候也会被堵住，也不能看到这个现象。</p><p>评论区还有同学说是不是主库多线程、从库单线程，备库跟不上主库的更新节奏导致的？今天这篇文章，我们刚好讲的是并行复制。所以，你知道了，这种情况会导致主备延迟，但不会表现为这种标准的呈45度的直线。</p><p>评论区留言点赞板：</p><blockquote>
 <p>@易翔 、 @万勇、@老杨同志 等同学的回复都提到了我们上面说的场景；</p></blockquote><blockquote>
 <p>@Max 同学提了一个很不错的问题。主备关系里面，备库主动连接，之后的binlog发送是主库主动推送的。之所以这么设计也是为了效率和实时性考虑，毕竟靠备库轮询，会有时间差。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/03/f7/3a493bec.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>尝试回答 慧鑫coming 的问题。<br>老师图片的步骤有下面5步<br>1 redo log prepare write<br>2 binlog write<br>3 redo log prepare fsync<br>4 binlog fsync<br>5 redo log commit write<br><br>1)如果更新通一条记录是有锁的，只能一个事务执行，其他事务等待锁。<br><br>2)第4步的时候会因为下面两个参数，等其他没有锁冲突的事务，一起刷盘，此时一起执行的事务拥有相同的commit_id<br>binlog_group_commit_sync_delay<br>binlog_group_commit_sync_no_delay_count<br><br>3)执行步骤5后，释放锁，等待锁的事务开始执行。<br><br>所以对同一行更新的事务，不可能拥有相同的commit_id</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍，你比我回复得详细，顶起</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-11 10:57:51</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/05/d4/e06bf86d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>举个例子，一个事务更新了表 t1 和表 t2 中的各一行，如果这两条更新语句被分到不同 worker 的话，虽然最终的结果是主备一致的，但如果表 t1 执行完成的瞬间，备库上有一个查询，就会看到这个事务“更新了一半的结果”，破坏了事务逻辑的原子性。<br><br>老师这块不太明白，备库有查询会看到更新了一半的结果，t1的worker执行完了更新会commit吗？如果不commit，备库查询应该看不到吧？如果commit，就破坏了事物的原子性，肯定是有问题的。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 应该是说，它迟早要commit，但是两个worker是两个线程，没办法约好“同时提交”，这样就有可能出现一个先提交一个后提交。<br>这两个提交之间的时间差，就能被用户看到“一半事务”，好问题<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-11 11:17:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKAerblVqBONYuFvJN6EVhjeGuFSvbrS73sHOhm1OhwJFg05o266icOibdhdks1bAwn2kcpltnEmibIA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>jike</span>
 </div><div class=_2_QraFYR_0>老师您好，开启并行复制后，事务是按照组来提交的，从库也是根据commit_id来回放，如果从库也开启binlog的话，那是不是存在主从的binlog event写入顺序不一致的情况呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是有可能binlog event写入顺序不同的，好问题</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-15 17:02:07</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/11/18/8cee35f9.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>HuaMax</span>
 </div><div class=_2_QraFYR_0>课后题。关键点在于主库单线程，针对三种不同的策略，COMMIT_ORDER：没有同时到达redo log的prepare 状态的事务，备库退化为单线程；WRITESET：通过对比更新的事务是否存在冲突的行，可以并发执行；WRITE_SESSION：在WRITESET的基础上增加了线程的约束，则退化为单线程。综上，应选择WRITESET策略</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 准确👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-12 12:12:13</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/54/9a/76c0af70.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>每天晒白牙</span>
 </div><div class=_2_QraFYR_0>我是做java的，看老师的这个专栏，确实挺吃力的，老师专栏的干货太多了，下面的留言也是相当有水平，质量都很高，互动也好，应该是好多DBA吧，做java的我，看的头大</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这几篇偏深，但确实是大家在使用的时候需要了解的，<br>到30篇后面的文章会偏应用哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-13 21:19:49</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLE4LYb3jrH63ZV98Zpc8DompwDgb1O3nffMoZCmiaibauRyEFv6NDNsST9RWxZExvMLMWb50zaanoQ/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>慧鑫coming</span>
 </div><div class=_2_QraFYR_0>老师，有个问题，mariadb的并行策略，当同一组中有3个事务，它们都对同一行同一字段值进行更改，而它们的commit_id相同，可以在从库并行执行，那么3者的先后顺序是怎么保证不影响该行该字段的最终结果与主库一致？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题<br>不过这个是不可能的哈，对同一行的修改，第一个拿到行锁的事务还没提交前，另外两个会被行锁堵住的，这两个进入不了commit状态。所以这三个的commit_id不会相同的😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-11 08:27:33</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>总结下多线程复制的流程,有不对之处请老师指出:<br>双1,配置为logical_clock,假设有三个事务并发执行也已经执行完成(都处于prepare阶段)<br>1.三个事务把redo log从redo log buffer写到fs page cache中<br>2.把binlog_cache flush到binlog文件中,最先进入flush队列的为leader,<br>其它两个事务为follower.把组员编号以及组的编号写进binlog文件中(三个事务为同一组).<br>3.三个事务的redo log做fsync,binlog做fsync.<br>4.dump线程从binlog文件里把binlog event发送给从库<br>5.I/O线程接收到binlog event,写到relay log中<br>6.sql thread读取relay log,判断出这三个事务是处于同一个组,<br>则把这三个事务的event打包发送给三个空闲的worker线程(如果有)并执行。<br><br>配置为writeset的多线程复制流程:<br>1.三个事务把redo log从redo log buffer写到fs page cache中<br>2.把binlog_cache flush到binlog文件中,根据表名、主键和唯一键(如果有)生成hash值(writeset),保存到hash表中<br>判断这三个事务的writeset是否有冲突,如果没有冲突,则视为同组,如果有冲突,则视为不同组.<br>并把把组员编号以及组的编号写进binlog文件中<br>(不过一个组的事务个数也不是无限大,由参数binlog_transaction_dependency_history_size决定组内最多事务数)<br>3.然后做redo log和binlog的fsync<br>4.dump线程从binlog文件里把binlog event发送给从库<br>5.I/O线程接收到binlog event,写到relay log中<br>6.sql thread读取relay log,如果是同一个组的事务,则把事务分配到不同的worker线程去应用relay log.<br>不同组的事务,需要等到上一个组的事务全部执行完成,才能分配worker线程应用relay log.<br><br>老师我有几个问题想请教下:<br>1.在备库是单线程下,second_behind_master是通过计算T3-T1得到,<br>在多线程的情况下,是怎么计算出second_behind_master的值？用的是哪一个事务的时间戳?<br>2.多线程复制下,如果从库宕机了,是不是从库有一个记录表记录那些事务已经应用完成,<br>恢复的时候,只需要恢复未应用的事务.<br>3.binlog延迟sync的两个参数,是延迟已经flush未sync时间。意思是让事务组占用flush时间更长,<br>之后的事务有更多的时间,从binlog cache进入到flush队列,使得组员变多,起到从库并发的目的<br>因为我理解的是加入到组是在binlog cache flush到binlog文件之前做的,如果此时有事务正在flush,<br>未sync,则后面的事务必须等待。不知道理解得对不<br><br><br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 上面的描述部分，writeset的多线程复制流程里面，这段需要修改下：<br>『2.把binlog_cache flush到binlog文件中,根据表名、主键和唯一键(如果有)生成hash值(writeset),保存到hash表中<br>【判断这三个事务的writeset是否有冲突,如果没有冲突,则视为同组,如果有冲突,则视为不同组.<br>并把把组员编号以及组的编号写进binlog文件中】』<br>上面中括号这段要去掉，<br>判断writeset之间是否可以并行这个逻辑，是在备库的coordinator线程做的。<br><br>----<br>1. 在多线程并发的时候，Seconds_behind_master很不准，后面会介绍别的判断方法；<br>2. 是的,备库有记录，就是show slave status 里面的Relay_Log_File 和 Relay_Log_Pos 这两个值表示的，好问题<br>3. ”加入到组是在binlog cache flush到binlog文件之前做的,如果此时有事务正在flush,未sync,则后面的事务必须等待“ 这句话是对的，但是我没看出这个跟前面提的两个延迟参数作用的关系^_^</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-13 15:04:12</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/4e/3a/86196508.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>linqw</span>
 </div><div class=_2_QraFYR_0>学习完这篇写下自己的理解，老师有空帮忙看下哦，备库一般会延迟分钟级别，比如主库压力比较大的时候，备库有可能会延迟小时级别，为此mysql官方提供了多种多线程复制策略<br>1、5.6基于库的多线程复制策略，使用hash数据库名作为key，value为多少个事务修改此数据库，使用hash来分配多线程，如果一个新事务加入进来，如果有冲突的hash，分配给此线程，如果没有冲突分配给空闲的线程，感觉实现的思路使用队列+线程池，如果线程池中没有空闲的线程，就在队列中增加事务，如果队列满，分发器阻塞，不解析binlog，分发器是生产者，线程池是消费者，基于库的多线程复制有如下优点①构造 hash 值的时候很快，只需要库名；线程的hash项也很少②binlog不需要强制指定row，statement也可以拿到库名。缺点：①如果只有一个库单线程复制，可以将其热点表分布到多个库中（不推荐使用），如果多个库的热点程度不同也会使其单线程复制。<br>2、基于表的多线程复制（非官方，老师实现），hash数据库名+表名作为key，value为多少个事务修改此数据表，同一个事务的多张表，在同一个线程进行处理，防止违反原子性，优点对同一个库多个热点表可以同时复制，多表负载效果很好，如果碰到热点表，比如所有的更新事务都会涉及到某一个表的时候，会使用单线程复制。<br>3、基于行的多线程复制，key必须是“库名 + 表名 + 唯一键的值“也需考虑唯一主键，防止唯一主键冲突（cpu的多线程调度，顺序不固定），value为修改前后key的次数，约束①表必须有主键②不能有外键③binlog格式row（表复制也一样）缺点：①大事务耗cpu②hash项多。优化可以设置阈值，如果事务修改的行大于特定值，使用单线程复制（老师自己实现）。mysql官网基于行的多线程复制，表示的是对于事务涉及更新的每一行，计算出每一行的 hash保存在writeset中，优点，①是有mysql主库写入binlog中，不需要解析 binlog 内容（event 里的行数据），节省计算量②binlog格式没要求，可以使用statement③无需扫描整个事务的binlog省内存，mysql5.7.22的多线程复制实现方式。<br>4、mysql5.7的多线程复制实现方式，借助于处于redo prepare到commit状态下的事务可以并行，因为执行器找引擎拿数据时，事务如果锁冲突会阻塞，无法到写redo log这一步，可以使用binlog故意延迟fsync，防止频繁写磁盘操作，不会丢失数据（redo prepar+完整的binlog事务才能提交，否则回滚），使其在备库多线程复制，主备延迟低，，但是这样有一点不好，语句的响应时间变长，感觉mysql官网故意延迟redo的fsync，在binlog write的时候（因为事务的binlog要写完整，时间较长），使其能批量提交，减少iops，感觉很巧妙</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-10 23:11:14</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/b8/36/542c96bf.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>老师您好：<br>关于COMMIT_ORDER的并行复制方案，从库根据 commit_id来判断“处于prepare和commit状态的事务”。这里我有个很大的疑惑：commit_id是什么时候加入到binlog的，又是在什么时候递增的？？<br>（<br>对于我这个问题的进一步解释：<br>既然commit_id是要被写入到binlog的，那么commit_id毫无疑问就是在write binlog阶段写入的。<br><br>我们知道redolog是组提交的，如果只是按照redolog的组提交方式生成commit_id，那么这个commit_id包含的并行事务数量并不够多！因为在binlog write阶段，又有事务进入到redolog prepare阶段，他们之间的commit_id是不一样的，但是他们是可以并行的。<br><br>所以commit_id什么时候递增？这个是非常关键的，我也很疑惑，commit_id到底是根据什么条件递增的？？<br>）</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 可以这么理解，每个事务都有两个数字表示它在执行提交阶段的时间范围, 构成区间(c1, c2).<br>如果两个事务的区间有交集，就是可以并行的。<br>这里c1是事务启动的时候，当前系统里最大的commit_id；<br>一个事务提交的时候，commit_id+1.</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-17 15:45:10</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e9/ab/37903736.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>J!</span>
 </div><div class=_2_QraFYR_0>同时处于 prepare 状态的事务，在备库执行时是可以并行.复制的，是这个prepare 就可以生成了改组的commited Id吗<br><br>极客时间版权所有: https://time.geekbang.org/column/article/77083</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 进入prepare 的时候就给这个事务分配 commitid，这个commitid就是当前系统最大的一个commitid</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 17:57:42</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/ba/f9/351e4fc0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>生活在别处</span>
 </div><div class=_2_QraFYR_0>writeset 是在主库生成后直接写入到 binlog 里面的，这样在备库执行的时候，不需要解析 binlog 内容，节省了很多计算量；矛盾吧？不解析binlog怎么知道是同一个写集合？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是说，不需要解析出binlog里面的行信息。你提的对，我加个说明进去</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-11 22:22:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/18/f6/2ff7bc7a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>轻歌赋</span>
 </div><div class=_2_QraFYR_0>1，3会导致备库仍然单线程执行<br>1是因为没有任何事务时间线是一致的<br>3是因为单线程执行的事务的先后关系必然不会有重叠的情况，在多线程上面为了保证顺序自然只能一个个过，就成了单线程</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-12 14:26:24</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/3a/82/1ff83a38.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>牛牛</span>
 </div><div class=_2_QraFYR_0>老师、请教两个问题～<br>1. 我在job里按主键删除线上表数据的时候、造成了主从延迟、delete from table where id in...<br><br>id是主键、每次delete 300条、sleep 500ms、这种延迟可能是什么造成的呢？300条应该不算大事务？还是说快速的数据删除导致了索引重建？<br><br>2. 如果一个表快速往里写数据、每次300条、sleep 1s、这个库上的读取会慢吗？<br><br>多谢老师🙏～</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. delete 300条 ， sleep 500ms已经是很克制的操作了，单线程吗？如果还是单线程，那延迟应该不是这个操作导致的<br><br>2. 这都是很小的压力，不会读取慢才对</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-27 09:27:18</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/b5/36/d444d19e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>xy🥝</span>
 </div><div class=_2_QraFYR_0>林老师好，问一个最近遇到的问题。有一台5.7版本的MySQL数据库，在开启多线程复制（4）的时候，跑了两天后，然后三个从库同时卡住了，按照MySQL 1864报错，手动调大了三个从库slave_pending_jobs_size_max的参数之后就恢复了，之前在5.6上没有遇到过这个问题。这里的原理还没想明白，官档上在这里描述的不是很详细，求指导一下。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 主要还是从库的apply线程不够快。。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-11 15:08:50</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/1b/49/ddefc656.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>MrVito</span>
 </div><div class=_2_QraFYR_0>说实话，这一篇文章我在按表复制和按行复制这一段还是清晰的，但是到了并行复制就不是很清晰了。在MySQL5.7.22新增了binlog-transaction-dependency-tracking，用来控制是都使用并行复制策略，分为commit_order，writeset和writeset_session。如果需要备库赶快追上主库，那么就需要更快的并行复制策略，在这里我选择设置为writeset，为什么，因为writeset不需要解析binlog的内容，直接并发执行处理冲突，而commit_order需要在prepare阶段和commit阶段判断是否可以并行，这样会退化成单线程，再并行复制，writeset_session还要在writeset的基础上多一个约束，要保证先后顺序，保证过先后顺序就会退化成单线程！</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-30 16:21:12</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/17/d4/d7a4e6f5.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>胡楚坚</span>
 </div><div class=_2_QraFYR_0>老师，关于留言板中置顶留言长杰的问题：一个事务更新了两张表的数据，然后两个更新语句分给了两个worker。这问题我有点不明白，因为看完专栏我的认知是一个事务只会给一个worker执行，这样就不会有先后commit问题。请问老师是我看漏了什么吗？这种情况应该会出现在哪种策略？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 一个事务只能发给一个worker的，<br><br>长杰评论的那个问题，讨论的是如果分成两个事务，然后约定一起提交，这个是做不到的（或者说实现起来很复杂）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-18 00:27:43</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e9/ab/37903736.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>J!</span>
 </div><div class=_2_QraFYR_0>5.7 版本的基于组提交的并行复制。last_commitid 是在什么时候生成的？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 事务提交的时候</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 17:56:47</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/1d/b5/971261fd.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>alias cd=rm -rf</span>
 </div><div class=_2_QraFYR_0>老师您好：<br><br>思考题答案的猜测：建议采用 WRITESET。<br>WRITESET_SESSION：因为主库是单线程插入，如果采用WRITESET_SESSION，那么会退化成单线程主从复制。<br>COMMIT_ORDER：因为是追历史数据，所以会退化成单线程。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对的，👍<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 17:20:00</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/d4/fd/43802282.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>IceGeek17</span>
 </div><div class=_2_QraFYR_0>好文，总结对比不同的并行策略，讲的深入浅出，看完豁然开朗。有看源代码的冲动。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 看完分享你的心得哈 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-24 17:10:27</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/f8/ba/14e05601.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>约书亚</span>
 </div><div class=_2_QraFYR_0>MySQL 5.7并行复制那里没有看懂。问题有点多请见谅哈。<br>文中提到处于prepare状态的事务，可以并行。<br>那说明，主库commit之前，就要把binlog同步到从库了吧？ (问题1)<br>还提到了prepare状态和commit状态的事务，可以并行。<br>我想象中的同步的步骤是，一组事务（其中有还没commit的，也有已经commit的）的binlog被从库获取到，并行执行sql的同时再后去下一组事务。但下一组事务在上一组执行完之前，不会执行。所以就是这样的流程 ： 同步binlog->执行，同时同步新binlog->等待执行完->执行，同时同步新binlog。<br>是这样吗（问题2）<br>可为什么从库会看到prepare和commit的两种事务，而不全是prepared？(问题3)<br>隐约觉得这似乎涉及到了异步/半同步，AFTER_COMMIT/AFTER_SYNC的内容了，后面会有详细介绍嘛？(问题4)<br><br></div><div class=_10o3OAxT_0>
@@ -456,16 +436,16 @@ select * from t limit 1;
 <a class="nav nav-prev" href=/1/25/ title=25_MySQL是怎么保证高可用的？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/27/ title=27_主库出问题了，从库怎么办？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

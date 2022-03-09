@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>01_基础架构：一条SQL查询语句是如何执行的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>01_基础架构：一条SQL查询语句是如何执行的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/1/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -277,121 +277,101 @@ MySQL实战45讲
 <p>调用InnoDB引擎接口取这个表的第一行，判断ID值是不是10，如果不是则跳过，如果是则将这行存在结果集中；</p></li><li>
 <p>调用引擎接口取“下一行”，重复相同的判断逻辑，直到取到这个表的最后一行。</p></li><li>
 <p>执行器将上述遍历过程中所有满足条件的行组成的记录集作为结果集返回给客户端。</p></li></ol><p>至此，这个语句就执行完成了。</p><p>对于有索引的表，执行的逻辑也差不多。第一次调用的是“取满足条件的第一行”这个接口，之后循环取“满足条件的下一行”这个接口，这些接口都是引擎中已经定义好的。</p><p>你会在数据库的慢查询日志中看到一个rows_examined的字段，表示这个语句执行过程中扫描了多少行。这个值就是在执行器每次调用引擎获取数据行的时候累加的。</p><p>在有些场景下，执行器调用一次，在引擎内部则扫描了多行，因此<strong>引擎扫描行数跟rows_examined并不是完全相同的。</strong>我们后面会专门有一篇文章来讲存储引擎的内部机制，里面会有详细的说明。</p><h1>小结</h1><p>今天我给你介绍了MySQL的逻辑架构，希望你对一个SQL语句完整执行流程的各个阶段有了一个初步的印象。由于篇幅的限制，我只是用一个查询的例子将各个环节过了一遍。如果你还对每个环节的展开细节存有疑问，也不用担心，后续在实战章节中我还会再提到它们。</p><p>我给你留一个问题吧，如果表T中没有字段k，而你执行了这个语句 select * from T where k=1, 那肯定是会报“不存在这个列”的错误： “Unknown column ‘k’ in ‘where clause’”。你觉得这个错误是在我们上面提到的哪个阶段报出来的呢？</p><p>感谢你的收听，欢迎你给我留言，也欢迎分享给更多的朋友一起阅读。</p><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/4a/22/2681d602.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>林晓斌</span>
 </div><div class=_2_QraFYR_0>感谢大家的积极评论。<br>答案是分析器。<br>@threefat 提到Oracle，MySQL确实在设计上受Oracle影响颇深。<br>@圈圈圆圆 高性能MySQL里面概念学得好。<br>@Yezhiwei 等几位，说正文里面已经暗示答案的同学，你们这么机智👍🏿<br><br>后面每期的问题，我们会在下一期的结尾的给出解释，不过只是“参考”哦，以评论区的质量，我估计到时候只需要引用优秀评论就好了 ^_^<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-16 16:41:36</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eq2fAjzw4bRgOory5XZqlTbSic7p4MmlK6g4wIdQ5628frjibBZ9QyAHrjqnm0TYaO1rePpiaoSv6xzQ/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>threefat</span>
 </div><div class=_2_QraFYR_0>课后答案:分析器。Oracle会在分析阶段判断语句是否正确，表是否存在，列是否存在等。猜测MySQL也这样。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: MySQL确实在设计上受Oracle影响颇深。就是这样哈，分析器做了这个工作。另外有评论里面举例高性能MySQL 里面概念的同学、说正文里面已经暗示答案的同学，远程点赞了哈😄😄 就喜欢你们这么机智的回答👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 22:08:16</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/57/4f/6fb51ff1.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>一步</span>
 </div><div class=_2_QraFYR_0>我认为是优化器的，优化器会进行优化分析，比如用先执行哪个条件，使用哪个索引。如果没有对应的字段就会报错的，我看其他评论说是执行器，原因是这个时候才打开表获取数据，但是表的字段不是数据啊，是事先定义好的，所以可以直接读取的，不需要打开表。这是我的看法，希望老师点评一下是否正确</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: “不是执行器”这一点，你分析得很好😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 08:13:26</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/65/d5/88beb15a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>李志博</span>
 </div><div class=_2_QraFYR_0>应该是分析器吧，老师我还有个问题，如果有memory 引擎，还有redis 存在的必要吗，应该是有的吧，两者的场景？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个后面专门有一篇《要不要用memory引擎》会说明，先说结论，redis很有必要😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 09:41:58</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/d6/bd/4cc3186e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>圈圈圆圆</span>
 </div><div class=_2_QraFYR_0>《高性能mysql》里提到解析器和预处理器。<br><br>解析器处理语法和解析查询, 生成一课对应的解析树。<br><br>预处理器进一步检查解析树的合法。比如: 数据表和数据列是否存在, 别名是否有歧义等。如果通过则生成新的解析树，再提交给优化器。<br><br>所以我觉得课后习题的错误应该发生在在分析器处理阶段>_&lt;</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 01:28:26</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eoKKuJnRI0xFuHWwyXcTRJN5DSic0pGz4uOykEL7SNInMoGHgHfkhgquABeksv9dmfM6Bc42HFk0aQ/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>郭</span>
 </div><div class=_2_QraFYR_0>有个问题不太明白，为什么对权限的检查不在优化器之前做？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 有些时候，SQL语句要操作的表不只是SQL字面上那些。比如如果有个触发器，得在执行器阶段（过程中）才能确定。优化器阶段前是无能为力的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 01:42:35</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epfVZHmbUnsxU67FwotibOjM0Obc47VWMyRBmY06AjqTp0C96A8zhUULWjBerK3XtPC7Q8LVClzPxA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>尼古拉斯·赵四</span>
 </div><div class=_2_QraFYR_0>我创建了一个没有select权限的用户，执行select * from T where k=1，报错“select command denied”，并没有报错“unknown column”，是不是可以说明是在打开表之后才判断读取的列不存在？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个是一个安全方面的考虑。你想想一个用户如果没有查看这个表的权限，你是会告诉他字段不对还是没权限？如果告诉他字段不对，其实给的信息太多了，因为没权限的意思还包含了：没权限知道字段是否存在😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 13:56:39</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>为该讲总结了几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br><br> 1. <br>MySQL的框架有几个组件, 各是什么作用? <br> 2. <br>Server层和存储引擎层各是什么作用?<br> 3. <br>you have an error in your SQL syntax 这个保存是在词法分析里还是在语法分析里报错?<br> 4. <br>对于表的操作权限验证在哪里进行?<br> 5. <br>执行器的执行查询语句的流程是什么样的? <br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 非常好👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-24 11:24:30</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/bd/c0/57b06721.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>深藏Blue</span>
 </div><div class=_2_QraFYR_0>入手比较晚，说下个人对为什么是分析器的看法。<br>连接器：门卫，想进请出示准入凭证（工牌、邀请证明一类）。“你好，你是普通员工，只能进入办公大厅，不能到高管区域”此为权限查询。 <br>分析器：“您需要在公司里面找一张头发是黑色的桌子？桌子没有头发啊！臣妾做不到”<br>优化器：“要我在A B两个办公室找张三和李四啊？那我应该先去B办公室找李四，然后请李四帮我去A办公室找张三，因为B办公室比较近且李四知道张三具体工位在哪”<br>执行器：“好了，找人的计划方案定了，开始行动吧，走你！糟糕，刚门卫大哥说了，我没有权限进B办公室”</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 哈哈，很不错，有意思啊👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-17 02:21:51</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJ9oIRvWZARRmB2hNAmSKOQddHYBJr3QXoT8ibtFicfj46PBOTOwGib6WAA3ES2HzzqqXl4ccEEwrLXw/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>yezhizi</span>
 </div><div class=_2_QraFYR_0>源码安装完MySQL之后,使用Debug模式启动<br>mysqld --debug --console &后，<br>mysql> create database wxb;<br>Query OK, 1 row affected (0.01 sec)<br><br>mysql> use wxb;<br>Database changed<br>mysql> create table t(a int);<br>Query OK, 0 rows affected (0.01 sec)<br><br>mysql> select * from t where k=1;<br>ERROR 1054 (42S22): Unknown column 'k' in 'where clause'<br><br>T@4: | | | | | | | | | error: error: 1054 message: 'Unknown column 'k' in 'where clause''<br><br>Complete optimizer trace:<br>答案就很清楚了<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯嗯，Trace 日志是个好东西</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 11:06:25</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/1d/13/31ea1b0b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>峰</span>
 </div><div class=_2_QraFYR_0>分析器，感觉老师故意只讲了词法语法解析，却没有讲语义解析。很坏⊙∀⊙！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 被…被发现了😺</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-15 11:22:13</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/98/3c/47d70fdc.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>ditiki</span>
 </div><div class=_2_QraFYR_0>请问能否在专业名词旁边加上它们的英文名称，比如分析器，优化器等等。谢谢！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是好建议，下一篇开始这么执行哈😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 04:57:42</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/4e/aa/2112f41e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>luffy</span>
 </div><div class=_2_QraFYR_0>应该是分析器 1.从功能模块的职责来考虑 2.从性能来考虑，错误越晚发现成本越高。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 09:08:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLOMFZHKEsOVkUWayeWefqyLHXqpZLIOrZicKeJGlVjEPzM7hRGxSibAR8K2hZW02H6fyQlxiaWGGKuQ/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_75aada</span>
 </div><div class=_2_QraFYR_0>执行器 这个阶段才会打开表 才会知道表有哪些列</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 00:35:22</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/58/2c/92c7ce3b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>易轻尘</span>
 </div><div class=_2_QraFYR_0>靠着耐心翻完所有留言以后，强烈建议极客时间app出一个回到顶部的功能！<br><br>另外总结一下在评论中看到的问题的解答<br>1. 连接器是从权限表里边查询用户权限并保存在一个变量里边以供查询缓存，分析器，执行器在检查权限的时候使用。<br>2. sql执行过程中可能会有触发器这种在运行时才能确定的过程，分析器工作结束后的precheck是不能对这种运行时涉及到的表进行权限校验的，所以需要在执行器阶段进行权限检查。另外正是因为有precheck这个步骤，才会在报错时报的是用户无权，而不是 k字段不存在（为了不向用户暴露表结构）。<br>3. 词法分析阶段是从information schema里面获得表的结构信息的。<br>4. 可以使用连接池的方式，将短连接变为长连接。<br>5. mysql_reset_connection是mysql为各个编程语言提供的api，不是sql语句。<br>6. wait_timeout是非交互式连接的空闲超时，interactive_timeout是交互式连接的空闲超时。执行时间不计入空闲时间。这两个超时设置得是否一样要看情况。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍<br><br>“回到顶部”这个需求很有画面感啊 😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-05-10 20:23:18</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/9e/ce/d8283814.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>xuan</span>
 </div><div class=_2_QraFYR_0>答案是分析器，理由如下：<br> 根据文章分析器主要做两个事情，先做词法分析后做语法分析,词法分析主要做的是根据mysql的关键字进行验证和解析，而语法分析会在词法解析的基础上进一步做表名和字段名称的验证和解析； <br> 看完整篇文章有个疑问望解答，在执行阶段为什么需判断对表是否有执行查询的权限，而不是在分析阶段去做；根据mysql中的information_schema库的存储信息理论上可以在分析器阶段判断是否有权限。<br> </div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 12:59:03</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/99/bc/c1266b7e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>400磅</span>
 </div><div class=_2_QraFYR_0>总结：<br>客户端连接到服务端，获取到权限等信息， 然后在连接的有效时长内(interactive_timeout和wait_timeout参数控制， 5.7版本会断开可以自动重连)对sql进行处理。<br><br>首先会判断查询缓存是否开启，如果已经开启，会判断sql是select还是update/insert/delete，对于select，尝试去查询缓存，如果命中缓存直接返回数据给客户端， 如果缓存没有命中，或者没有开启缓存， 会进入到下一步分析器。<br><br>分析器进行语法分析、词法分析，检查sql的语法顺序等得到解析树， 然后预处理器对解析树进一步分析，验证数据表、字段是否存在，通关之后sql进入下一步优化器，所以课后问题一定是分析器阶段了。<br><br>优化器对sql执行计划分析， 得到最终执行计划，得到优化后的执行计划之后交给执行器。<br><br>执行器调用存储引擎api执行sql，得到响应结果， 将结果返回给客户端，如果缓存是开启状态， 会更新缓存。<br><br>问题1：<br> 在缓存开启状态下， 要判别sql是select还是其他类型，保证只有select才去查询缓存，那么这个判断操作是何时进行的呢？ 我猜测在查询缓存之前， 但是分析器也要对sql关键字进行分析，再分析一遍岂不是重复？ 因为我没有看源码，所以这一块不明白， 如果我来设计的话， 可能是把查询缓存这个模块在分析器阶段来执行， 由分析器进行关键字解析，判断是何种sql语句，如果是select， 再去查询缓存， 如果不是继续往下进行好像更合理，看到大家都说先查询缓存，没有命中再去分析器， 感觉不太通。<br> <br>问题2：<br> 在mysql中通过“explain extended和show warnings”命令来查看的sql， 是不是优化器重写之后的sql？ 以前我看到一本书中提到，也可能是一篇博客，mysql的单表的union查询其实会优化成or查询， 但是show warnings看到的还是union查询语句，所以有此疑问。<br><br>问题3：<br> update等sql清空缓存是在sql执行完返回结果给客户端之前还是之后， 还是说同时进行的， 会不会存在清空缓存失败， 但是告诉客户端update success， 缓存的地方一直不是很清楚， 所以正好 will be removed in a future releas， 真是一个大快人心。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 很好的总结。<br><br>1. 实际上肯定是要判断出是select语句， 但是之后的解析都没做哈。 要理解成“包含在内”也可以。<br><br>2. Show wanings不会把重写后的显示出来，只是格式化后<br><br>3. 清空缓存失败这个不太可能，这个内部结构的操作没什么依赖</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-30 14:11:53</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f5/de/c33e531e.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Jason</span>
 </div><div class=_2_QraFYR_0>1，连接<br>连接管理模块，接收请求；连接进程和用户模块，通过，连接线程和客户端对接<br>2，查询<br>查询缓存 Query Cache<br>分析器，内建解析树，对其语法检查，先from，再on，再join，再where......；检查权限，生成新的解析树，语义检查（没有字段k在这里）等<br>优化器，将前面解析树转换成执行计划，并进行评估最优<br>执行器，获取锁，打开表，通过meta数据，获取数据<br>3，返回结果<br>返回给连接进程和用户模块，然后清理，重新等待新的连接<br><br>请大神指正😂</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 最后是“等待新的请求”哈，其他部分很不错呢</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-14 16:43:39</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/c5/77/39e01d42.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>志平</span>
 </div><div class=_2_QraFYR_0>请问您的逻辑架构图是用什么工具画的？谢谢</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-15 21:14:45</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/3a/eb/b83988e9.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>zhxilin℃+</span>
 </div><div class=_2_QraFYR_0>优化器阶段。个人理解：<br>1.编译原理告诉我们做一个Parser，核心有三步：词法分析、语法分析和语义分析；<br>2.分析器负责词法分析和语法分析，即将查询分解成一个个Identifier（词法分析），构造一棵解析树，整棵树只确保没有语法错误（语法分析），比如检查标识符是否有效、语句是否闭合等；<br>3.优化器紧接着分析上一步的解析树，这时才解决分析器阶段无法做的语义分析，也就是会检查表名、列表等是否正确、是否存在。<br>所以此题我认为是优化器阶段。</div><div class=_10o3OAxT_0>
@@ -401,16 +381,16 @@ MySQL实战45讲
 <a class="nav nav-prev" href=/1/ title=MySQL实战45讲> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/2/ title=02_日志系统：一条SQL更新语句是如何执行的？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

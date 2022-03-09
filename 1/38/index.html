@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>38_都说InnoDB好，那还要不要使用Memory引擎？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>38_都说InnoDB好，那还要不要使用Memory引擎？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/38/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -302,121 +302,101 @@ insert into temp_t select * from t2 where b&gt;=1 and b&lt;=2000;
 select * from t1 join temp_t on (t1.b=temp_t.b);
 </code></pre><p><img src="https://static001.geekbang.org/resource/image/a4/92/a468ba6d14ea225623074b6255b99f92.png?wh=2132*906" alt></p><center><span class=reference>图10 使用内存临时表的执行效果</span></center><p>可以看到，不论是导入数据的时间，还是执行join的时间，使用内存临时表的速度都比使用InnoDB临时表要更快一些。</p><h1>小结</h1><p>今天这篇文章，我从“要不要使用内存表”这个问题展开，和你介绍了Memory引擎的几个特性。</p><p>可以看到，由于重启会丢数据，如果一个备库重启，会导致主备同步线程停止；如果主库跟这个备库是双M架构，还可能导致主库的内存表数据被删掉。</p><p>因此，在生产上，我不建议你使用普通内存表。</p><p>如果你是DBA，可以在建表的审核系统中增加这类规则，要求业务改用InnoDB表。我们在文中也分析了，其实InnoDB表性能还不错，而且数据安全也有保障。而内存表由于不支持行锁，更新语句会阻塞查询，性能也未必就如想象中那么好。</p><p>基于内存表的特性，我们还分析了它的一个适用场景，就是内存临时表。内存表支持hash索引，这个特性利用起来，对复杂查询的加速效果还是很不错的。</p><p>最后，我给你留一个问题吧。</p><p>假设你刚刚接手的一个数据库上，真的发现了一个内存表。备库重启之后肯定是会导致备库的内存表数据被清空，进而导致主备同步停止。这时，最好的做法是将它修改成InnoDB引擎表。</p><p>假设当时的业务场景暂时不允许你修改引擎，你可以加上什么自动化逻辑，来避免主备同步停止呢？</p><p>你可以把你的思考和分析写在评论区，我会在下一篇文章的末尾跟你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>今天文章的正文内容，已经回答了我们上期的问题，这里就不再赘述了。</p><p>评论区留言点赞板：</p><blockquote>
 <p>@老杨同志、@poppy、@长杰 这三位同学给出了正确答案，春节期间还持续保持跟进学习，给你们点赞。</p></blockquote><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/fa/44/aa19d1f6.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>放</span>
 </div><div class=_2_QraFYR_0>老师新年快乐！过年都不忘给我们传授知识！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 新年快乐🤝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-08 22:13:52</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/1e/4c/d6416f57.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>于家鹏</span>
 </div><div class=_2_QraFYR_0>新年好！<br>课后作业：在备库配置跳过该内存表的主从同步。<br><br>有一个问题一直困扰着我：SSD以及云主机的广泛运用，像Innodb这种使用WAL技术似乎并不能发挥最大性能（我的理解：基于SSD的WAL更多的只是起到队列一样削峰填谷的作用）。对于一些数据量不是特别大，但读写频繁的应用（比如点赞、积分），有没有更好的引擎推荐。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 即使是SSD，顺序写也比随机写快些的。 不过确实没有机械盘那么明显。<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-08 12:05:52</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/da/ec/779c1a78.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>往事随风，顺其自然</span>
 </div><div class=_2_QraFYR_0>为什么memory 引擎中数据按照数组单独存储，0索引对应的数据怎么放到数组的最后</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这就是堆组织表的数据存放方式</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-09 11:46:48</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/20/3a/90db6a24.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Long</span>
 </div><div class=_2_QraFYR_0>老师新年好 :-)<br>刚好遇到一个问题。 <br><br>本来准备更新到，一个查询是怎么运行的里面的，看到这篇更新文章，就写在这吧，希望老师帮忙解答。<br><br>关于这个系统memory引擎表：information_schema.tables<br>相关信息如下<br>（1）Verison: MySQL 5.6.26<br>（2）数据量table_schema = abc的有接近4W的表，整个实例有接近10W的表。（默认innodb引擎）<br>（3）mysql.user和mysql.db的数据量都是100-200的行数，MyISAM引擎。<br>（4）默认事务隔离级别RC<br><br><br>在运行查询语句1的时候：select * from information_schema.tables where table_schema = 'abc';<br>状态一直是check permission，opening tables，其他线程需要打开的表在opend tables里面被刷掉的，会显示在opening tables，可能需要小几秒后基本恢复正常。<br><br>但是如果在运行查询语句2：select count(1) from information_schema.tables where table_schema = 'abc'; 这个时候语句2本身在profiling看长期处于check permission状态，其他线程就会出现阻塞现象，大部分卡在了opening tables，小部分closing tables。我测试下了，当个表查询的时候check permission大概也就是0.0005s左右的时间，4W个表理论良好状态应该是几十秒的事情。<br>但是语句1可能需要5-10分钟，语句2需要5分钟。<br><br>3个问题，请老师抽空看下：<br>（1）information_schema.tables的组成方式，是我每次查询的时候从数据字典以及data目录下的文件中实时去读的吗？<br>（2）语句1和语句2在运行的时候的过程分别是怎样的，特别是语句2。<br>（3）语句2为什么会出现大量阻塞其他事务，其他事务都卡在opening tables的状态。<br><br><br>PS: 最后根据audit log分析来看，语句实际上是MySQL的一个客户端Toad发起的，当使用Toad的object explorer的界面来查询表，或者设置connection的时候指定的的default schema是大域的时候就会run这个语句：（table_schema改成了abc，其他都是原样）<br>SELECT COUNT(1) FROM information_schema.tables WHERE table_schema = 'abc' AND table_type != 'VIEW';<br><br><br>再次感谢！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1&2 查询information_schema.tables的时候，会把所有的表都访问到一次，这里不止是4w个表，而是这个实例上所有的表，也就是10万<br><br>3. 因为系统一般设置的table_definition_cache 都不会太大，你要打开10万张表，就只能轮流打开，然后轮流从table_definition_cache里面淘汰。这样就跟其他查询在table_definition_cache这个结构里出现了互相等待资源的情况。<br><br>嗯，这个其实就是我不建议用界面工具的原因之一<br><br>不好意思，你这个问题这么迟才回复你😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-08 17:07:31</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/df/e7/4ce5ed27.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>lionetes</span>
 </div><div class=_2_QraFYR_0>重启前 my.cnf 添加 skip-slave-errors 忽略 内存表引起的主从异常导致复制失败<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯，这个也是可以的。不过也会放过其他引擎表的主备不一致的报错哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 17:28:37</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/97/f4/6709b8cf.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>llx</span>
 </div><div class=_2_QraFYR_0>1、如果临时表读数据的次数很少（比如只读一次），是不是建临时表时不创建索引效果很更好？<br>2、engine=memory 如果遇到范围查找，在使用哈希索引时应该不会使用索引吧</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 取决于对临时表的访问模式哦，如果是需要用到索引查找，还是要创建的。如果创建的临时表只是用于全表扫描，就可以不创建索引；<br>2. 是的，如果明确要用范围查找，就得创建b-tree索引</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 11:05:29</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/ef/3e/9c3a8abc.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>杜嘉嘉</span>
 </div><div class=_2_QraFYR_0>我的认识里，有一点不是很清楚。memory这个存储引擎，最大的特性应该是把数据存到内存。但是innodb也可以把数据存到内存，不但可以存到内存(innodb buffer size)，还可以进行持久化。这样一对比，我感觉memory的优势更没有了。不知道我讲的对不对</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是，如我们文中说的，不建议使用普通内存表了哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-10 16:48:29</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_da015d</span>
 </div><div class=_2_QraFYR_0>很重要的一点没说啊，内存表不支持事务。怪不得写demo的时候总锁不住</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-11-25 11:02:04</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/9a/64/eea9aa33.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>陈扬鸿</span>
 </div><div class=_2_QraFYR_0>老师你好，今天生产上出碰到一个解决不了的问题,php的yii框架，使用show full processlist 查看 全是如下语句有100多条<br>SELECT<br> kcu.constraint_name,<br> kcu.column_name,<br> kcu.referenced_table_name,<br> kcu.referenced_column_name<br>FROM information_schema.referential_constraints AS rc<br>JOIN information_schema.key_column_usage AS kcu ON<br> (<br> kcu.constraint_catalog = rc.constraint_catalog OR<br> (kcu.constraint_catalog IS NULL AND rc.constraint_catalog IS NULL)<br> ) AND<br> kcu.constraint_schema = rc.constraint_schema AND<br> kcu.constraint_name = rc.constraint_name<br>WHERE rc.constraint_schema = database() AND kcu.table_schema = database()<br>AND rc.table_name = 't1' AND kcu.table_name = 't1' <br>这个可以优化吗 这个库是数据字典的 现在数据库无法对外提供服务 请老师指教！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你看看能不能把短连接改成长连接<br><br>还有，这个语句应该是没用的，看看能不能通过配置框架参数，来避免执行这个语句</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-06 12:19:56</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>晚风·和煦</span>
 </div><div class=_2_QraFYR_0>老师，内存表就是使用memory引擎创建的表吗？😂</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-01-16 22:12:22</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJCscgdVibmoPyRLRaicvk6rjTJxePZ6VFHvGjUQvtfhCS6kO4OZ1AVibbhNGKlWZmpEFf2yA6ptsqHw/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>夹心面包</span>
 </div><div class=_2_QraFYR_0>我们线上就有一个因为内存表导致的主从同步异常的例子,我的做法是先跳过这个表的同步,然后开发进行改造,取消这张表的作用</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯嗯，联系开发改造是对的😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-11 13:47:21</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/05/d4/e06bf86d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>长杰</span>
 </div><div class=_2_QraFYR_0>内存表一般数据量不大，并且更新不频繁，可以写一个定时任务，定期检测内存表的数据，如果数据不空，就将它持久化到一个innodb同结构的表中，如果为空，就反向将数据写到内存表中，这些操作可设置为不写入binlog。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 因为重启的时候已经执行了delete语句，所以再写入数据的动作也可以保留binlog哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-09 14:10:25</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/20/3a/90db6a24.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Long</span>
 </div><div class=_2_QraFYR_0>追问更新1: 谢谢老师的答复，我看了下innodb_stats_on_metadata就是OFF，今天在5.7环境验证，发现竟然不是几百秒，而且几秒，不知道这个是代码的优化，还是参数不一致的原因，有几十个参数差异需要排查。 所以在不知道是因为参数变化导致，还是内部查询逻辑变化。如果是参数，担心有一天被人设置错，又回滚到不好的情况. 老师，我想入坑源码了… </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这种情况最适合源码入坑😄<br><br>你有两个可以稳定复现的对比场景，而且单线程就能复现。<br><br>这两天我用电脑不方便，下周末来给出答案哈。<br><br>你可否把5.6/5.7这个对照试验组，包括实验过程和结果差异，再单独写一个问题😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-01 16:14:05</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/20/3a/90db6a24.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Long</span>
 </div><div class=_2_QraFYR_0>追问：多谢老师回复，在上面回复中，为什么语句2会阻塞其他的线程把其他线程都卡在opening tables 和closing tables，而语句1不会.<br><br>猜测是不是语句2用了lock_open的方法？<br>老师有什么好的建议，我怎么能通过日志或者调试来看？<br>已经看了innodb status, processlist, profiling都看了，没发现异常<br><br>语句1: SELECT table_name, table_schema, data_length, index_length FROM information_schema.TABLES WHERE ENGINE in ('MyISAM','InnoDB') and table_schema &lt;> 'information_schema';<br><br>语句2:select count(1) from information_schema.tables where table_schema = 'abc';</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你如果是innodb_stats_on_metadata设置为off的话，第二个语句是不用打开表的。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-01 04:57:24</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/27/13/a8/38255467.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>yangman</span>
 </div><div class=_2_QraFYR_0>老师你好，有个问题：为什么相同的数据，t1和t2的data_length会相差这么大？ <br>Name |Engine|Rows |Data_length|<br>-----+------+-----+-----------+<br>t1 |MEMORY| 10| 126992|<br>t2 |InnoDB| 10| 16384|<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-08-13 20:32:54</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/58/15/56f4e62a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>antz</span>
 </div><div class=_2_QraFYR_0>问句：在真实业务场景中真的有像文中动态创建临时表这么用的吗？怎么感觉这么反人类啊</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-06-18 09:26:48</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/24/2b/ef/7d650974.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>bulingbuling</span>
 </div><div class=_2_QraFYR_0>老师:<br>memory和innodb引擎的区别第3点:数据位置发生变化的时候，InnoDB 表只需要修改主键索引，而内存表需要修改所有索引。这句话没理解，数据位置发生变化的时候，memory修改所有索引的原理是什么</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-06-02 15:49:52</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_66dfcd</span>
 </div><div class=_2_QraFYR_0>临时表是临时表，临时表存在磁盘上，内存表是内存表，内存表存在内存中，为什么这里说用户临时表是普通内存表的一个例外呢？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-11-13 20:52:28</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/19/15/03/682bd618.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>DavidJiang</span>
 </div><div class=_2_QraFYR_0>按照全表扫描原理，扫描的行数应该是总行数。但是如下实验发现并不相同。—todo list<br> 另外，增加了list，原则上应该扫描前十行就可以了，为啥也是全表扫描<br>mysql> select count(*) from employees;<br>+----------+<br>| count(*) |<br>+----------+<br>| 300024 |<br>+----------+<br>1 row in set (0.09 sec)<br><br><br>mysql> explain select * from employees ;<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>| 1 | SIMPLE | employees | NULL | ALL | NULL | NULL | NULL | NULL | 299202 | 100.00 | NULL |<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>1 row in set, 1 warning (0.02 sec)<br><br><br>mysql> explain select * from employees limit 10;<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>| 1 | SIMPLE | employees | NULL | ALL | NULL | NULL | NULL | NULL | 299202 | 100.00 | NULL |<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>1 row in set, 1 warning (0.01 sec)<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-11-06 13:52:39</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/19/15/03/682bd618.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>DavidJiang</span>
 </div><div class=_2_QraFYR_0> 博主好，大家好，请教两个问题。<br>1、问题一：不指定顺序是否就是按照主键索引顺序输出结果。下面是验证部分<br>mysql> select * from employees limit 10;<br>mysql> select emp_no from employees limit 10;<br>+--------+<br>| emp_no |<br>+--------+<br>| 10001 |<br>| 10002 |<br>| 10003 |<br>| 10004 |<br>| 10005 |<br>| 10006 |<br>| 10007 |<br>| 10008 |<br>| 10009 |<br>| 10010 |<br><br>mysql> select first_name from employees limit 10;<br>+------------+<br>| first_name |<br>+------------+<br>| Georgi |<br>| Bezalel |<br>| Parto |<br>| Chirstian |<br>| Kyoichi |<br>| Anneke |<br>| Tzvetan |<br>| Saniya |<br>| Sumant |<br>| Duangkaew |<br><br>问题二、select如果全表扫描，按照文章分析应该扫描行数就是总的rows数，但是验证结果确不是，为啥？另外，加limit为啥还是全表扫描？<br>mysql> select count(*) from employees;<br>+----------+<br>| count(*) |<br>+----------+<br>| 300024 |<br>+----------+<br><br>mysql> explain select * from employees ;<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>| 1 | SIMPLE | employees | NULL | ALL | NULL | NULL | NULL | NULL | 299202 | 100.00 | NULL |<br><br><br>mysql> explain select * from employees limit 10;<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+<br>| 1 | SIMPLE | employees | NULL | ALL | NULL | NULL | NULL | NULL | 299202 | 100.00 | NULL |<br>+----+-------------+-----------+------------+------+---------------+------+---------+------+--------+----------+-------+</div><div class=_10o3OAxT_0>
@@ -426,16 +406,16 @@ select * from t1 join temp_t on (t1.b=temp_t.b);
 <a class="nav nav-prev" href=/1/37/ title=37_什么时候会使用内部临时表？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/39/ title=39_自增主键为什么不是连续的？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

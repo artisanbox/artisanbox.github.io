@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>10_MySQL为什么有时候会选错索引？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>10_MySQL为什么有时候会选错索引？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/10/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -300,121 +300,101 @@ select * from t force index(a) where a between 10000 and 20000;/*Q2*/
 <p>@某、人 把02篇的redo log更新细节和change buffer的更新串了起来；<br>
 @Ivan 回复了其他同学的问题，并联系到Checkpoint机制；<br>
 @约书亚 问到了merge和redolog的关系。</p></blockquote><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>今天这个问题不是特别明白为什么。session A开启了一致性读,session B delete或者insert,之前记录都已经放进了undo了。二级索引的记录也写进了redo和change buffer,应该说删除了索引页也不影响session A的重复读。估计是开启了一致性读之后,在这个事务执行期间,不能释放空间,导致统计信息变大。还是需要老师解释下具体的细节<br><br>今天有两个问题,想请教下老师<br>1.我的理解是由于B是查找(50000,100000),由于B+树有序,通过二分查找找到b=50000的值,从50000往右扫描,一条一条回表查数据,在执行器上做where a(1,1000)的筛选,然后做判断是否够不够limit的数,够就结束循环。由于这里b(50000,100000)必然不存在a(1,1000),所以需要扫描5W行左右.但是如果把a改为(50001,51000),扫描行数没有变。那么是因为优化器给的扫描行数有问题还是执行器没有结束循环？为什么不结束循环?<br>(好像rows能直观展示limit起作用,必须在执行器上过滤数据,不能在索引上过滤数据,不知道为什么这样设计)<br><br>2.假设b上数据是会有很多重复的数据,b的最大值也存在多行重复<br>select * from t where (a between 1 and 1000) and (b between 50000 and 100000) order by b desc limit 1;<br>这里倒序去扫描b索引树,选取的是b值最大,id值为一个固定值(既不最大也不最小)<br>select * from t force index(a) where (a between 1 and 1000) and (b between 50000 and 100000) order by b desc limit 1;<br>由于这里选取的是a索引,排序不能用到索引,只能用优化排序.选取的是b值最大,id值最小那一行<br>这就是典型的两条相同的sql,但是索引选择的不同,出现的数据不一致。<br>所以如果是order by b,a就可以避免这种情况的引起的不一致,也可以避免堆排序造成的不一致<br>但是如果是asc没有出现这种情况。这里出现不一致,应该还不是由于堆排序造成的。这是什么原因造成的？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 好问题，而且你做了个不错的对照实验。是的，加了limit 1 能减少扫描多少行，其实优化器也不确定，【得执行才知道】，所以显示的时候还是按照“最多可能扫多少行”来显示。<br><br>2. 你这个例子里，如果确实是按照b扫描了，应该肯定是ID最大值呀，除非ID最大的那个记录，a条件不满足。但是一定是“满足a条件里面最大的那个ID的”，你再验证下。<br><br> 而如果是用了a, 那就有临时表排序，临时表排序有三种算法，还分内存还是磁盘临时表… 这里展开不了了，后面《order by是怎么工作的》这篇会讲。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 20:54:02</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/16/31/ae8adf82.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>路过</span>
 </div><div class=_2_QraFYR_0>老师，关于本章中的“基数”（cardinality）问题。既然已经为列a创建了索引，即有专门的数据页存放索引。遍历索引是很快的，从而得到“基数”的值应该很快呀。为何要到原始的数据页中，找N页，统计上面不同的值呢？有点多此一举啊。如果这样操作，会导致信息不准确，比如本来一个页中有50条数据，后来其中20条数据被删除了，空间没有被释放，这导致统计的信息就发生偏差。基数信息就更不准确了。<br>从原始页中计算“基数”，是不是考虑到索引页中的数据具有滞后性，即更新了表中数据，要过一会才更新索引页？<br>请老师指正，谢谢！<br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 啊，误会了，确实是哪个索引的基数就是在哪个索引树上拿的。<br><br>你的理解是对的，我文中也是这个意思哦😓</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 22:46:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/34/a5/db01dc4f.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>bowenz</span>
 </div><div class=_2_QraFYR_0>在5.7.21 percona 版本实验，未出现案例1的情况 。 <br>dev02> select @@global.tx_isolation,@@tx_isolation,version(),"session A";<br>+-----------------------+-----------------+---------------+-----------+<br>| @@global.tx_isolation | @@tx_isolation | version() | session A |<br>+-----------------------+-----------------+---------------+-----------+<br>| REPEATABLE-READ | REPEATABLE-READ | 5.7.21-20-log | session A |<br>+-----------------------+-----------------+---------------+-----------+<br>dev02> start transaction with consistent snapshot;<br>Query OK, 0 rows affected (0.00 sec)<br>dev02> commit;<br>Query OK, 0 rows affected (0.00 sec)<br>dev02> select now() ;<br>+---------------------+<br>| now() |<br>+---------------------+<br>| 2018-12-04 22:03:48 |<br>+---------------------+<br>1 row in set (0.00 sec)<br>dev02> select @@global.tx_isolation,@@tx_isolation,version(),"session B";<br>+-----------------------+-----------------+---------------+-----------+<br>| @@global.tx_isolation | @@tx_isolation | version() | session B |<br>+-----------------------+-----------------+---------------+-----------+<br>| REPEATABLE-READ | REPEATABLE-READ | 5.7.21-20-log | session B |<br>+-----------------------+-----------------+---------------+-----------+<br>1 row in set, 2 warnings (0.00 sec)<br><br>dev02> delete from t;<br>Query OK, 100000 rows affected (0.51 sec)<br><br>dev02> call idata();<br>Query OK, 1 row affected (2 min 38.34 sec)<br><br>dev02> select now();<br>+---------------------+<br>| now() |<br>+---------------------+<br>| 2018-12-04 22:03:58 |<br>+---------------------+<br>1 row in set (0.00 sec)<br><br>dev02> explain select * from t where a between 10000 and 20000;<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |<br>| 1 | SIMPLE | t | NULL | range | a | a | 5 | NULL | 10001 | 100.00 | Using index condition |</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Session A提交早了… 从上到下按照时间顺序执行哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 14:12:34</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>趁着答案公布之前的最后时间,再来尝试性答一下这个题<br>1.为什么没有session A,session B扫描的行数是1W<br>由于mysql是使用标记删除来删除记录的,并不从索引和数据文件中真正的删除。<br>如果delete和insert中间的间隔相对较小,purge线程还没有来得及清理该记录。<br>如果主键相同的情况下,新插入的insert会沿用之前删除的delete的记录的空间。<br>由于相同的数据量以及表大小,所以导致了统计信息没有变化<br>2.为什么开启了session A,session B扫描行数变成3W<br>由于session A开启了一致性读,目的为了保证session A的可重复读,insert只能<br>另起炉灶,不能占用delete的空间。所以出现的情况就是delete虽然删除了,但是<br>未释放空间,insert又增加了空间。导致统计信息有误</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-06 23:34:19</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>把该讲内容总结为几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br><br> 1. <br>mysql如何判断一个查询的扫描行数?<br> 2. <br>索引基数如何计算? 通过哪个参数可以设置索引统计的存储方式?<br> 3. <br>可以重新统计索引信息的命令是什么?<br> 4. <br>如何定位索引选择异常这样的问题?<br> 5. <br>索引选择异常的问题可以有哪几种处理方式?<br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-09 15:57:46</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f3/4a/b6a46894.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Ying</span>
 </div><div class=_2_QraFYR_0>现学现用 今天有个500万的表 分页查询特别慢。<br>select * from table where create_time and create_time>=时间戳 and create_time&lt;=时间戳 <br>and subtype='xx' and type='xx' and company_id =x order by create_time limited 90,30 ;<br>已经建立了组合索引 union_index包括字段 create_time subtype type company_id<br>但是 explain 发现竟然走了create_time 的索引<br>语句里加了一个use index(union_index) ，立马好了<br>真正的解决了客户的实际问题啊。 感谢老师</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿<br><br>而且发评论的时候还做了很细致地脱敏，赞</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 20:04:29</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e9/8f/0de9ca55.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Niko.</span>
 </div><div class=_2_QraFYR_0>我试了几遍 也是没有复现选错索引<br>A会话<br>mysql> select @@tx_isolation;<br>+-----------------+<br>| @@tx_isolation |<br>+-----------------+<br>| REPEATABLE-READ |<br>+-----------------+<br>1 row in set, 1 warning (0.01 sec)<br><br>mysql> select @@version<br> -> ;<br>+------------+<br>| @@version |<br>+------------+<br>| 5.7.22-log |<br>+------------+<br>1 row in set (0.00 sec)<br>mysql> start transaction with consistent snapshot;<br>Query OK, 0 rows affected (0.00 sec)<br><br>B会话<br>mysql> delete from t;<br>Query OK, 100000 rows affected (2.58 sec)<br><br>mysql> call idata();<br>Query OK, 1 row affected (24.32 sec)<br><br>mysql> explain select * from t where a between 10000 and 20000;<br>+----+-------------+-------+------------+-------+---------------+------+---------+------+-------+----------+-----------------------+<br>| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |<br>+----+-------------+-------+------------+-------+---------------+------+---------+------+-------+----------+-----------------------+<br>| 1 | SIMPLE | t | NULL | range | a | a | 5 | NULL | 10001 | 100.00 | Using index condition |<br>+----+-------------+-------+------------+-------+---------------+------+---------+------+-------+----------+-----------------------+<br>1 row in set, 1 warning (0.00 sec)<br><br>为啥呢？ </div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-12 11:09:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/5c/c5/1231d633.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>梁中华</span>
 </div><div class=_2_QraFYR_0>假如要查 A in () AND B in (), 怎么建索引?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题<br>where A in (a,b,c) AND B in (x,y,z)<br>会转成<br> <br>(A=a and B=x) or (A=a and B=y) or (A=a and B=z) or<br>(A=b and B=x) or (A=b and B=y) or (A=b and B=z) or<br>(A=c and B=x) or (A=c and B=y) or (A=c and B=z) </p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 15:06:59</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/ea/9a/02d589f9.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>斜面镜子 Bill</span>
 </div><div class=_2_QraFYR_0>问题的思考：<br>我理解 session A 开启的事务对 session B的delete操作后的索引数据的统计时效产生了影响，因为需要保证事务A的重复读，在数据页没有实际删除，而索引的统计选择了N个数据页，这部分数据页不收到前台事务的影响，所以整体统计值会变大，直接影响了索引选择的准确性；</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 10:59:31</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/9b/a8/6a391c66.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Leon📷</span>
 </div><div class=_2_QraFYR_0>公司测试机器IO性能太差，插十万条要27分钟，做这个文章的实验要1个小时以上</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: ………<br><br>不会吧，插入10万条27分钟… 你把innodb_flush_log_at_trx_commit 和 sync_binlog都设置成0试试</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 16:01:53</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/fd/d5/0194ea41.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>沉浮</span>
 </div><div class=_2_QraFYR_0>图十下面第二段<br>现在 limit b,a 这种写法，要求按照 b,a 排序，就意味着使用这两个索引都需要排序。<br>应该是order by b,a吧<br>另外有个问题请教林老师，根据经验大表增加索引的时候比较慢，这个是理解的，但是删除索引的时候能做到秒删，这个什么原理呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是，已经修改了，谢谢。<br><br>删除的时候是标记删除，所以很快。<br>建索引是要扫描数据和真正生成索引树，是会慢些</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 09:20:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/77/fd/c6619535.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>XD</span>
 </div><div class=_2_QraFYR_0>谢谢老师的解答，我之前一直以为这个操作也是在存储层进行的。<br>那执行器调用存储层的接口是不是只能获取到最原始的数据，后续的加工，比如order，join和group操作也都是在执行器里进行的吗？对应的buffer和内存临时表也都是server层的东西？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，你提到的这些，都在server层<br><br>很早之前连过滤数据都在server层，后来有了index condition pushdown下推了一点到引擎层<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-26 10:17:28</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/16/2b/fd/7013289d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>我要给爸爸买辆二手车(已买)</span>
 </div><div class=_2_QraFYR_0>号外，号外，我终于把开头例子给复现了，修改建表语句（id自增），存储过程代码（不要指定id值）如下，即可复现不选择索引a问题：<br>CREATE TABLE `t` (<br> `id` int(11) auto_increment,<br> `a` int(11) DEFAULT NULL,<br> `b` int(11) DEFAULT NULL,<br> PRIMARY KEY (`id`),<br> KEY `a` (`a`),<br> KEY `b` (`b`)<br>) ENGINE=InnoDB;<br><br>delimiter ;;<br>create procedure idata()<br>begin<br> declare i int;<br> set i=1;<br> while(i&lt;=100000)do<br> insert into t (`a`,`b`) values(i, i);<br> set i=i+1;<br> end while;<br>end;;<br>delimiter ;</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-01-01 14:20:47</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/71/97/f1a3d398.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>张永志</span>
 </div><div class=_2_QraFYR_0>merge那段的解释明白了change buffer操作逻辑。即change buffer变化与数据块变化是分开的，最初redo中记录的只是change buffer的变更，因为还未应用到数据块上。而merge后redo记录的是数据块、change buffer的变更。<br>是这样吧？😄</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 准确。<br><br>悄悄地我涨了一点信心😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 21:23:28</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/67/f4/9a1feb59.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>为加深印象小结如下：<br><br>1：MySQL选错索引，啥意思？<br><br>我们认为使用K索引检索的速度会更快的，但是MySQL没有使用，决定使用什么索引是由Server层的优化器来决定的，她也是想选择最佳的方案来检索数据的，不过他也是人写的程序也是存在bug的。<br><br>2：MySQL为啥会选错索引？<br><br>优化器认为使用那个索引检索数据的速度比较快是一个需要各种因素综合评估的事情，比如：是否使用临时表、是否排序、扫描的行数多少、回表的次数等，文中的例子优化器判断失误的主要原因是扫描行数的判断存在误差，因为这个信息是采样评估得到的。索引的创建是非常的耗时的，因为需要真正的建索引的过程，但是删除索引却不需要耗费太多时间，因为是标记删除，这个是以空间换时间的思路。优化器采用采样评估出现误差的原因也在于，索引的标记删除影响的。<br><br>3：MySQL选错索引怎么破？<br><br>3-1：强制指定使用某个索引，不常用不推荐用<br><br>3-2：调整SQL语句，使优化器选择的和我们想的一样，不具有通用性<br><br>3-3：新建更合适的索引或者删除不合适的索引，是一个思路<br><br>3-4：使用analyze table可以解决索引统计信息不准确导致的索引选错的问题<br><br>这篇刷新了认知，以前从没有思考过这个问题，觉得MySQL很牛逼没有什么bug，即使有我也发现不了，如果使用是有问题也是自己不会使用。<br><br>现在还存在这个问题嘛？<br><br>通过改变使用方式就解决了，好像也不算是bug了？<br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-30 14:31:52</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/07/8c/0d886dcc.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Shopee内推码：NTAGxyl</span>
 </div><div class=_2_QraFYR_0>老师，原文中：在这个例子里，我们用 limit 100 让优化器意识到，使用b索引代价是很高的。<br>问题：为什么limit 100时候，使用b索引代价高呢？和limit 1相比，赶紧没有什么质的变化啊</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 其实这篇主要就是说优化器的bug😄 bug嘛就没什么道理😓</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-08 22:40:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/78/31/c7f8d1db.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Laputa</span>
 </div><div class=_2_QraFYR_0>老师，redo log 是实时写入磁盘的吗？是不是还有一层所谓的“redo log buffer”？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Redolog buffer是在事务执行过程中，先把要写入的内容在内存里存起来，在commit阶段，一次性写入redolog file </p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-05 13:16:04</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/09/d7/ffe7b0bf.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Shen</span>
 </div><div class=_2_QraFYR_0>1、sessionA：start transaction with consistent snapshot;<br>2、sessionB：delete from t;<br>3、sessionB：call idata();<br>4、sessionB：explain select * from t where a between 10000 and 20000;<br>+----+-------------+-------+-------+---------------+------+---------+------+-------+-----------------------+<br>| id | select_type | table | type | possible_keys | key | key_len | ref | rows | Extra |<br>+----+-------------+-------+-------+---------------+------+---------+------+-------+-----------------------+<br>| 1 | SIMPLE | t | range | a | a | 5 | NULL | 10000 | Using index condition |<br>+----+-------------+-------+-------+---------------+------+---------+------+-------+-----------------------+<br><br><br>5.6.43没有复现 案例1的情况<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-16 11:22:07</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e3/bc/064401c7.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>EAGLE</span>
 </div><div class=_2_QraFYR_0>老师，看了一篇文章说innodb如果不加order by默认是按照主键排序的。也就是说如果不加order by，查询结果也是有一定次序的。那么如果没有业务需求，纯粹只是为了分页显示数据，不加order by也是可以的吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 文章说错了… 😓<br>默认按照“查询使用的索引”排序</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-06 16:35:24</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/80/45/24c30321.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>kevin</span>
 </div><div class=_2_QraFYR_0>老师你好。我用存储过程插入100000条数据特别慢，后来我set autocommit=0,每1000条才commit，这样就快了。我想不出来这是为什么，求解惑</div><div class=_10o3OAxT_0>
@@ -424,16 +404,16 @@ select * from t force index(a) where a between 10000 and 20000;/*Q2*/
 <a class="nav nav-prev" href=/1/9/ title=09_普通索引和唯一索引，应该怎么选择？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/11/ title=11_怎么给字符串字段加索引？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

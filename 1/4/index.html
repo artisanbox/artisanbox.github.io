@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>04_深入浅出索引（上） :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>04_深入浅出索引（上） :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/4/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -284,121 +284,101 @@ alter table T add primary key(id);
 <p>Percona的pt-kill这个工具不错，推荐使用；</p></li><li>
 <p>在业务功能测试阶段要求输出所有的general_log，分析日志行为提前发现问题；</p></li><li>
 <p>如果使用的是MySQL 5.6或者更新版本，把innodb_undo_tablespaces设置成2（或更大的值）。如果真的出现大事务导致回滚段过大，这样设置后清理起来更方便。</p></li></ol><p>感谢 @壹笙☞漂泊 @王凯 @易翔 留下的高质量评论。</p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/29/1a/87f11f3d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>JackPn</span>
 </div><div class=_2_QraFYR_0>老师我可不可以理解为：每一张表其实就是一个B+树，树结点的key值就是某一行的主键，value是该行的其他数据。新建索引就是新增一个B+树，查询不走索引就是遍历主B+树。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 每一个表是好几棵B+树（应该是你理解对了但是手误），<br>其它的完全正确</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-27 20:06:41</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTK9z4ADkhDVV2oNaRmetm5QMFB2ayr5hHIJGA3cGibkFxbiaCYuyPwJQB800dMFGqwslmuvXbdulDVw/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>wuxue_123</span>
 </div><div class=_2_QraFYR_0>老师，回表只是普通索引才会有的吗？主键和数据放在同一个树中，根据主键查询的时候，就可以直接获得数据了。<br>那select ＊from table where id＝xx<br>和select id from table where id＝xx<br>的效率是一样的吗？（id是主键）</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这两个语句是都不用回表了，在“查找行”这个逻辑上是一样的，<br><br>但是select *要读和拷贝更多列到server,还要发送更多列给客户端，所以还是select id更快的。<br><br>好问题</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-20 06:39:01</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/de/ff/a64e347a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Christain</span>
 </div><div class=_2_QraFYR_0>老师，索引篇结束了么？<br>有几个问题<br>1 :三个字段联合索引时，如果中间的字段使用了范围查询或者模糊查询，最后一个字段还会用到索引么？<br>2:在order by时，索引是如何使用的<br>3:新建一张表，如何界定其索引的数量，有没有选择或者公式<br>4:能不能再详细介绍下字符串前缀索引</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 理论篇的先到这里，实践篇的还有六篇索引相关。<br>1. 我们文中有这样的例子了哦。like “张%” 就是对name 字段的范围查询/模糊查询。 age 就是你说的最后一个字段啦 😄<br>2. 我们有两篇的篇幅来讲order by, 第14和16（15是答疑）<br>3. 根据查询需要😓<br>4. 等《如何给字符串字段加索引》发布哈<br><br>嗯索引的内容其实很多，基础篇两篇是不可能写完的，而且怕理论类太多大家读着累，把一些知识点放到实践篇了 @all </p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-23 09:09:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/ab/e1/f6b921fa.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>壹笙☞漂泊</span>
 </div><div class=_2_QraFYR_0>总结：<br>1.索引的作用：提高数据查询效率<br>2.常见索引模型：哈希表、有序数组、搜索树<br>3.哈希表：键 - 值(key - value)。<br>4.哈希思路：把值放在数组里，用一个哈希函数把key换算成一个确定的位置，然后把value放在数组的这个位置<br>5.哈希冲突的处理办法：链表<br>6.哈希表适用场景：只有等值查询的场景<br>7.有序数组：按顺序存储。查询用二分法就可以快速查询，时间复杂度是：O(log(N))<br>8.有序数组查询效率高，更新效率低<br>9.有序数组的适用场景：静态存储引擎。<br>10.二叉搜索树：每个节点的左儿子小于父节点，父节点又小于右儿子<br>11.二叉搜索树：查询时间复杂度O(log(N))，更新时间复杂度O(log(N))<br>12.数据库存储大多不适用二叉树，因为树高过高，会适用N叉树<br>13.InnoDB中的索引模型：B+Tree<br>14.索引类型：主键索引、非主键索引<br> 主键索引的叶子节点存的是整行的数据(聚簇索引)，非主键索引的叶子节点内容是主键的值(二级索引)<br>15.主键索引和普通索引的区别：主键索引只要搜索ID这个B+Tree即可拿到数据。普通索引先搜索索引拿到主键值，再到主键索引树搜索一次(回表)<br>16.一个数据页满了，按照B+Tree算法，新增加一个数据页，叫做页分裂，会导致性能下降。空间利用率降低大概50%。当相邻的两个数据页利用率很低的时候会做数据页合并，合并的过程是分裂过程的逆过程。<br>17.从性能和存储空间方面考量，自增主键往往是更合理的选择。<br><br>思考题：<br>如果删除，新建主键索引，会同时去修改普通索引对应的主键索引，性能消耗比较大。<br>删除重建普通索引貌似影响不大，不过要注意在业务低谷期操作，避免影响业务。<br><br><br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 优秀</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 14:28:24</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/f8/ba/14e05601.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>约书亚</span>
 </div><div class=_2_QraFYR_0>“N叉树”的N值在MySQL中是可以被人工调整的么？曾经面试被问到过这问题，当时就懵逼了...</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 面试中题面越简单的问题越暗藏凶险，可见一斑…<br><br>可以按照调整key的大小的思路来说；<br><br>如果你能指出来5.6以后可以通过page大小来间接控制应该能加分吧<br><br>面试回答不能太精减，计算方法、前缀索引什么的一起上😄<br><br><br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 08:49:43</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/7a/3c/87e015f8.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>堵车</span>
 </div><div class=_2_QraFYR_0>请问没有主键的表，有一个普通索引。怎么回表？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 没有主键的表，innodb会给默认创建一个Rowid做主键</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 09:25:11</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/d3/5c/796962de.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>天天向上</span>
 </div><div class=_2_QraFYR_0>去面试，遇到面试官问我innodb B+树主键索引的叶子节点存的是什么，我说是行，面试官说错，存的是页，<br>老师讲的就是行啊，我……</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: B+树的叶子节点是page （页），一个页里面可以存多个行<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-23 11:53:46</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/f1/5f/6ac1c883.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>张良</span>
 </div><div class=_2_QraFYR_0>结合王争的数据结构与算法看正好</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 09:58:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>张先先森森森</span>
 </div><div class=_2_QraFYR_0>drop主键索引会导致其他索引失效，但drop普通索引不会。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 07:24:13</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/ class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>扬～</span>
 </div><div class=_2_QraFYR_0>但现在一般自增索引都设置为bigint，这点老师这么看</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 特别合理，因为现在很多业务插入数据很凶残，容易超过int 上限，<br><br>实际上是建议设置bigint unsigned<br><br>好问题</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-19 14:42:24</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/f5/51/60e91438.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Richie</span>
 </div><div class=_2_QraFYR_0>老师索引只能定位到page，page内部怎么去定位行数据</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 内部有个有序数组，二分法</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 16:42:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/16/31/ae8adf82.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>路过</span>
 </div><div class=_2_QraFYR_0>顺序应是先删除k列索引，主键索引。然后再创建主键索引和k列索引。<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 09:49:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/70/97/e5bf9ddb.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>橡皮泥boy</span>
 </div><div class=_2_QraFYR_0>【回答问题】<br>1. 直接删掉主键索引是不好的，它会使得所有的二级索引都失效，并且会用ROWID来作主键索引；<br>2. 看到mysql官方文档写了三种措施，第一个是整个数据库迁移，先dump出来再重建表（这个一般只适合离线的业务来做）；第二个是用空的alter操作，比如ALTER TABLE t1 ENGINE = InnoDB;这样子就会原地重建表结构（真的吗？）；第三个是用repaire table，不过这个是由存储引擎决定支不支持的（innodb就不行）。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 准确</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-22 13:22:46</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/fe/68/e0bebd9a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>高枕</span>
 </div><div class=_2_QraFYR_0>我来回答这个问题<br>你可以想象一下一棵 100 万节点的平衡二叉树，树高 20。一次查询可能需要访问 20 个数据块。<br><br>这里有点不理解，为什么树高20就是20个数据块？<br><br><br>每个叶子结点就是一个块，每个块包含两个数据，块之间通过链式方式链接。树高20的话，就要遍历20个块</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿，多谢<br><br>多补一句，因为是二叉树结构，每次指针查找很大概率是触发随机磁盘读（比如很难刚好碰上一个节点和他的左右儿子刚好相邻）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 12:33:53</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/f5/51/60e91438.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Richie</span>
 </div><div class=_2_QraFYR_0>二级索引重建应该新建索引再做删除，如果有查询用到这个索引，此时索引已被删除，会导致业务抖动.主键重建不能采用drop这种方式去按操作，因为所有数据都是以主键组织的，删了主键后，InnoDB会自己找一个主键组织数据，再次添加主键又会重新组织数据，重建表的次已达二次，我们可以直接Optimiz这个表</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 03:57:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/1e/96/c735ad6b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>滩涂曳尾</span>
 </div><div class=_2_QraFYR_0>老师我有2个问题，问题1是上一节遗留的没来得及问:<br>1. 在“读提交”隔离级别下，这个视图是在每个 SQL 语句开始执行的时候创建的。这句话能具体说明吗?<br>2. 访问磁盘和内存索引涉及磁盘(sata，ssd，nvm)读写性能，以及内存读写性能，可否给一些数值方便直观认识?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 就是语句开始执行前创建一个read-view<br><br>2. 我估计你要的是这个：<br>T his group of numbers is from a presentation Jeff Dean gave at a Engineering All-Hands Meeting at Google.<br><br>L1 cache reference 0.5 ns<br>Branch mispredict 5 ns<br>L2 cache reference 7 ns<br>Mutex lock/unlock 100 ns<br>Main memory reference 100 ns<br>Compress 1K bytes with Zippy 10,000 ns<br>Send 2K bytes over 1 Gbps network 20,000 ns<br>Read 1 MB sequentially from memory 250,000 ns<br>Round trip within same datacenter 500,000 ns<br>Disk seek 10,000,000 ns<br>Read 1 MB sequentially from network 10,000,000 ns<br>Read 1 MB sequentially from disk 30,000,000 ns<br>Send packet CA->Netherlands->CA 150,000,000 ns</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 07:42:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/49/8e/e6eaf434.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>大王拍我去巡山</span>
 </div><div class=_2_QraFYR_0>老师你好：之前看过一遍文章，一直有疑惑：一个innoDB引擎的表，数据量非常大，根据二级索引搜索会比主键搜索快，文章阐述的原因是主键索引和数据行在一起，非常大搜索慢，我的疑惑是：通过普通索引找到主键ID后，同样要跑一边主键索引，还望老师解惑。。。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 问出这个问题表示你今天的文章看明白了👍🏿<br><br>看完明天的（下），我估计你就有答案了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 09:52:58</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/70/97/e5bf9ddb.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>橡皮泥boy</span>
 </div><div class=_2_QraFYR_0>【今日收获】<br>1. 主键索引的叶子结点存储了整一行的内容（聚簇索引），使用主键可以快速获取到整行的数据。<br>2. 非主键索引的叶子结点存储的是主键的值，所以主键字段占用空间不宜过大。同时，其查找数据的过程称为“回表”，需要先查找自己得到主键值，再在主键索引上边查找数据内容。<br>3. 索引的实现由存储引擎来决定，InnoDB使用B+树（N叉树，比如1200叉树），把整颗树的高度维持在很小的范围内，同时在内存里缓存前面若干层的节点，可以极大地降低访问磁盘的次数，提高读的效率。<br>4. B+树的插入可能会引起数据页的分裂，删除可能会引起数据页的合并，二者都是比较重的IO消耗，所以比较好的方式是顺序插入数据，这也是我们一般使用自增主键的原因之一。<br>5. 在Key-Value的场景下，只有一个索引且是唯一索引，则适合直接使用业务字段作为主键索引。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 赞👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-22 12:56:47</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/f2/6a/3bcef8ef.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>唐堂</span>
 </div><div class=_2_QraFYR_0>@约书亚 的问题：““N叉树”的N值在Mysql是否可以被调整？” ，老师能否在稍微详细点指导下？ 谢谢老师了</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-11-21 20:55:03</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e1/09/9483f537.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>☞</span>
 </div><div class=_2_QraFYR_0>老师请问下：<br>1、如果插入的数据是在主键树叶子结点的中间，后面的所有页如果都是满的状态，是不是会造成后面的每一页都会去进行页分裂操作，直到最后一个页申请新页移过去最后一个值<br>2、还有之前看到过说是插入数据如果是在某个数据满了页的首尾，为了减少数据移动和页分裂，会先去前后两个页看看是否满了，如果没满会先将数据放到前后两个页上，不知道是不是有这种情况</div><div class=_10o3OAxT_0>
@@ -408,16 +388,16 @@ alter table T add primary key(id);
 <a class="nav nav-prev" href=/1/3/ title=03_事务隔离：为什么你改了我还看不见？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/5/ title=05_深入浅出索引（下） style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

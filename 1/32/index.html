@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>32_为什么还有kill不掉的语句？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>32_为什么还有kill不掉的语句？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/32/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -290,121 +290,101 @@ MySQL实战45讲
 <p>一种是本地缓存，也就是在本地开一片内存，先把结果存起来。如果你用API开发，对应的就是mysql_store_result 方法。</p></li><li>
 <p>另一种是不缓存，读一个处理一个。如果你用API开发，对应的就是mysql_use_result方法。</p></li></ol><p>MySQL客户端默认采用第一种方式，而如果加上–quick参数，就会使用第二种不缓存的方式。</p><p>采用不缓存的方式时，如果本地处理得慢，就会导致服务端发送结果被阻塞，因此会让服务端变慢。关于服务端的具体行为，我会在下一篇文章再和你展开说明。</p><p>那你会说，既然这样，为什么要给这个参数取名叫作quick呢？这是因为使用这个参数可以达到以下三点效果：</p><ul>
 <li>第一点，就是前面提到的，跳过表名自动补全功能。</li><li>第二点，mysql_store_result需要申请本地内存来缓存查询结果，如果查询结果太大，会耗费较多的本地内存，可能会影响客户端本地机器的性能；</li><li>第三点，是不会把执行命令记录到本地的命令历史文件。</li></ul><p>所以你看到了，–quick参数的意思，是让客户端变得更快。</p><h1>小结</h1><p>在今天这篇文章中，我首先和你介绍了MySQL中，有些语句和连接“kill不掉”的情况。</p><p>这些“kill不掉”的情况，其实是因为发送kill命令的客户端，并没有强行停止目标线程的执行，而只是设置了个状态，并唤醒对应的线程。而被kill的线程，需要执行到判断状态的“埋点”，才会开始进入终止逻辑阶段。并且，终止逻辑本身也是需要耗费时间的。</p><p>所以，如果你发现一个线程处于Killed状态，你可以做的事情就是，通过影响系统环境，让这个Killed状态尽快结束。</p><p>比如，如果是第一个例子里InnoDB并发度的问题，你就可以临时调大innodb_thread_concurrency的值，或者停掉别的线程，让出位子给这个线程执行。</p><p>而如果是回滚逻辑由于受到IO资源限制执行得比较慢，就通过减少系统压力让它加速。</p><p>做完这些操作后，其实你已经没有办法再对它做什么了，只能等待流程自己完成。</p><p>最后，我给你留下一个思考题吧。</p><p>如果你碰到一个被killed的事务一直处于回滚状态，你认为是应该直接把MySQL进程强行重启，还是应该让它自己执行完成呢？为什么呢？</p><p>你可以把你的结论和分析写在留言区，我会在下一篇文章的末尾和你讨论这个问题。感谢你的收听，也欢迎你把这篇文章分享给更多的朋友一起阅读。</p><h1>上期问题时间</h1><p>我在上一篇文章末尾，给你留下的问题是，希望你分享一下误删数据的处理经验。</p><p><strong>@苍茫 同学提到了一个例子</strong>，我觉得值得跟大家分享一下。运维的同学直接拷贝文本去执行，SQL语句截断，导致数据库执行出错。</p><p>从浏览器拷贝文本执行，是一个非常不规范的操作。除了这个例子里面说的SQL语句截断问题，还可能存在乱码问题。</p><p>一般这种操作，如果脚本的开发和执行不是同一个人，需要开发同学把脚本放到git上，然后把git地址，以及文件的md5发给运维同学。</p><p>这样就要求运维同学在执行命令之前，确认要执行的文件的md5，跟之前开发同学提供的md5相同才能继续执行。</p><p>另外，我要特别点赞一下@苍茫 同学复现问题的思路和追查问题的态度。</p><p><strong>@linhui0705 同学提到的“四个脚本”的方法，我非常推崇</strong>。这四个脚本分别是：备份脚本、执行脚本、验证脚本和回滚脚本。如果能够坚持做到，即使出现问题，也是可以很快恢复的，一定能降低出现故障的概率。</p><p>不过，这个方案最大的敌人是这样的思想：这是个小操作，不需要这么严格。</p><p><strong>@Knight²º¹⁸ 给了一个保护文件的方法</strong>，我之前没有用过这种方法，不过这确实是一个不错的思路。</p><p>为了数据安全和服务稳定，多做点预防方案的设计讨论，总好过故障处理和事后复盘。方案设计讨论会和故障复盘会，这两种会议的会议室气氛完全不一样。经历过的同学一定懂的。</p><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/9b/a8/6a391c66.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Leon📷</span>
 </div><div class=_2_QraFYR_0>kill connection本质上只是把客户端的sql连接断开，后面的执行流程还是要走kill query的，是这样理解吧</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个理解非常到位👍<br><br>额外的一个不同就是show processlist的时候，kill connection会显示“killed”<br><br>这两句加起来可以用来替换我们文中的描述👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-30 10:45:22</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/38/fe/00ddeb81.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>learn more</span>
 </div><div class=_2_QraFYR_0>老师好，文中 set global innodb_thread_concurrency=2的那个例子，前面 Session A 和 Session B 已经占用了两个线程了，那为什么我们还可以在一个新的Session中执行 Kill 或 show full processlist 命令呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 执行kill的时候没进InnoDB，不受这个参数限制的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-12-26 19:21:06</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/67/f4/9a1feb59.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>kill不掉<br>1：kill命令被堵了，还没到位<br>2：kill命令到位了，但是没被立刻触发<br>3：kill命令被触发了，但执行完也需要时间<br>和猜测较近，估计所有的kill命令，kill不掉时都是这么个原因</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-04 21:04:42</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.sylar</span>
 </div><div class=_2_QraFYR_0>老师，我想问下这些原理的"渔"的方法除了看源码，还有别的建议吗</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不同的知识点不太一样哈，<br>有些可以看文档；<br>有些可以自己验证；<br>还有就是看其他人文章，加验证；（就是我们这个专栏的方法^_^）<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-25 15:04:01</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/03/c7/563345e1.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>wjz1991</span>
 </div><div class=_2_QraFYR_0>老师，之前也是有遇到程序问题导致cpu爆满，临时先把innodb_thread_concurrency设置为16（降低cpu避免影响同机器实例），然后不断去kill，后面程序人员修复了这个问题后，一堆的killed的语句不释放，设置innodb_thread_concurrency=0，等了半个月都没释放，后面还是安排主从切换，强制重启解决，请问老师，这是为什么？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 如果是因为这个原因的，应该是设置innodb_thread_concurrency=0就会退出的。。<br>你这个情况可能卡在别的地方了，下次如果再出现，要重启之前，用pstack保留个现场哦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-13 14:45:34</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJCscgdVibmoPyRLRaicvk6rjTJxePZ6VFHvGjUQvtfhCS6kO4OZ1AVibbhNGKlWZmpEFf2yA6ptsqHw/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>夹心面包</span>
 </div><div class=_2_QraFYR_0>对于结尾的问题,我觉得肯定是等待,即便是mysql重启,也是需要对未提交的事务进行回滚操作的,保证数据库的一致性</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-25 10:14:07</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/b2/5a/574f5bb0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Lukia</span>
 </div><div class=_2_QraFYR_0>请教老师，删除中间列和修改末尾列这两种DDL的差别在什么地方呢？<br><br>作者回复: 对，其实只有 改索引、 加最后一列、删最后一列<br>其他的大多数不行，比如删除中间一列这种</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 删除中间列，就没办法用切换的那个方案。<br>MySQL的备库比主库多一个字段或少一个字段，这时候日志还是可以应用成功的（但如果少的是中间一个字段，字段就会对应错了）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-19 13:22:27</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/11/18/8cee35f9.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>HuaMax</span>
 </div><div class=_2_QraFYR_0>课后题。我认为需要看当时的业务场景。重启会导致其他的连接也断开，返回给其他业务连接丢失的错误。如果有很多事务在等待该事务的锁，则应该重启，让其他事务快速重试获取锁。另外如果是RR的事务隔离级别，长事务会因为数据可见性的问题，对于多版本的数据需要找到正确的版本，对读性能是不是也会有影响，这时候重启也更好。个人理解，请老师指正。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 有考虑到对其他线程的影响，这个👍<br><br>其实这种时候往往是要先考虑切换（当然重启也是切换的）<br>如果只看恢复时间的话，等待会更快 <br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-26 12:21:13</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/69/de/5e637b01.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>gaohueric</span>
 </div><div class=_2_QraFYR_0>老师您好，一个表中 1个主键，2个唯一索引，1个普通索引 4个普通字段，当插入一条全部字段不为空的数据时，此时假设有4个索引文件，分别对应 主键 唯一性索引，普通索引，假设内存中没有这个数据页，那么server是直接调用innodb的接口，然后依次校验 （读取磁盘数据，验证唯一性）主键，唯一性索引，然后确认无误A时刻之后，吧主键和唯一性索引的写入内存，再把普通索引写入change buffer？那普通数据呢，是不是跟着主键一块写入内存了？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 是的，如果普通索引上的数据页这时候没有在内存中，就会使用change buffer<br>2. “那普通数据呢，是不是跟着主键一块写入内存了？” 你说的是无索引的字段是吧，这些数据就在主键索引上，其实改的就是主键索引。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-26 07:11:48</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>700</span>
 </div><div class=_2_QraFYR_0>老师，请教。<br>1）文中开头说“当然如果这个线程有语句正在执行，也是要先停止正在执行的语句的”。我个人在平时使用中就是按默认的执行，不管这个线程有无正在执行语句。不知这样会有什么潜在问题？<br>2）文中说“实际上，执行 Ctrl+C 的时候，是 MySQL 客户端另外启动一个连接，然后发送一个 kill query 命令“。这个怎么解释呢？<br>我开启 general log 的时候执行 Ctrl+C 或 Ctrl+D 并没有看到有另外启动一个连接，也没有看到 kill query 命令。general log 中仅看到对应线程 id 和 Quit。<br>3）MySQL 为什么要同时存在 kill query 和 kill connection，既然 kill query 有无效的场景，干嘛不直接存在一个 kill connection 命令就好了？那它俩分别对应的适用场景是什么，什么时候考虑 kill query，什么时候考虑 kill connection？我个人觉得连接如果直接被 kill 掉大不了再重连一次好了。也没啥损失。<br>4）小小一个总结，不知对否？<br>kill query - 会出现无法 kill 掉的情况，只能再次执行 kill connection。<br>kill connection - 会出现 Command 列显示成 Killed 的情况。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 一般你执行kill就是要停止正在执行的语句，所以问题不大😋<br>2. 不应该呀， KILL QUERY 是大写哦，你再grep一下日志；<br>3. 多提供一种方法嘛。kill query是指你只是想停止这个语句，但是事务不会回滚。一般kill query是发生在客户端执行ctrl+c的时候啦。平时紧急处理确实直接用kill + thread_id。 好问题<br>4. 对，另外，在kill query无效的时候，其实kill connection也是无效的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-25 23:04:13</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>700</span>
 </div><div class=_2_QraFYR_0>老师，您好。客户端版本如下：<br>mysql Ver 14.14 Distrib 5.7.24, for linux-glibc2.12 (x86_64) using EditLine wrapper<br><br>老师，再请教另一个问题。并非所有的 DDL 操作都可以通过主从切换来实现吧？不适用的场景有哪些呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对，其实只有 改索引、 加最后一列、删最后一列<br>其他的大多数不行，比如删除中间一列这种</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-27 22:24:12</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/d3/9f/36ea3be4.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>千年孤独</span>
 </div><div class=_2_QraFYR_0>可能不是本章讨论的问题，我想请问老师“MySQL使用自增ID和UUID作为主键的优劣”，基于什么样的业务场景用哪种好?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 后面会有文章会提到这个问题哈：）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-27 18:34:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/ef/3e/9c3a8abc.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>杜嘉嘉</span>
 </div><div class=_2_QraFYR_0>我想请问下老师，一个事务执行很长时间，我去kill。那么，执行这个事务过程中的数据会不会回滚？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个事务执行过程中新生成的数据吗？ 会回滚的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-25 15:41:43</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e7/7b/71da8283.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>似水流年</span>
 </div><div class=_2_QraFYR_0>老师，请问我直接在操作系统层面用kill命令掉会话的进程，这个会话的事物应该会回滚，除此外有不良影响吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 就是回滚的影响，没有其他的了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-13 22:52:50</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/df/3e/5f60dfde.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>think_wtw</span>
 </div><div class=_2_QraFYR_0>老师如果正在执行ddl 比如删除一列或者创建一个索引，执行kill query也是事物进行回滚的是吗？内部会做什么操作？ 来得晚还没追上课程。谢谢解答！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对，进行回滚<br><br>取决于做到什么程度了，总之效果就是中间生成的数据全部清理掉，恢复到未执行ddl之前的状态</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-13 17:59:16</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJWjvLFWEzQkszn8nicSaaYFdmE4ribeIicSGu7rfquG3EeuqJYbpHrtThKKDVfDGIib7SE7FBbfuoYDQ/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_a67865</span>
 </div><div class=_2_QraFYR_0>也遇到@发条橙子一样的问题，例如队列两个消息同时查询库存，发现都不存在，然后就都执行插入语句，一条成功，一条报唯一索引异常，这样程序日志会一直显示一个唯一索引报错，然后重试执行更新，我暂时是强制查主库</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: “我暂时是强制查主库” 从这就看你是因为读是读的备库，才出现这个问题的是吧。<br><br>发条橙子的问题是，他都是操作主库。<br><br>其实如果索引有唯一键，就直接上insert。<br>然后碰到违反唯一键约束就报错，这个应该就是唯一键约束正常的用法吧😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-26 09:46:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/4f/78/c3d8ecb0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>undifined</span>
 </div><div class=_2_QraFYR_0>如果此时仅有一个事务在执行,可以重启,此时 redo log 没有被fsync 到磁盘,重新启动恢复的时候也不会提交该事务<br>如果有其他事务在执行,就应该等待执行完成<br>老师这样理解对吗,谢谢老师</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这个事务现在是处于回滚状态， 即使有其他事务在执行，重启后也是要回滚的，跟有没有其他事务在并行执行是没关系的哦</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-25 09:08:52</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/ea/9a/02d589f9.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>斜面镜子 Bill</span>
 </div><div class=_2_QraFYR_0>“采用不缓存的方式时，如果本地处理得慢，就会导致服务端发送结果被阻塞，因此会让服务端变慢” 这个怎么理解？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 堵住了不就变慢了😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-28 18:08:04</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/19/16/48/09493874.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>茶没喝完</span>
 </div><div class=_2_QraFYR_0>kill只是修改了线程状态+发出中断信号 <br>具体被中断的线程在收到中断信号怎么处理，由它自己决定。<br>直接杀死线程是不安全的，线程占用的资源没法释放，回滚操作没完成等等。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2021-02-25 13:27:26</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJWjvLFWEzQkszn8nicSaaYFdmE4ribeIicSGu7rfquG3EeuqJYbpHrtThKKDVfDGIib7SE7FBbfuoYDQ/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_a67865</span>
 </div><div class=_2_QraFYR_0>老师好，我猜发条橙子的问题 因为很多日志监控会统计error日志，这样并不很优雅，觉得他是想有什么办法规避这种并发引起的问题，</div><div class=_10o3OAxT_0>
@@ -414,16 +394,16 @@ MySQL实战45讲
 <a class="nav nav-prev" href=/1/31/ title=31_误删数据后除了跑路，还能怎么办？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/33/ title=33_我查这么多数据，会不会把数据库内存打爆？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

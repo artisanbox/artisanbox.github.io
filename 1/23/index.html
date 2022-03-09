@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>23_MySQL是怎么保证数据不丢的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>23_MySQL是怎么保证数据不丢的？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/23/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -308,121 +308,101 @@ MySQL实战45讲
 <p>@Manjusaka 同学的留言中，第二点提得非常好：如果你的数据库请求模式直接对应于客户请求，这往往是一个危险的设计。因为客户行为不可控，可能突然因为你们公司的一个运营推广，压力暴增，这样很容易把数据库打挂。<br>
 在设计模型里面设计一层，专门负责管理请求和数据库服务资源，对于比较重要和大流量的业务，是一个好的设计方向。</p></blockquote><blockquote>
 <p>@Vincent 同学提了一个好问题，用文中提到的DDL方案，会导致binlog里面少了这个DDL语句，后续影响备份恢复的功能。由于需要另一个知识点（主备同步协议），我放在后面的文章中说明。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/30/28/6e019a7a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>锅子</span>
 </div><div class=_2_QraFYR_0>老师好，有一个疑问：当设置sync_binlog=0时，每次commit都只时write到page cache，并不会fsync。但是做实验时binlog文件中还是会有记录，这是什么原因呢？是不是后台线程每秒一次的轮询也会将binlog cache持久化到磁盘？还是有其他的参数控制呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你看到的“binlog的记录”，也是从page cache读的哦。<br>Page cache是操作系统文件系统上的😄<br><br>好问题</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-04 11:09:07</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/c4/74/27cf551a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WilliamX</span>
 </div><div class=_2_QraFYR_0>为什么 binlog cache 是每个线程自己维护的，而 redo log buffer 是全局共用的？<br>这个问题，感觉还有一点，binlog存储是以statement或者row格式存储的，而redo log是以page页格式存储的。page格式，天生就是共有的，而row格式，只跟当前事务相关</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯，这个解释也很好。👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-04 10:50:21</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/1d/b5/971261fd.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>alias cd=rm -rf</span>
 </div><div class=_2_QraFYR_0>事务A是当前事务，这时候事务B提交了。事务B的redolog持久化时候，会顺道把A产生的redolog也持久化，这时候A的redolog状态是prepare状态么？<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不是。<br><br>说明一下哈，所谓的 redo log prepare，是“当前事务提交”的一个阶段，也就是说，在事务A提交的时候，我们才会走到事务A的redo log prepare这个阶段。<br><br>事务A在提交前，有一部分redo log被事务B提前持久化，但是事务A还没有进入提交阶段，是无所谓“redo log prepare”的。<br><br>好问题<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-28 09:03:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/34/5c/6b4757a0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>倪大人</span>
 </div><div class=_2_QraFYR_0>老师求解sync_binlog和binlog_group_commit_sync_no_delay_count这两个参数区别<br><br>如果<br> sync_binlog = N<br> binlog_group_commit_sync_no_delay_count = M<br> binlog_group_commit_sync_delay = 很大值<br>这种情况fsync什么时候发生呀，min(N,M)吗？<br>感觉sync_binlog搭配binlog_group_commit_sync_delay也可以实现组提交？<br><br>如果<br> sync_binlog = 0<br> binlog_group_commit_sync_no_delay_count = 10<br>这种情况下是累计10个事务fsync一次？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，我写这篇文章的时候也为了这个问题去翻了代码，是这样的：<br>达到N次以后，可以刷盘了，然后再进入(sync_delay和no_delay_count)这个逻辑；<br><br>Sync_delay如果很大，就达到no_delay_count才刷；<br><br>只要sync_binlog=0,也会有前面的等待逻辑，但是等完后还是不调fsync😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-04 11:14:23</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/e0/41/8ae7a30a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Komine</span>
 </div><div class=_2_QraFYR_0>为什么binlog 是不能“被打断的”的呢？主要出于什么考虑？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题<br><br>我觉得一个比较重要的原因是，一个线程只能同时有一个事务在执行。<br><br>由于这个设定，所以每当执行一个begin/start transaction的时候，就会默认提交上一个事务；<br>这样如果一个事务的binlog被拆开的时候，在备库执行就会被当做多个事务分段自行，这样破坏了原子性，是有问题的。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 10:51:46</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLkhgYnYZBdhdwKnXQibey04cy9N9ria3DadH7iagoKukaWK1FJwjfCoh0He4p7b2icSYVzHH71l8ZXiaQ/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>猪哥哥</span>
 </div><div class=_2_QraFYR_0>老师 我想问下文件系统的page cache还是不是内存, 是不是文件系统向内核申请的一块的内存?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你理解的是对的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-10 16:20:12</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>有调到非双1的时候,在大促时非核心库和从库延迟较多的情况。<br>设置的是sync_binlog=0和innodb_flush_log_at_trx_commit=2<br>针对0和2,在mysql crash时不会出现异常,在主机挂了时，会有几种风险:<br>1.如果事务的binlog和redo log都还未fsync,则该事务数据丢失<br>2.如果事务binlog fsync成功,redo log未fsync,则该事务数据丢失。<br>虽然binlog落盘成功,但是binlog没有恢复redo log的能力,所以redo log不能恢复.<br>不过后续可以解析binlog来恢复这部分数据<br>3.如果事务binlog fsync未成功,redo log成功。<br>由于redo log恢复数据是在引擎层,所以重新启动数据库,redo log能恢复数据,但是不能恢复server层的binlog,则binlog丢失。<br>如果该事务还未从FS page cache里发送给从库,那么主从就会出现不一致的情况<br>4.如果binlog和redo log都成功fsync,那么皆大欢喜。<br><br>老师我有几个问题:<br>1.因为binlog不能被打断,那么binlog做fsync是单线程吧?<br>如果是的话,那么binlog的write到fsync的时间,就应该是redo log fsync+上一个事务的binlog fsync时间。<br>但是测试到的现象,一个超大事务做fsync时,对其它事务的提交影响也不大。<br>如果是多线程做fsync,怎么保证的一个事务binlog在磁盘上的连续性？<br>2. 5.7的并行复制是基于binlog组成员并行的,为什么很多文章说是表级别的并行复制？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. Write的时候只要写进去了，fsync其实很快的。连续性是write的时候做的（写的时候保证了连续）<br><br>2. 你的理解应该是对的。不是表级</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-06 20:09:33</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/97/98/5ef15aa0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>chris~jiang</span>
 </div><div class=_2_QraFYR_0>刚开始我也遇到了jacy一样的问题，认为binlog写到file里面就是写到disk了，就不理解为什么还要fsync，后来仔细回读了文章，发现binlog写到file是指写到pagecache，并不是disk。<br>建议老师在描述binlog写盘的那两个步骤时，把写到file直接描述为写到pagecache，避免歧义</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-08-28 09:31:19</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e0/3c/ae0f6f57.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>xiaoyou</span>
 </div><div class=_2_QraFYR_0>老师，请教一个问题，文章说innodb的 redo log 在commit的时候不进行fsync，只会write 到page cache中。当sync_binlog>1,如果redo log 完成了prepare持久化落盘，binlog只是write page cache，此时commit标识完成write 但没有落盘，而client收到commit成功，这个时候主机掉电，启动的时候做崩溃恢复，没有commit标识和binglog，事务会回滚。我看文章说sync_binlog设置为大于1的值，会丢binlog日志,此时数据也会丢失吧？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你说的对，分析得很好</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-09 17:40:59</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/00/f0/08409e78.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>一大只😴</span>
 </div><div class=_2_QraFYR_0>你是怎么验证的？等于0的时候虽然有走这个逻辑，但是最后调用fsync之前判断是0，就啥也没做就走了<br>回复老师:<br> 老师，我说的sync_binlog=0或=1效果一样，就是看语句实际执行的效果，参数binlog_group_commit_sync_delay我设置成了500000微秒，在=1或=0时，对表进行Insert，然后都会有0.5秒的等待，也就是执行时间都是0.51 sec，关闭binlog_group_commit_sync_delay，insert执行会飞快，所以我认为=1或=0都是受组提交参数的影响的。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿<br>非常好<br><br>然后再补上我回答的这个逻辑，就完备了<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-05 17:49:55</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/b8/36/542c96bf.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Strive.Z.H.L</span>
 </div><div class=_2_QraFYR_0>老师你好，看了@倪大人的问题，个人认为：<br>sync_binlog和binlog_group_commit_sync_no_delay_count的最大区别主要在于，数据的丢失与否吧？<br><br>sync_binlog = N：每个事务write后就响应客户端了。刷盘是N次事务后刷盘。N次事务之间宕机，数据丢失。<br><br>binlog_group_commit_sync_no_delay_count=N： 必须等到N个后才能提交。换言之，会增加响应客户端的时间。但是一旦响应了，那么数据就一定持久化了。宕机的话，数据是不会丢失的。<br><br>不知道我这么理解对不对？<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你的理解很到位</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-08 12:09:08</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/9f/1d/ec173090.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>melon</span>
 </div><div class=_2_QraFYR_0>老师帮忙看一下我binlog 组提交这块理解的对不对<br><br>binlog write 阶段<br>组里面第一个走到 binlog write 的事务记录一个时间戳，用于在 binlog fsync 阶段计算 sync delay了多少时间，姑且计为 start_time<br>组里已 sync write 次数+1，姑且记为 group_write<br>全局已 sync wirte 次数+1，姑且记为 global_write<br><br>binlog fsync 阶段<br>IF ( NOW - sart_time ) >= binlog_group_commit_sync_delay || group_write >= binlog_group_commit_sync_no_delay_count<br> IF sync_binlog >0 && global_write >= sync_binlog<br> fsync<br><br> 设置 binlog 组提交信号，让其它等待的事务继续<br>ELSE<br> 等待 binlog 组提交信号<br><br>另外 binlog_group_commit_sync_no_delay_count 这个参数是不是不应该设置的比并发线程数大，因为一个组里的事务应该不会比并发线程数多吧，设置大了也就没什么意义了，可以这么理解吧老师。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 前面的伪代码不错哈<br><br>”binlog_group_commit_sync_no_delay_count这个参数是不是不应该设置的比并发线程数大“，最好是这样的，否则的话，就只能等binlog_group_commit_sync_delay |时间到了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-28 09:28:17</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/d6/60/f21b2164.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>jacy</span>
 </div><div class=_2_QraFYR_0>1.先把 binlog 从 binlog cache 中写到磁盘上的 binlog 文件；<br>2.调用 fsync 持久化。<br><br>老师，这两步我不不太理解，写到磁盘binlog文件，不就是持久化了吗，为啥还要调用fsync再刷一次盘呢？能否帮忙解答一下，感谢🙏</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: wrie很多次，fsync一次</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-05-30 23:14:19</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/fe/75/46742f12.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>liao xueqiang</span>
 </div><div class=_2_QraFYR_0>每秒一次后台轮询刷盘，再加上崩溃恢复这个逻辑，InnoDB 就认为 redo log 在 commit 的时候就不需要 fsync 了，只会 write 到文件系统的 page cache 中就够了。老师好，这句话怎么理解呢？这不是服务器重启的情况下，会丢失1秒的数据吗</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不是，这意思就是，即使异常掉电，只要redo log的prepare 部分+binlog完整，就会保证不丢数据。<br><br>也就是说，最多会丢失1秒的“redo log commit信息”，但是这个commit信息丢失，并不会影响数据（就是崩溃恢复慢一点）</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-01 08:00:42</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/1d/b5/971261fd.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>alias cd=rm -rf</span>
 </div><div class=_2_QraFYR_0>老师不好意思，我接着刚才的问题问哈<br>并发事务的redolog持久化，会把当前事务的redolog持久化，当前事务的redolog持久化后prepare状态么？redolog已经被持久化到磁盘了，那么当前事务提交时候，redolog变为prepare状态，这时候是从redologbuffer加载还是从磁盘加载？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 每个事务在提交过程的prepare阶段，会把redolog持久化； “当前事务的redolog持久化后prepare状态么”这个描述还是不清楚，你用事务A、事务B这样来描述吧😆<br><br>redolog已经被持久化到磁盘了，那么当前事务提交时候，<br>（其实这里只是“部分”被持久化，因为这个事务自己在执行的过程中，还会产生新的日志），只需要继续持久化剩下的redo log</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-28 01:11:41</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/ec/01/978d54af.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Justin</span>
 </div><div class=_2_QraFYR_0>您说的Lsn 确保不会二次执行 意思是持久化在磁盘中的页也有和redo log record相关的lsn吗 然后根据lsn的大小在recovery阶段确定redo log需不需要执行？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 对的，lsn 就是写在数据页的<br>i</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-05 13:53:41</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/bd/be/53350286.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_527020</span>
 </div><div class=_2_QraFYR_0>事务还未结束，binlog和redo log就写到磁盘中了，如果出现了事务回滚，写到磁盘的数据要删除吗，如果不删除，MYSQL奔溃重启，岂不是多了操作，请老师解答下疑惑</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 没事，这些操作没提交，崩溃恢复的时候就回滚了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-08 17:21:05</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/11/18/8cee35f9.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>HuaMax</span>
 </div><div class=_2_QraFYR_0>老师在解释组提交的原理那里的图中第二步应该是binlog cache写入到系统page cache的意思吧？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，write是到page cache</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-04 12:09:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/da/ec/779c1a78.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>往事随风，顺其自然</span>
 </div><div class=_2_QraFYR_0>binlog cache 和page cache 有啥区别，一个在内存一个在磁盘，page cache 不是已经在磁盘？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: Page cache是在文件系统的内存，还没持久化</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-04 08:57:49</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLE4LYb3jrH63ZV98Zpc8DompwDgb1O3nffMoZCmiaibauRyEFv6NDNsST9RWxZExvMLMWb50zaanoQ/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>慧鑫coming</span>
 </div><div class=_2_QraFYR_0>这里提示和我一样的小白，注意老师最后的说的提升io性能方法3，是在主机掉电或os崩溃的时候，page cache 会丢失;而最后老师建议将redo log写到page cash，说的是能防止“MySQL异常重启时数据丢失”。也就是仅仅写数据的程序crash，那么已经写入page cash中的数据不会丢失，但如果系统crash或者重启的话，那就没办法啦😆</div><div class=_10o3OAxT_0>
@@ -432,16 +412,16 @@ MySQL实战45讲
 <a class="nav nav-prev" href=/1/22/ title=22_MySQL有哪些“饮鸩止渴”提高性能的方法？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/24/ title=24_MySQL是怎么保证主备一致的？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

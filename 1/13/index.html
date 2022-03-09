@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>13_为什么表数据删掉一半，表文件大小不变？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>13_为什么表数据删掉一半，表文件大小不变？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/13/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -284,121 +284,101 @@ MySQL实战45讲
 <p>@某、人 给了一个形象的描述，而且提到了，在这种情况下，连change buffer的优化也失效了。因为checkpoint一直要往前推，这个操作就会触发merge操作，然后又进一步地触发刷脏页操作；<br>
 有几个同学提到了内存淘汰脏页，对应的redo log的操作，这个我们会在后面的文章中展开，大家可以先看一下 @melon 同学的描述了解一下；<br>
 @算不出流源 提到了“动态平衡”，其实只要出现了这种“平衡”，意味着本应该后台的操作，就已经影响了业务应用，属于有损失的平衡。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/9b/a4/a52a637d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>陈飞</span>
 </div><div class=_2_QraFYR_0>老师，请问下分布式ID（雪花算法生成的ID）生成的索引会比自增长的ID性能低吗？<br><br>雪花算法生成的ID是越来越大的，但不是逐渐递增，长度用的的bitint，麻烦解答下，非常感谢。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题。<br><br><br>性能一样的，没有一定要“连续”，只要是递增</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-13 13:57:41</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/4f/78/c3d8ecb0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>undifined</span>
 </div><div class=_2_QraFYR_0>老师，有几个问题：<br>1.Truncate 会释放表空间吗<br>2.重建表的时候如果没有数据更新，有没有可能产生页分裂和空洞<br>3.页分裂是发生在索引还是数据上<br>4.应用 row log 的过程会不会再次产生页分裂和空洞<br>5.不影响增删改，就是 Online；相对 Server层没有新建临时表，就是 inplace，这里怎么判断是不是相对 Server 层没有新建临时表<br>辛苦老师解答一下，谢谢老师</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. Truncate 可以理解为drop+create<br>2. Online 可以认为没有<br>3. 数据也是索引哦<br>4. 可能会<br>5. 好问题，我放到明天答疑部分</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-12 10:41:48</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/36/d2/c7357723.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>发条橙子 。</span>
 </div><div class=_2_QraFYR_0>老师 ， 我的确实是 5.7 版本。我今天看了些关于 online ddl的文章 ，再结合表锁那章评论的内容，有几个点还想确认一下 ，希望老师能解答一下 。<br><br>1. 是不是 5.6 之后 所有的 alter 操作(增删字段、增删索引等)都是支持 online ddl <br><br>2. 如果 alter 都是 online ddl 那么是不是如果 alter操作 获取到mdl写锁 时， 后面的 查询需要mdl读锁会暂时阻塞， 但是mdl会马上降为读锁 ，后面的操作会继续进行不会堵塞 。等再升到写锁 ，后面操作又会暂时阻塞。 <br><br>3. 当 alter 降到mdl 读锁时 ， 这时候可以新增数据么 ， mdl表级读锁 不会影响到 insert 或者 update的行锁么 <br><br>4. 如果将 alter 操作显式的放到事务里 ，事务不提交 ， 另一个事务查询的时候会查询到alter 操作后的表结构 ， 比如新增了一个字段。这个是什么原因 ，是否打破了 mvcc 的定义呢</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 不是哦，我文章里说的加全文索引就不online<br><br>2. 对，这两个暂时，都是时间很短的<br><br>3. 是，DML语句加的是MDL读锁，读读不冲突<br><br>4. 好问题 ， 不过alter table 语句会默认提交前面的事务，然后自己独立执行😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-13 23:49:21</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/63/70/0b7b5cda.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>郜</span>
 </div><div class=_2_QraFYR_0>麻烦咨询个问题，“在图 3 中，我们把表 A 中的数据导出来的存放位置叫作 tmp_table。这是一个临时表，是在 server 层创建的。”<br>在server层创建的表也是将A表数据copy到了临时表，为什么在空间不够用时就没有问题，而inplace在InnoDB执行则会再占用一份存储？<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 额，<br><br>Copy的时候肯定更要的…<br><br>这里特别指出来，是因为大多数人很容易理解copy需要临时空间，但是误以为inplace不需要<br><br><br>Anyway,好问题 😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-13 11:07:27</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>飞翔</span>
 </div><div class=_2_QraFYR_0>我想到的其中一种可能：<br>本来就很紧凑，没能整出多少剩余空间。<br>重新收缩的过程中，页会按90%满的比例来重新整理页数据（10%留给UPDATE使用），<br>未整理之前页已经占用90%以上，收缩之后，文件就反而变大了。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 一个漂亮的答案</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-12 11:16:17</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/67/f4/9a1feb59.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>1：为啥删除了表的一半数8据，表文文件大小没变化？<br><br>因为delete 命令其实只是把记录的位置，或者数据页标记为了“可复用”，但磁盘文件的大小是不会变的。也可以认为是一种逻辑删除，所以物理空间没有实际释放，只是标记为可复用，表文件的大小当然是不变的啦！<br><br>2：表的数据信息存在哪里？<br><br>表数据信息可能较小也可能巨大无比，她可以存储在共享表空间里，也可以单独存储在一个以.ibd为后缀的文件里，由参数innodb_file_per_table来控制，老师建议总是作为一个单独的文件来存储，这样非常容易管理，并且在不需要的时候，使用drop table命令也能直接把对应的文件删除，如果存储在共享空间之中即使表删除了空间也不会释放。<br><br>3：表的结构信息存在哪里？<br><br>首先，表结构定义占有的存储空间比较小，在MySQL8.0之前，表结构的定义信息存在以.frm为后缀的文件里，在MySQL8.0之后，则允许把表结构的定义信息存在系统数据表之中。<br><br>系统数据表，主要用于存储MySQL的系统数据，比如：数据字典、undo log(默认)等文件<br><br>4：如何才能删除表数据后，表文件大小就变小？<br><br>重建表，消除表因为进行大量的增删改操作而产生的空洞，使用如下命令：<br><br>1：alter table t engine=InnoDB<br><br>2：optimize table t( 等于 recreate+analyze)。<br><br>3：truntace table t (等于drop+create)<br><br>5：空洞是啥？咋产生的？<br><br>空洞就是那些被标记可复用但是还没被使用的存储空间。<br><br>使用delete命令删除数据会产生空洞，标记为可复用<br><br>插入新的数据可能引起页分裂，也可能产生空洞<br><br>修改操作，有时是一种先删后插的动作也可能产生空洞<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-07-01 07:52:18</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/e7/50/d476ed6c.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Mr.Panda</span>
 </div><div class=_2_QraFYR_0>很喜欢作者的MySQL，绝对干货哈哈。<br>这里针对空洞提下问题：<br>1.删除有空洞，是因为标记了已删除可复用的节点位置，不会释放。<br>2.随机插入有空洞，是因为数据页分裂造成。<br>3.但更新有空洞，有点费解，我个人理解是更新是结合删除和插入的一个合并操作。删除后产生的空洞，在插入时不是应该就马上被复用了吗，毕竟主键是一致的。所以为什么更新会产生空洞呢？？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 3. 可以这么想下，如果1，2，3，4，5<br>然后update把2 改成6， 如果原地修改，这个索引就不是“有序”的了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-29 11:43:08</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e8/45/c58cb283.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>帆帆帆帆帆帆帆帆</span>
 </div><div class=_2_QraFYR_0>@undifined怎么判断是不是相对 Server 层没有新建临时表。一个最直观的判断方法是看命令执行后影响的行数，没有新建临时表的话新建的行数是0。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿，下一篇答疑直接贴你答案😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-12 14:41:23</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELZPnUAiajaR5C25EDLWeJURggyiaOP5GGPe2qlwpQcm5e3ybib8OsP4tvddFDLVRSNNGL5I3SFPJHsA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>null</span>
 </div><div class=_2_QraFYR_0>临时表插入数据时，不允许表 A 有增删改操作，否则会造成数据丢失。所以表数据 copy 的方式不是 online 的。<br>而 inplace 的方式，在构建临时文件时，允许表 A 有增删改操作，期间新的增删改操作会记录到另外的日志文件，表 A 数据页的所有数据复制完成后，再应用日志文件（自己理解：应用日志文件时，不允许对表 A 增删改操作，即非 online 的）。整体操作是 online 的。<br>切换表名或临时文件时，需要获取 MDL 写锁。<br>inplace 表示在 innodb 引擎完成所有操作，对 server 层是透明的。inplace 操作不一定是 online 的，如 MySQL 8.0 的添加全文索引和空间索引。而 online 的一定是 inplace 的。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-10 13:19:00</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/41/f7/277f14bb.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>wang chen wen</span>
 </div><div class=_2_QraFYR_0>optimize table t 等于 recreate+analyze<br>老师请教个问题recreate出来应该是几乎全新的，analyze的必要性？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好问题，这个得是比较极端的情况下才有必要，所以我比较喜欢直接用alter </p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-12 09:45:55</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>通过第10期的课后思考题学习到如果delete的数据还会被用于MVCC,那么该数据页(二级索引和聚簇索引)上的记录不会被物理删除,是被标记删除。只有当该事务不会用于mvcc了,才可以被purge线程把之前标记删除的数据真正删除掉.但是即便数据物理删除了,磁盘空间也不会返回给操作系统.可以通过show table status like 't';观察data_free来预估该表的碎片。如果过大,可以用alter table t engine=innodb来清除<br>我有几个问题请教下老师:<br>1.inplace相对于其他在线改表软件,多了MDL X锁.既然都是通过临时表/文件来做,为什么一开始要上MDL X锁？<br>2.gh-ost使用binlog来做同步,假设从position 1开始,先lock S前面1000条数据做cp,这时有事务对后面1000条数据做了修改或者插入。等cp后面这个1000条时,会把修改好的数据cp到临时表.最后又应用binlog,那么这相当于做了两次操作,请问这部分数据是怎么处理的？<br>3.online会把过程中对表的操作记录在一个(row log)中,那么中途这些DML事务,是怎么判定的commit?我做测试,中途这些事务都是成功的。但是有在做online DDL快完了,commit那个阶段,DDL报唯一键冲突,这又是什么原因造成的啊？我没有模拟出来这个例子</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 确保没有启发请求在用这个表<br><br>2. Binlog设置为row格式，幂等的<br><br>3. 这个我觉得其实是bug,就没提。你在DDL期间，往原表插入一个已经存在相同主键的一行试试</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-13 20:26:25</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqibSwKPg7hiapc49qoM4dibhM3fYANPjfltF2ibBZ3dHX2hibjg5EIIcziahrmjO5R2XrcRibvU39TQS7jg/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>库淘淘</span>
 </div><div class=_2_QraFYR_0>alter table A engine=InnoDB 中由写锁降为读锁。有个疑问 为何不直接就加个MDL读锁 ,这样DDL 也执行不了,应用redo 替换文件后释放读锁即可</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 如果有别的线程正在读这个表的数据，得等下</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-13 16:04:09</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/46/d1/a1ddf49f.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>阿杜</span>
 </div><div class=_2_QraFYR_0>我以前负责的一个系统就出现过这种情况，突然有个表的sql执行很慢，后来觉得是此表增删的数据很多，碎片很多，就执行了optimize table，立马就好了。看来就是老师文中说的，删除和增加都是空洞造成。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍，找到正主了😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-01 12:28:20</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKVIjh4T1akib7wAQXiaMmTRVe89bT3tBAeSdFflCQSWjDZQOs5jeBEWLC1GyFshHjvhsIZKArO6ichw/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>壹口尘埃</span>
 </div><div class=_2_QraFYR_0>网上找到一个Inplace和Online的区别，写的挺好的，贴出来方便大家理解：<br>MySQL各版本，对于add Index的处理方式是不同的，主要有三种：<br><br>（1）Copy Table方式<br>这是InnoDB最早支持的创建索引的方式。顾名思义，创建索引是通过临时表拷贝的方式实现的。<br><br>新建一个带有新索引的临时表，将原表数据全部拷贝到临时表，然后Rename，完成创建索引的操作。<br><br>这个方式创建索引，创建过程中，原表是可读的。但是会消耗一倍的存储空间。<br><br>（2）Inplace方式<br>这是原生MySQL 5.5，以及innodb_plugin中提供的创建索引的方式。所谓Inplace，也就是索引创建在原表上直接进行，不会拷贝临时表。相对于Copy Table方式，这是一个进步。<br><br>Inplace方式创建索引，创建过程中，原表同样可读的，但是不可写。<br><br>（3）Online方式<br>这是MySQL 5.6.7中提供的创建索引的方式。无论是Copy Table方式，还是Inplace方式，创建索引的过程中，原表只能允许读取，不可写。对应用有较大的限制，因此MySQL最新版本中，InnoDB支持了所谓的Online方式创建索引。<br><br>InnoDB的Online Add Index，首先是Inplace方式创建索引，无需使用临时表。在遍历聚簇索引，收集记录并插入到新索引的过程中，原表记录可修改。而修改的记录保存在Row Log中。当聚簇索引遍历完毕，并全部插入到新索引之后，重放Row Log中的记录修改，使得新索引与聚簇索引记录达到一致状态。<br><br>与Copy Table方式相比，Online Add Index采用的是Inplace方式，无需Copy Table，减少了空间开销；与此同时，Online Add Index只有在重放Row Log最后一个Block时锁表，减少了锁表的时间。<br><br>与Inplace方式相比，Online Add Index吸收了Inplace方式的优势，却减少了锁表的时间。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-19 14:40:25</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/07/1e/bdbe93f4.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>尘封</span>
 </div><div class=_2_QraFYR_0>老师，请教一个问题，和本文无关，既然mysql支持了打包数据排序模式，能够更紧凑的分配内存进行排序，那定义表结构的时候，varchar(10)存储hello和varchar(100)存储hello的优势在哪里呢？谢谢</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你这个问题放在第16篇问就刚刚好了。<br><br>以前不支持紧凑排序的时候有，现在没啥了差别了，小于256都差不多</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-12 07:32:20</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/df/6c/5af32271.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Dylan</span>
 </div><div class=_2_QraFYR_0>看了这么多期的文章，感觉这个专栏真的是让我有爱有恨，喜欢的是让我能理解这些SQL语句背后的原理，恨的刚好也是这些原理理解起来很是费劲。<br>有一个问题想请教老师，关于MySQL的这些参数，对于之前没接触过的人来说，很多是不知道的，那我用的时候怎么知道说要设置哪个参赛比较适合呢</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 有爱有恨 😅 加油哈<br><br>这种我觉得可以这样，上网找一个“最佳实践”的建议，但是不要照搬，而是一个个去理解每个参数的意思，以及判断是否适合自己的业务<br><br>这样几次我觉得应该会慢慢有感觉起来</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-20 15:01:01</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/54/9a/76c0af70.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>每天晒白牙</span>
 </div><div class=_2_QraFYR_0>针对@undifined的问题3：页分裂发生在索引上还是数据上？老师给的回答是 数据也是索引，老师是不是想表达 索引也是数据呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不是…<br>我的意思是，数据是放在主键索引的叶子节点的<br><br>“索引也是数据”这个是哲学问题，一切皆数据😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 08:44:41</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>把该讲内容总结为几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br> 1.<br> innodb_file_per_table参数是什么意思, 一般如何设置更合理?<br> 2. <br>删除数据和插入数据为什么会造成出现空间空洞的情况? 原因各是什么?<br> 3. <br>online DDL在重建表流程上比非online DDL的方式做了哪些流程上的优化?<br> 4. <br>Online和replace两个概念各是什么, 他们之间有什么样的区别?<br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-16 13:55:42</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/45/91/afda3094.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>是我的海</span>
 </div><div class=_2_QraFYR_0>二刷中++<br>以下是老师回复一个同学的问题：<br>+++++++++++++++++++++++<br>Mr.Panda<br>很喜欢作者的MySQL，绝对干货哈哈。<br>这里针对空洞提下问题：<br>1.删除有空洞，是因为标记了已删除可复用的节点位置，不会释放。<br>2.随机插入有空洞，是因为数据页分裂造成。<br>3.但更新有空洞，有点费解，我个人理解是更新是结合删除和插入的一个合并操作。删除后产生的空洞，在插入时不是应该就马上被复用了吗，毕竟主键是一致的。所以为什么更新会产生空洞呢？？<br><br>5<br>2019-01-29<br>作者回复: 3. 可以这么想下，如果1，2，3，4，5<br>然后update把2 改成6， 如果原地修改，这个索引就不是“有序”的了<br>+++++++++++++++++++<br>我的问题是：即使是更新主键索引，把2 改成6 了，不是只要修改指针就可以保证有序了么？<br>为什么需要先删除，再插入一条数据 ？ 这里对更新的流程不太熟悉，请老师稍微详细解答下。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 可以这么想下，如果2 和 6应该属于不同的父亲节点，那父亲节点怎么表示这个page的取值范围？</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-05-31 12:28:17</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/11/a2/33be69a6.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>毛毛</span>
 </div><div class=_2_QraFYR_0>可能性有两个。<br>1. 生成临时表过程中，row log中新增的数据较多，导致表的行数变多。<br>2. 生成临时表过程中，row log中有部分插入和删除操作会产生“空洞”。<br>个人感觉，第一种情况，突然多了高于1％的数据，比较少见；但第二种情况，在某些业务中，经常出现。</div><div class=_10o3OAxT_0>
@@ -408,16 +388,16 @@ MySQL实战45讲
 <a class="nav nav-prev" href=/1/12/ title=12_为什么我的MySQL会“抖”一下？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/14/ title=14_count(x)这么慢，我该怎么办？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

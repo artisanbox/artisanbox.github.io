@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>14_count(x)这么慢，我该怎么办？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>14_count(x)这么慢，我该怎么办？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/14/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -283,121 +283,101 @@ MySQL实战45讲
 <p>@W_T 等同学提到了数据表本身紧凑的情况；<br>
 @undifined 提了一个好问题， @帆帆帆帆帆帆帆帆 同学回答了这个问题；<br>
 @陈飞 @郜 @wang chen wen 都提了很不错的问题，大家可以去看看。</p></blockquote><p></p><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/61/57/6f3c81dd.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>包包up</span>
 </div><div class=_2_QraFYR_0>从并发系统性能的角度考虑，应该先插入操作记录，再更新计数表。<br><br>知识点在《行锁功过：怎么减少行锁对性能的影响？》<br>因为更新计数表涉及到行锁的竞争，先插入再更新能最大程度地减少了事务之间的锁等待，提升了并发度。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 好几个同学说对，你第一个标明出处👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 01:44:36</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/34/5c/6b4757a0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>倪大人</span>
 </div><div class=_2_QraFYR_0>看到有同学说会话A是幻读，其实图一的会话B才是幻读吧？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这些都不叫幻读，幻读的意思是“用一个事务里面，后一个请求看到的比之前相同请求看到的，多了记录出来”。<br>改了不算<br><br>大家关注一下这个问题。<br>好问题<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-15 14:49:54</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/76/93/c78a132a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>果然如此</span>
 </div><div class=_2_QraFYR_0>一、请问计数用这个MySQL+redis方案如何：<br>1.开启事务（程序中的事务）<br>2.MySQL插入数据<br>3.原子更新redis计数<br>4.如果redis更新成功提交事务，如果redis更新失败回滚事务。<br><br>二、.net和java程序代码的事务和MySQL事务是什么关系，有什么相关性？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 好问题，不会还是没解决我们说的一致性问题。如果在3、4之间插入了 Session B的逻辑呢<br><br>2. 我估计就是启动事务（执行begin),结束时提交（执行commit)吧，没有了解过所有框架，不确定哈</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 20:19:15</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/36/d2/c7357723.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>发条橙子 。</span>
 </div><div class=_2_QraFYR_0>老师 ，我这边有几个问题 ：<br><br>1. 看到老师回复评论说 count(id) 也是走普通索引 ，那是不是也算是优化了 ， 我以为 count(字段) 是走的聚集索引 。老师的意思是 count(字段) 是走二级索引，但是不一定是数据最少的索引树的意思是么 <br><br>2. count(*) 的话， innodb 还会有取数判空这样的判断逻辑么 ，还是直接取行数 +1 了 ， 还是按所取索引类型分情况。 允许为 null 的索引是不是行数比较少， 取的总数会不会有问题呢<br><br>3. 我这边试了一下 ， 库里总共 30w 数据 。 第一次用 count(*) 是 120多ms , 第二次就是 60多 ms 。 第三次用了 count(1) ，也是60多ms 。 请问 count(*) 这两次的前后时间差是什么原因，也会走缓存 ？<br><br>4. 另一个问题是一个题外话 ，我看老师的例子事务级别应该都是 rr 。 我偶然看到我们公司事务隔离级别是 rc 。 我比较惊讶，就去问 DBA 为什么是 rc 而不是默认的 rr 。 她说一般都是用的 rc ，我想问现在公司一般都是 rc 么， 请问老师现在用的隔离级别是什么 ？？ 在我的印象里 ，rr 保证事务的隔离性会更好一些吧 。 我google 了一下， rc 会不会在某些场景下出现一些问题，但是没有查出来相关结果。老师能不能讲解一下，rc 的话会在哪些场景下会踩坑么 。 （我之前码代码都是按照 rr 级别下的思维码的代码）</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 如果有索引用到这个字段的话，比较大可能会用到这个索引，比主键索引小<br><br>2. 索引字段就算是NULL，上面的id也不是的<br><br>3. 进了Buffer pool 的原因吧<br><br>4. 嗯，rc用得挺多的，但是原因可能只是因为“以前是这么用的”。 使用rc可能有问题，也可能没问题。但是我觉得DBA不知道为什么这么选，这个是问题。<br><br>rc本身的问题其实前面我们说过一些，比如不是一致性读。后面也会有文章说到。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-15 15:32:19</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/d4/f3/129d6dfe.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>一子三木</span>
 </div><div class=_2_QraFYR_0>一直以为带*查询效率是最差的，平时查询特意加了 count(ID) 查询。罪过啊。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 😄 来得及来得及</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-15 15:26:28</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/62/c4/98a9e594.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>菜鸡一只</span>
 </div><div class=_2_QraFYR_0>count（id）和count（这段）都是要把每一行的该字段值取出来，然后判断是否为空，那为什么count（id）的效率要高？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: count(id)可能会选择最小的索引来遍历<br>而count(字段)的话，如果字段上没有索引，就只能选主键索引</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-01 17:46:00</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/21/30/8ecce1e1.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>北天魔狼</span>
 </div><div class=_2_QraFYR_0>老师说过：事务开启后，更新操作放到最后。较少锁等待时间的影响</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 06:50:56</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/67/f4/9a1feb59.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>1：又刷新了认知，先给结论(之前不知从哪看的，以为count(主键id)性能最佳)<br>按照效率排序的话，count(字段)&lt;count(主键 id)&lt;count(1)≈count(*)，所以老师建议，尽量使用 count(*)。<br>2：count(*)这么慢，我该怎么办？<br>要么忍，要么自己动手记录，如果自己记录的话，老师建议使用数据库来弄，感觉使用数据库自己弄的思路可以建议MySQL实现一下？<br>3：count()的语义是啥？<br>首先，不同的存储引擎实现方式不同<br>MyISAM 引擎把一个表的总行数存在了磁盘上，因此执行 count(*) 的时候会直接返回这个数，效率很高；<br>而 InnoDB 引擎就麻烦了，它执行 count(*) 的时候，需要把数据一行一行地从引擎里面读出来，然后累积计数。<br>以下针对innodb来说<br>count() 是一个聚合函数，对于返回的结果集，一行行地判断，如果 count 函数的参数不是 NULL，累计值就加 1，否则不加，最后返回累计值。<br>4：count(字段)怎么计数？<br>4-1：如果这个“字段”是定义为 not null 的话，一行行地从记录里面读出这个字段，判断不能为 null，按行累加；<br>4-2：如果这个“字段”定义允许为 null，那么执行的时候，判断到有可能是 null，还要把值取出来再判断一下，不是 null 才累加。<br>从引擎返回的字段会涉及到解析数据行，以及拷贝字段值的操作。<br>5：count(主键 id)怎么计数？<br>对于 count(主键 id) 来说，InnoDB 引擎会遍历整张表，把每一行的 id 值都取出来，返回给 server 层。server 层拿到 id 后，判断是不可能为空的，就按行累加。从引擎返回的 主键id 会涉及到解析数据行，以及拷贝字段值的操作。<br>6：count(1)怎么计数？<br>对于 count(1) 来说，InnoDB 引擎遍历整张表，但不取值。server 层对于返回的每一行，放一个数字“1”进去，判断是不可能为空的，按行累加。<br>7：count(*)怎么计数？<br>对于count(*)来说，并不会把全部字段取出来，而是专门做了优化，不取值。count(*) 肯定不是 null，按行累加。<br>8：现在终于弄明白这些count()背后的计算原理啦！非常感谢！另外，分析这些count()的原则如下：<br>8-1：server 层要什么就给什么；<br>8-2：InnoDB 只给必要的值；<br>8-3：现在的优化器只优化了 count(*) 的语义为“取行数”，其他“显而易见”的优化并没有做。<br>这几条原则对别的性能差别的分析也是OK的吧？<br>达到同样的目标，谁绕的弯越多做的事情越多就会越慢，性能自然不咋滴！不过知道每种达到目的的路径轨迹是一个难点，如果知道谁不喜欢走捷径呢？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-07-01 11:11:31</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>老师我先问个本章之外的问题:<br>1.rr模式下,一张表上没有主键和唯一键,有二级索引c.如果是一张大表,删除一条数据delete t where c=1.<br>在主库上利用二级索引,在根据虚拟的主键列回表删除还挺快.但是在备库上回放特别慢,而且状态是system lock,是因为binlog event里没有包含虚拟主键列.导致在备库回放的时候,必须全表扫描,耗时特别久?还是其他原因<br><br>2.回放过程中,在备库delete一条语句是被阻塞的,insert又是可以的,说明只在记录上的X锁没有gap锁。<br>但是如果在主库session A begin,delete where c=1.在开启一个session B,在主库上操作也是delete阻塞,insert正常.不过等session A执行完成,不提交.insert都阻塞了,说明最后上了gap锁。有点没明白这儿的上锁逻辑是什么？<br><br>3.还有就是备库回放binlog,相对于主库的一条update语句流程来说,从库回放哪些流程是省略了的啊,<br>server层的应该都省略了,应该主要是引擎层的回放,这里有点模糊从库是怎么回放的binlog event?<br>因为第一个问题从库回放的时候,从库上的二级索引貌似没起作用,直接就在聚簇索引上做的更新。<br><br>感谢老师</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 对，这个是个bug, 从库上会全表扫描。MariaDB 的版本有解决这个问题。生产上我们最好不允许没有主键的表<br><br>2. 按照你问的,gap锁没问题了。delete 被锁是因为行锁吧。从库重放就是因为走全表扫描按行锁下来触发的<br><br>3. 出现这个问题肯定是binlog设置了row格式。<br>这样binlog里面有所有值。如果你有主键的话，就是主键查，没有的话…就是全表了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 15:10:57</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/4d/70/7d736d5f.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>小动物很困</span>
 </div><div class=_2_QraFYR_0>我记得有一个并发插入的方法,就是说计数表对同一个表开很多行,然后计数增加对这些数据随机做加法,当做count操作的时候取sum,这样对行锁竞争会削弱.</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，咱们专栏07篇也有类似的介绍😆</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-22 10:16:56</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/ba/48/c892a35b.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>csoulsi</span>
 </div><div class=_2_QraFYR_0>老师：<br>1.count(*) 不取值，<br> InnoDB还做遍历表的操作吗，也不用给server层返回值吗？<br>2.count(1) 不取值，<br> 但是要遍历表。原文中：<br> “server 层对于返回的每一行，放一个数字“1”进去”<br> 这个“返回的每一行” ：到底返回的啥？是每一行记录吗？还是形式的返回空行，然后用1填充？<br><br>3. count(1),count(*),count(主键id)<br> 这三个做比较，哪个会快？时间消耗在哪个环节？<br> 是否遍历表；是否取值；返回给server层内容 细节上从哪个角度考虑？<br> </div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 18:19:50</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/ea/9a/02d589f9.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>斜面镜子 Bill</span>
 </div><div class=_2_QraFYR_0>先插入操作纪录，再更新计数表，因为计数表相当于热点行，加锁时间需要考虑足够短！</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 13:08:03</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>把该讲内容总结为几个问题, 大家复习的时候可以先尝试回答这些问题检查自己的掌握程度:<br> 1. <br>count(*)的实现方式在MySAM引擎和InnoDB引擎的实现方式各是怎么样的? 为什么会有这种不同?<br> 2. <br>使用缓存保存count总数存在什么问题?<br> 3. <br>如果使用一场单独的表来记录其他各张表的记录数的话,是怎么解决统计结果不精确的问题的?<br> 4. <br>count(字段),count(id),count(1), count(*)各自是怎么样的执行机制, 效率排序是怎么样的?<br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-16 14:39:53</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/de/bc/1245cd12.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>不忘初心</span>
 </div><div class=_2_QraFYR_0>对于 count(主键 id) ，server层拿到ID，判断ID是不可能为空的按行累加。这个地方，是不是又点问题，既然是主键ID，是一定不会为空的，这个server层还需要判断不为空吗</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯，代码就是这么写的 我也觉得可以优化一下… 不过现在就这样😓</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 16:44:53</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>谈谈自己的理解,有不对之处还请老师指出:<br>数据一致性问题目前来说主要分为三类<br>1.主从不一致<br>解决办法:半同步复制after_commit,after_sync,MGR(after_prepare)。但是都不能完成满足完全实时一致,由于等待的ack点不同,相对来说一致性的强度是递增.<br>2.数据库与缓存的不一致<br>解决办法:读操作直接读缓存,写操作先更新到数据库,淘汰缓存(程序需要保证两个操作的原子性).由于该key的缓存已经清理掉,那么下次读的时候需要先读数据库,在重建缓存.<br>由于redis是单线程,保证了一个操作的原子性.可以通过设置appendfsync always来保证每次操作都把该操作记录并落盘到aof文件里(不过一般redis该值为everysec),毕竟使用redis的目的不是为了保证acid.还是要根据业务来选择<br>3.一个事务跨多个节点或者多种数据库(分库分表和银行转账这种例子)<br>目前好像都是通过2pc,3pc来保证的。<br><br>count(字段值):如果该字段上有null值.每行的行头有一个标记位,标记该行是否为null.所以多了一层判断。相对更耗时<br>count(主键id):即便是选择的有null值的二级索引,但是也可以挺快的正确计数。因为null的话字段值虽然为null,但是该行上主键id以及指向聚簇索引该id的指针还是存在的,所以不影响计数,也不用做判断,直接遍历该二级索引,取出id值,按行累加就行。<br>count(1)和count(*):看官方文档上说是5.7.18版本之前是扫描聚簇索引,之后是二级索引。虽然不取值,只计数。但是二级索引比聚簇索引需要扫描的页数相对来说更少,这应该也是一种优化,不过我做测试percona版本的5.6都是选择了二级索引<br>这期干货挺多的,学会了如果某表上有count比较多的操作,最好是用count(1)或者count(*),然后选择一列占用字节数最少的建立索引(比如tinyint类型)<br><br>还有个问题请教下老师:<br>1.如果某列设置为not null建立索引.那么是不是count(id)走该索引和count(该列)效率是不是一样的？都不用做判断,两者都是需要把整个二级索引传给server层计数?还是说count(id)只需要传id,而count(字段)只需要传字段值给server层做计数？</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-16 14:32:02</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/cb/f8/f4adadcb.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>陈天境</span>
 </div><div class=_2_QraFYR_0>碰到大部分情形都是带条件查询的count,，这个怎么解？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 索引条件过滤完后还多少行？如果行数少（几百行？）就没关系直接执行了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 08:54:02</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/01/57/13fd8e5a.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>2009532140</span>
 </div><div class=_2_QraFYR_0>关键，很多查询不仅仅是单表的计数。大部分情况下是对表联合查询的计数。是不是没有特殊好的思路了</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-06-25 22:02:51</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/ef/af/ba786593.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>wljs</span>
 </div><div class=_2_QraFYR_0>为何没说在information_schema.tables也可以查看表记录数。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 跟show table status是一样的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-14 09:43:49</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/de/8c/bd9d1868.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>。</span>
 </div><div class=_2_QraFYR_0>老师，您好！<br>今天翻了下文档，按照MySQL innodb版本情况，文档已明确给出了以下说明：InnoDB handles SELECT COUNT(*) and SELECT COUNT(1) operations in the same way. There is no performance difference。<br>【https://dev.mysql.com/doc/refman/5.7/en/group-by-functions.html#function_count】是否可以至少认为在5.7.18版本以后count(1)=count(*)呢【因为MySQL 文档没有明确指明具体版本，猜测下大概版本】2个方法的性能完全一致.但是如果是这样，那么count(1)还是像老师您说的那样：InnoDB 引擎遍历整张表，但不取值。server 层对于返回的每一行，放一个数字“1”进去，判断是不可能为空的，按行累加。还成立吗？<br>第二问题，想请教您一下，2-3个表join之后，添加各种条件的count()计算什么方案会更好些呢，单方面的缓存，感觉并不是十分有效啊，因为条件的组合排列会很多</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2020-06-13 22:21:16</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/16/4a/e1/2a498473.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>李威</span>
 </div><div class=_2_QraFYR_0>后台有很多表格形式的报表，分页是需要展示总页数的，当数据很多，但查询条件过滤掉的数据比较少时，查询速度就很慢(10几秒)，这个怎么解？</div><div class=_10o3OAxT_0>
@@ -407,16 +387,16 @@ MySQL实战45讲
 <a class="nav nav-prev" href=/1/13/ title=13_为什么表数据删掉一半，表文件大小不变？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/15/ title=15_答疑文章（一）：日志和索引相关问题 style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

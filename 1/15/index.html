@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>15_答疑文章（一）：日志和索引相关问题 :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>15_答疑文章（一）：日志和索引相关问题 :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/15/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -345,121 +345,101 @@ insert into t values(1,2);
 <p>@北天魔狼、@斜面镜子 Bil 和@Bin 等同学，都给出了正确答案；<br>
 @果然如此 同学提了一个好问题，虽然引入事务，避免看到”业务上还没提交的更新”，但是Redis的计数被提前看到了。核心原因还是两个系统，不支持一致性视图；<br>
 @ 帆帆帆帆帆帆帆帆 同学的问题提醒了大家，count(id)也是可以走普通索引得到的。</p></blockquote><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>孔乙己来到酒馆大喊一声老板来二两酒赊着,酒馆生意太好,老板把孔乙己的欠账记录记到小黑板上并记录了孔乙己点的菜单。孔乙己跟别人吹了会牛,忘了叫的几两酒了。又给老板说,老板把酒改成二两。老板也不确定孔乙己叫没叫酒,就去查菜单,发现孔乙己确实点了酒,但是本来就二两,也就难得麻烦了,又要修改小黑板,又要改菜单。直接就给孔乙己说已经改好了。😄</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 老板看完板，正要告知孔乙己今日总账是赊账二两酒，<br>小二连忙过来拦住，“老板，刚刚孔乙己刚又赊账了一碟茴香豆。”<br>老板大惊，“差点亏了我一碟豆子！我怎不知？”<br>小二道，“老板你方才看板的之时没拿记账笔，我看记账笔没人使用，按店规自然可用。老板你自己没看”<br><br>老板惊呼，“亏的你小心”。<br><br>暗地想店规确有不妥。<br><br>于是把店规“变账须用记账笔。” 改为<br>“改帐均须动笔。纵为不变之帐，仍需覆写之”<br><br>😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 17:07:58</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/57/96/b65bdf43.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>萤火虫</span>
 </div><div class=_2_QraFYR_0>林老师的每次更新我都会跟着看 跟着学 已经坚持15节课了 受益良多 只是心里有时会反问自己 底层原理有那么重要吗？ 会用不就行了吗？ 自己不知道该怎么推翻这些想法 加上自己有个不好的习惯 就是容易放弃 希望自己能够坚持到最后。 </div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 加油。<br><br>说下我自己的理解。<br><br>我在带新人的时候，要求大家在写SQL语句的时候，心里是有数的，知道每个语句执行的结果，以及这些代码会消耗什么资源、如果慢了会慢在哪里、每个语句执行会占用哪些锁等等。<br><br>有的新人会问“为什么需要这么麻烦，我执行一下，看看结果对不对，对了就行，不对就改，是不是也可以？”<br><br>我说不可以。因为如果这样，我们就会受到很多局限，即使我们定位自己是业务开发人员。<br><br>这里我说一个限制：<br><br>这会限制基于数据库的业务架构能力。一个语句可以试，一个五个语句的事务分析就要试很多次，一个复杂业务系统的数据库设计，是试不出来的。<br><br>原理可以帮我们剪枝，排除掉那些理论上明显错误的方案，这样才有精力真的去试那些有限的、可能正确的方案。<br><br><br>我们不需要100%精通MySQL(我自己离这个目标也相去甚远），但是只要多知道一些原理，就能多剪一些枝，架构设计就能少一些错误选项的干扰，设计出来的项目架构正确的可能性更高。<br><br>我自己特别喜欢这个剪枝的过程和感觉，他表示我用以前学习的时间，来节省了现在工作的时间。<br><br><br>当然，“原理”是一个很大的概念，有的原理更接近实战，有的远一些。这个专栏我挑的是跟平时使用相关的原理，以便大家可以有机会边学边用。<br><br>一起加油吧🤝<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 11:37:45</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/4e/44/66450d97.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Gavin</span>
 </div><div class=_2_QraFYR_0>课后问题：<br>在命令行先执行以下命令（注意不要提交事务）：<br>BEGIN;<br>UPDATE t SET a=2 WHERE id=1;<br><br>新建一个命令行终端，执行以下命令：<br>UPDATE t SET a=2 WHERE id=1;<br><br>从新建的命令行终端的执行结果看，这条更新语句被阻塞了，如果时间足够的话（InnoDB行锁默认等待时间是50秒），还会报锁等待超时的错误。<br>综上，MySQL应该是采用第3种方式处理题述场景。<br><br>对于MySQL为什么采用这种方式，我们可以利用《08 | 事务到底是隔离的还是不隔离的？》图5的更新逻辑图来解释：假设事务C更新后a的值就是2，而事务B执行再执行UPDATE t SET a=2 WHERE id=1;时不按第3种方式处理，即不加锁不更新，那么在事务B中接下来查询a的值将还是1，因为对事务B来说，trx_id为102版本的数据是不可见的，这就违反了“当前读的规则”。<br><br>以上是我的理解与分析，不是很确定准确与否。<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 漂亮</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 17:47:06</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/PiajxSqBRaELZPnUAiajaR5C25EDLWeJURggyiaOP5GGPe2qlwpQcm5e3ybib8OsP4tvddFDLVRSNNGL5I3SFPJHsA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>null</span>
 </div><div class=_2_QraFYR_0>看到自己的问题上榜，这是对自己的最大鼓励。<br><br>学习专栏之前，自己只是一个 CRUD boy，平时同事间讨论 MySQL 的问题，自己完全搭不上话，因为对 MySQL 底层原理完全不懂。对 MySQL 的认知就仅限一点：索引能提高查询效率。但是为什么能提高？不知道！！<br><br>现在回想，以前犯过很多错误：<br>1. 主键使用 UUID，非自增主键。<br>2. 滥用索引，其实可以通过“最左前缀原则”来精减索引。<br>3. 不管 SQL 语句是否合理，只要能返回结果集就是好 SQL。<br>4. 建表时字段类型拿捏不准。<br><br>现在都会反复学习专栏的每一篇文章，每次学习都有不一样的收获。<br>第一次可能是：喔，原来有这么个知识点，但对它的实现原理一知半解。<br>第二次却是：对它的实现原理有了更深的认识，加强对知识的理解，基本会形成一个比较清晰的逻辑。<br>第三次是，MySQL 的这种实现原理，是为了解决什么问题等等。<br><br>现在感觉有点“走火入魔”了，以前执行查询语句，关注的多久能返回结果集。<br>现在关注的却是：连接器、分析器、优化器、执行器和 InnoDB 引擎。<br>连接成功后，获取我的权限，查询缓存，命中缓存直接返回，否则进行后续的操作。（记得老师留言区回复过：连接器取权限，执行器用权限。而编写留言到这产生了一个疑问：查询缓存前，应该会校验权限，所以连接器也会用权限？）<br>分析器阶段进行词法分析，解析关键字，字段名，表名等。语法分析判断语法是否正确。（记得第一篇《基础架构》留言提到语义分析，今晚要找资料学习下）。<br>优化器阶段生成执行计划，选择索引（这时会怀疑 MySQL 选择的索引是否最优），能否使用索引下推和覆盖索引减少回表查询，提高性能。<br>执行器阶段调用引擎接口查询数据，Server 层要啥，引擎给啥，InnoDB 只给必要的值。<br>查询结束后，返回结果集，并将结果集放入查询缓存。<br><br>更新语句的关注点是隔离性，视图，MVCC，回滚日志，redo log，binlog，两阶段提交等。<br>写业务代码时，会考虑事务内的 SQL 语句，能否调整 SQL 语句的顺序，减少更新表时行锁对性能的影响。<br>在建表的时，会反复推敲这个索引是否合理。使用普通索引还是唯一索引更为合适。能否通过“最左前缀原则”来减少创建索引的个数。如果索引字段的类型是字符串并长度太长，如何优化使用前缀索引，减少空间占用，提高查询性能。<br><br>学习专栏后，基本上涉及到 MySQL 的内容，这些知识点都会浮现在脑海中。昨天还差点应用这些知识，帮同事优化他的 SQL 语句。昨天跟往常一样，当写代码写累了，就跑到同事那溜达溜达。<br>他正在线上的备库测试查询百万数据要多久，另一位同事建议他使用 force index 强制索引，这次执行 5 秒，再执行零点几秒。<br>他惊乎，为啥这次这么快。我说，这次查了缓存。我还想帮他看看 SQL 语句，是否 MySQL 选择错了索引，导致使用 force index 显式指定索引。说不定使用 order by field 就解决了呢，哈哈哈哈。后面有事，没有继续跟进他这问题了。<br><br>非常感恩，跟着老师学习，让我体会到了学习是一件自然而又充满魅力的事情，也让我从一个基础不牢固的小白，一步步地充实了自己的知识库，另外老师非常尽责，经常半夜回复答疑，希望老师保重身体。谢谢！！</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: “我说，这次查了缓存”<br><br>哈哈，这个场景好棒，这个画面感，有一种扫地僧的感觉👍🏿<br><br>一起加油<br><br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-18 14:11:54</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/a3/40/e0df3b84.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>力挽狂澜爆炸输出的臭臭宁</span>
 </div><div class=_2_QraFYR_0>针对不能只用binlog完成数据恢复我的理解：<br>按照文中这个话题下的示例，因为MySQL写数据是写在内存里的，不保证落盘，所以commit1的数据也可能丢失；但是恢复只恢复binlog失败的也就是commit2的数据，所以数据会丢失。<br>这样理解对吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的，binlog一来时机控制不好（就是你说的这个），二来内容的能力不足（没有页面信息）<br>👍🏿<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-20 20:36:21</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/18/22/e817914c.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>于海</span>
 </div><div class=_2_QraFYR_0>在极客时间也学了不少课程，林老师是这其中最认真负责的，好的课程是用“心”写出来的</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 谢谢🙏 <br>希望大家都有收获</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 16:05:08</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/fc/e5/c26c67ea.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>陈新仁</span>
 </div><div class=_2_QraFYR_0>【操作符“|”是逻辑或，连同最后一句insert语句里...】<br>老师，“|” 这应该叫位运算符的按位或操作符，逻辑或是“||”吧？<br>这里的幂等性原理就是：A &lt; B: relation_ship = 2 | 1; A > B:relation_ship = 1 | 2；重复插入 3 | 1 或者 3 | 2 。位运算： 2 | 1 == 1 | 2 == 3 | 1 == 3 | 2 == 3。感觉这里想法很巧妙。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你说得对，是按位或，看得很细致👍🏿<br><br>我发个堪误</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 11:26:47</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/1f/ff/aadcf237.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Eric</span>
 </div><div class=_2_QraFYR_0>老师，您实在是太良心了。整理这些问题应该很费时间吧。看完答疑之后感觉又加深了一遍印象。像很多知识点都需要反复理解才能真正掌握。答疑来的很及时，感谢！</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 09:47:10</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/e9/0b/1171ac71.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>WL</span>
 </div><div class=_2_QraFYR_0>关于刷脏页有两个问题请教老师:<br>1. 当redo log空间不足时, 按照redo log的顺序把脏页更新到磁盘, 那么假如一个脏页在第1条redo log中已经被持久化到磁盘, 后面第1000条redo log又有这个关于这个脏页的信息, 那么innoDB是直接丢弃掉这条redo log的记录吗? 还有这个时候, 是要把redo log上的全部内容更新到磁盘吗, 还是更新一部分?<br><br>2. 当内存不足开始刷脏页的时候, 以内存为刷脏页发起点, 这时是把最久不使用的数据页从内存中淘汰掉, 那么这个时候, 对应的额redo log是不是也会清除? 而对于该脏页的操作可能在redo log中并不是连续的记录, redo log有只能顺序读写, 那么redo log是怎么清除掉关于这个脏页的所有记录的?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 刷脏页是只把内存上最新版本的数据页写到磁盘上。 第一个碰到的redolog会把这个脏页刷下去，注意redolog并没有修改内存数据页的数据（这个不是崩溃恢复过程哦）<br>后面再碰到这个页面的redolog,这个页面是干净页了，不用刷直接跳过<br><br>2. 第二个问题的两个问号是一个答案：不用清除。 下次redo log来刷的时候看到是干净页就直接过了。<br><br>好问题。</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-22 16:10:21</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/15/ff/c6/8b5cbe97.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>刘志兵</span>
 </div><div class=_2_QraFYR_0>老师您好，读了很久其他问题都明白了，还是没太明白只用binlog为啥不能恢复数据，根本原因还是对binlog和redolog都记录的内容没掌握清楚，我的理解跟评论区里“得不到de颜色”说的一样，就是binlog也同样记录了一行数据，但是不知道该从哪里回放，所以没法恢复，但是redo log可以从check_point开始扫描所以能恢复；<br>看到你回复的是binlog没有能力做出来一页的数据，反正缺失的数据都记在binlog里了，如果能有办法知道binlog从哪里回放，回放一遍就可以了，为啥一定要做一页数据出来，麻烦老师解答一下，谢谢</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是这样的<br>一个事务的binlog如果回放，就是重做这个事务，一个事务更新的可能不止一个page。<br><br>比如一个事务更新了page ABC<br>然后崩溃回复了，B坏了，AC没问题，而且AC还落盘了。<br>这样如果重做事务，B好了，AC又坏了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-01 18:39:29</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/9f/1d/ec173090.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>melon</span>
 </div><div class=_2_QraFYR_0>思考题：应该是第三种，因为两个事务并行执行该update，有一个会卡住，说明有加锁，而且update语句执行后，查看ibd文件和redo log文件的修改时间都更新了。通过show engine innodb status 进一步验证，查看LSN确实增加了，而且Number of rows updated 也加+1了。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 13:24:03</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/67/29/b0ec5430.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>greatcl</span>
 </div><div class=_2_QraFYR_0>看评论里有人说足够有钱把redo log设置无限大，老师已经回复说不能设置无限大。<br>在MySQL的一个文档里https://dev.mysql.com/doc/refman/5.6/en/innodb-init-startup-configuration.html#innodb-startup-log-file-configuration看到全部redo log文件的大小是不能超过512GB的。<br>文档里建议redo log全部文件总大小的设置要能满足业务系统一个小时写操作的量，当然如果磁盘足够这个是能尽量大点就大点的。<br>二刷能学到更多的知识^_^</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-25 16:58:43</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e5/39/951f89c8.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>信信</span>
 </div><div class=_2_QraFYR_0>如果图1的“写入redo log”是写内存，当时刻B发生crash，重启后这部分redo log都丢失了，那么何谈判断redo log是否有完整的prepare还是commit标志呢？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 不是哦，<br>在事务执行期间是在redo log buffer.<br><br>在图中写binlog之前，就已经都写了盘并且fsync了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 13:14:11</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/15/14/98/0251b8fd.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Cy190622</span>
 </div><div class=_2_QraFYR_0>老师有几个问题，请教一下：<br>疑惑点：<br>1. change buffer：存在buffer pool中的数据库缓存数据，里面的数据呈数据页形式存在，<br>2.redo log；将change buffer 操作数据库的语句按照顺序记录，后再适当的时候一次提交。<br>我的理解为另一种缓存。<br>3.flush 操作:就是在刷新change buffer中数据页上的新数据。<br>merge 将change buffer中的数据同步到数据库，并获取新的数据页的过程。 <br><br>问题：1.麻烦老师指一下前面有错误的地方<br> 2.感觉merge 和flush两个过程很象，这两个有什么区别？<br> 最后感谢老师的耐心解答，谢谢您。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. “flush 操作:就是在刷新change buffer中数据页上的新数据。” 除了这句不太明确啥意思， 其他对的。<br>2. merge是change buffer应用到数据页， flush是数据页从内存写到磁盘<br></p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-02-25 21:51:41</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/Z8t0JKFjnmdx4s4wuRePZXRL2L9awEpicp0rjT9rfXmZKOBIleZuOC86OzZE0tSdkfy3LWWa7YU67MicWeiaFd3jA/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>小白</span>
 </div><div class=_2_QraFYR_0>老师，请教个问题，为什么要比较AB的大小，这快逻辑没有看懂<br><br>如果是 a喜欢b 那就insert into `like`(user_id, liker_id, relation_ship) values(A, B, 1)<br>如果是 b喜欢a 那就insert into `like`(user_id, liker_id, relation_ship) values(B, A, 1)<br>不是应该这个逻辑么？我理解错了哪里老师<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-17 18:42:20</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/b0/bb/fc698888.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>leozhang</span>
 </div><div class=_2_QraFYR_0>只要binlog做宕机恢复，不知道我理解对不对，请解答下，我看留言中很多有和我类似的疑问！<br><br>假如现在有内存中的数据页 pageA,pageB,pageC,<br>假如此时pageA 有id=1,name=liu; pageB有id=2,name=liu; pageC有id=3,name=liu三个记录，<br>同事和数据库磁盘数据保持一致.假设所有liu的初始money为0<br>此时执行update t set money=money+1 where name=liu;<br>这个时候写了binlog，假设statement模式则log日志是 update t set money=money+1 where name=liu；<br>同时binlog日志写磁盘成功，<br>现在去吧pageA，pageB，pageC刷到磁盘。<br>刷盘的过程中突然断电，pageA，pageB成功，pageC失败了<br>此时就悲催了，pageA和pageB的liu money为1，pageC的liu money为0<br>假设有了binlog。事物提交，那么肯定就不对了，因为pageC数据是错误的<br>假如现在重做事物，也就是再一次执行刚刚binlog的重做日志。<br>这个时候如果重做事务，结果也不对了，是不是pageC的 money就为-1了，请指教，可能不对<br><br>其实最根本的还是，当初设计binlog的时候就没想crash恢复，<br>再就是binlog是没有记录数据页的改动的。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-09-04 22:14:17</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83epbtcXw5PHzibHcXlupLmnZOYXBLR10U4Hvn5tib14EYlkMBERYgGlgZ63BxgFSBTQmUErfSXibcKl6w/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Geek_maxwell</span>
 </div><div class=_2_QraFYR_0>看了一点留言，有几个问题我思考后老师帮我看看是否正确：<br>1 binlog不能恢复数据，这个是因为binlog是不清楚存储引擎有多少增量没有处理，因为存储引擎对它是透明的，所以binlog设计之初就认为要恢复就是回放所有的binlog，或者从某个时间点从库备份开始恢复剩下所有binlog<br>2 innodb具有恢复，这个主要是因为它将数据分为存量（落盘） + 增量（changeBuffer+内存中脏页），而这个增也正好是WAL中的redolog + checkpoint两个持久化的数据以及存量联合得到，那么这个增量的恢复就是一个可行性很高，代价很小的操作，因此就是可以具有数据恢复能力<br>3 redologBuffer， 这个我感觉主要作用不是说为了prepare阶段加速，因为prepare必然要sync 磁盘，因为二阶段sync也是具有持久化的保证，那么它的加速应该是为了事务过程中对于快速得到多版本信息吧，因为需要用到多版本的情况下，所需要回溯的数据总不能读redolog，那就是随机读了，而且多版本一般情况下存在的量不大，可以在内存中存在，这是为了优化随机读</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-04-11 23:03:36</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>老师提几个问题：<br>1.事务在执行过程中，binlog是否像redo log一样记录到binlog_cache里？<br>2.为什么把redo log buffer设置成全局参数，binlog cache设置为事务级别参数？<br>3.为什么一般是binlog落盘比redo log更耗时？<br>4.如果sync为1，dump线程是等到binlog 成功flush，再从binlog cache中把binlog event发送给从库？如果非1,是在最后xid写入就从binlog cache中把binlog event发送给从库？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 1. 嗯，它有单独的内存，redo log buffer<br><br>2. Binlog cache size也是global 的呀，我还去确认了5.5～5.7，你用的是哪个版本？<br><br>3. 这个数据是怎么得到的😄<br><br>4. 写完磁盘就发，然后再回来flush。 <br> 不是，放在binlog cache表示“这事务还没做完”，不发的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-17 01:22:28</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/4e/3a/86196508.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>linqw</span>
 </div><div class=_2_QraFYR_0>由于工作的原因最近一段时间，没有看，为此这周末赶紧恶补了一下，在redo log和binlog的答疑中，写下自己的理解，老师帮忙看下哦<br>1、redo log和binlog采用两阶段提交，目的是为了双方能多一个选择，在mysql宕机时，如果redo log处于commit，事务直接提交，如果redo log处于prepare，binlog完整事务也提交，只有在binlog不完整时，事务会回滚，以前更新数据页会丢失。<br>2、redo log如何和binlog联系在一起，XID，在服务重启启动时，会扫描redo log中xid字段到binlog中，找相对应的事务，判断binlog的状态是否需要提交<br>3、能否在redo log写完整在写binlog么？不行，因为redo log写完，表示事务已经提交，如果在binlog写入的过程中出现异常，会导致redo log和binlog的数据不一致的问题，如果使用binlog恢复库，会导致主库和从库的数据不一致，因为redo log已提交，binlog没有写入成功，为此需要采用两阶段提交。<br>4、redo log和redo buffer的联系？<br>即在数据更新时，会先写redo buffer，因为这样可以在写redo log时，先把数据保存起来，在commit时在把数据写入redo log中，因为这样更新的时候会更快，直接更新内存，在事务处于cmmit时，才将内存中的数据写到redo log中。<br>5、数据页回复是使用buffer pool还是redo log？<br>redo log只有在数据页出现异常的时候，将其拿来恢复上次更新的数据页，但是redo log没有记录完整的数据页数据，为此在正常的情况下，都没有使用redo log，是使用buffer pool将起内部以前的数据刷新到磁盘中，其实想说，脏（这个字不会打，尴尬的一批）数据？<br>6、redo log一般设置多大？这个老师上面说的很清楚，如果磁盘的容量大，就多搞点，如果小的话可以向公司申请买好设备，要是不同意的话，就得问你们老板了，项目已si，开玩笑，哈哈哈。<br>7、只用redo log？其实你要是公司机器够大，可以设置成无限大，额，可以假装binlog，额，开玩笑的，因为redo log只有循环写，没法当做binlog，只要有钱就不好说了。<br>8、只用binlog？不行，为啥不行，百度啊，不行谷歌，好啦，开玩笑，发一下烧，因为如果在一个事务里面，同时写binlog，你看看会有什么问题，一个成功执行，一个执行失败，那会导致一个binlog可以回复数据页，一个不行，为此，导致数据页不一致，好了，今天不知道为啥那么兴奋，额，可能是，你猜吧，好了，写完我也忘了，一起拍砖</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: <br><br>1. 两阶段提交主要还是因为有了两份日志😆，两份日志的历史原因多些；<br>2. 对的，XID<br>3. 是，要考虑binlog和数据的一致性；<br>4. 对的<br>5. 是脏页哈<br>6. 😅<br>7. 不能设置无限大<br>8. 是不是暗恋的妹子向你表白了😝</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-01-27 20:00:28</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/84/49/47d48fd0.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>观弈道人</span>
 </div><div class=_2_QraFYR_0>丁老师，不好意思，刚才提的A > B, A &lt; B问题，我要再重复一下。A > B: 应该是表示当前业务操作为A用户关注B用户, sql为: insert into like('a_user_id', 'b_user_id', 1), 如果反向关联则为insert into like('b_user_id', 'a_user_id', 2), 互相关联则relation_ship update 为3, 您的意思是通过relation_ship表示user_id,liker_id哪个为被关注方,哪个是关注方，所以，我还是理解 A > B ,不应该理解成 A 大于 B,而是A 关注 B，我认为A 大于 B的比较是没有意义的，比较疑惑我这样理解偏差在哪里?😖</div><div class=_10o3OAxT_0>
@@ -469,16 +449,16 @@ insert into t values(1,2);
 <a class="nav nav-prev" href=/1/14/ title=14_count(x)这么慢，我该怎么办？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/16/ title=16_“orderby”是怎么工作的？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>

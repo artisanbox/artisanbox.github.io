@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>19_为什么我只查一行的语句，也执行这么慢？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646789669 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646789669 rel=stylesheet>
-<link href=/css/hybrid.css?1646789669 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646789669 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646789669 rel=stylesheet>
-<link href=/css/auto-complete.css?1646789669 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646789669 rel=stylesheet>
-<link href=/css/theme.css?1646789669 rel=stylesheet>
-<link href=/css/tabs.css?1646789669 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646789669 rel=stylesheet>
-<link href=/css/theme-green.css?1646789669 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646789669></script>
+<title>19_为什么我只查一行的语句，也执行这么慢？ :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646794261 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646794261 rel=stylesheet>
+<link href=/css/hybrid.css?1646794261 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646794261 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646794261 rel=stylesheet>
+<link href=/css/auto-complete.css?1646794261 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646794261 rel=stylesheet>
+<link href=/css/theme.css?1646794261 rel=stylesheet>
+<link href=/css/tabs.css?1646794261 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646794261 rel=stylesheet>
+<link href=/css/theme-green.css?1646794261 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646794261></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/1/19/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646789669></script>
-<script type=text/javascript src=/js/auto-complete.js?1646789669></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646794261></script>
+<script type=text/javascript src=/js/auto-complete.js?1646794261></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646789669></script>
+<script type=text/javascript src=/js/search.js?1646794261></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -306,121 +306,101 @@ KEY <code>b</code> (<code>b</code>)
 <p>@赖阿甘 提到了等号顺序问题，实际上MySQL优化器执行过程中，where 条件部分， a=b和 b=a的写法是一样的。<br>
 @沙漠里的骆驼 提到了一个常见的问题。相同的模板语句，但是匹配行数不同，语句执行时间相差很大。这种情况，在语句里面有order by这样的操作时会更明显。<br>
 @Justin 回答了我们正文中的问题，如果id 的类型是整数，传入的参数类型是字符串的时候，可以用上索引。</p></blockquote><style>ul{list-style:none;display:block;list-style-type:disc;margin-block-start:1em;margin-block-end:1em;margin-inline-start:0;margin-inline-end:0;padding-inline-start:40px}li{display:list-item;text-align:-webkit-match-parent}._2sjJGcOH_0{list-style-position:inside;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;margin-top:26px;border-bottom:1px solid rgba(233,233,233,.6)}._2sjJGcOH_0 ._3FLYR4bF_0{width:34px;height:34px;-ms-flex-negative:0;flex-shrink:0;border-radius:50%}._2sjJGcOH_0 ._36ChpWj4_0{margin-left:.5rem;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding-bottom:20px}._2sjJGcOH_0 ._36ChpWj4_0 ._2zFoi7sd_0{font-size:16px;color:#3d464d;font-weight:500;-webkit-font-smoothing:antialiased;line-height:34px}._2sjJGcOH_0 ._36ChpWj4_0 ._2_QraFYR_0{margin-top:12px;color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-all;line-height:24px}._2sjJGcOH_0 ._10o3OAxT_0{margin-top:18px;border-radius:4px;background-color:#f6f7fb}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._10o3OAxT_0 ._3KxQPN3V_0{color:#505050;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;white-space:normal;word-break:break-word;padding:20px 20px 20px 24px}._2sjJGcOH_0 ._3klNVc4Z_0{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;margin-top:15px}._2sjJGcOH_0 ._3Hkula0k_0{color:#b2b2b2;font-size:14px}</style><ul><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>最近几张干货越来越多了,很实用,收获不少.先回答今天的问题<br>版本5.7.13<br>rc模式下:<br>session 1:<br>begin;<br>select * from t where c=5 for update; <br>session 2:<br>delete from t where c=10 --等待<br>session 3:<br>insert into t values(100001,8) --成功<br>session 1:<br>commit<br>session 2:事务执行成功<br>rr模式下:<br>begin;<br>select * from t where c=5 for update; <br>session 2:<br>delete from t where c=10 --等待<br>session 3:<br>insert into t values(100001,8) --等待<br>session 1:<br>commit<br>session 2:事务执行成功<br>session 3：事务执行成功<br>从上面这两个简单的例子,可以大概看出上锁的流程.<br>不管是rr模式还是rc模式,这条语句都会先在server层对表加上MDL S锁,然后进入到引擎层。<br><br>rc模式下,由于数据量不大只有10W。通过实验可以证明session 1上来就把该表的所有行都锁住了。<br>导致其他事务要对该表的所有现有记录做更新,是阻塞状态。为什么insert又能成功?<br>说明rc模式下for update语句没有上gap锁,所以不阻塞insert对范围加插入意向锁,所以更新成功。<br>session 1commit后,session 2执行成功。表明所有行的x锁是在事务提交完成以后才释放。<br><br>rr模式下,session 1和session 2与rc模式下都一样,说明rr模式下也对所有行上了X锁。<br>唯一的区别是insert也等待了,是因为rr模式下对没有索引的更新,聚簇索引上的所有记录，都被加上了X锁。其次，聚簇索引每条记录间的间隙(GAP)，也同时被加上了GAP锁。由于gap锁阻塞了insert要加的插入意向锁,导致insert也处于等待状态。只有当session 1 commit完成以后。session 1上的所有锁才会释放,S2,S3执行成功<br><br>由于例子中的数据量还比较小,如果数据量达到千万级别,就比较直观的能看出,上锁是逐行上锁的一个过程.扫描一条上一条,直到所有行扫描完,rc模式下对所有行上x锁。rr模式下不仅对所有行上X锁,还对所有区间上gap锁.直到事务提交或者回滚完成后,上的锁才会被释放。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 分析得非常好。<br>两个模式下，各增加一个session 4 : update t set c=100 where id=10看看哦<br><br>基本就全了👍🏿</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 18:40:38</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/71/97/f1a3d398.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>张永志</span>
 </div><div class=_2_QraFYR_0>RR隔离级别下，为保证binlog记录顺序，非索引更新会锁住全表记录，且事务结束前不会对不符合条件记录有逐步释放的过程。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 准确</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-27 08:27:44</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f3/2d/711d73b2.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>薛畅</span>
 </div><div class=_2_QraFYR_0>回来老师的问题：<br>在 Read Committed 隔离级别下，会锁上聚簇索引中的所有记录；<br>在 Repeatable Read 隔离级别下，会锁上聚簇索引中的所有记录，并且会锁上聚簇索引内的所有 GAP；<br>在上面两个隔离级别的情况下，如果设置了 innodb_locks_unsafe_for_binlog 开启 semi-consistent read 的话，对于不满足查询条件的记录，MySQL 会提前放锁，不过加锁的过程是不可避免的。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 08:48:10</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/73/4f/abb7bfe3.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>沙漠里的骆驼</span>
 </div><div class=_2_QraFYR_0>@高枕<br>这里有些资料提供给你参考: <br>1. 何登成的技术博客: 加锁分析 http://hedengcheng.com/?p=771<br>2. 锁的常见种类: http://www.aneasystone.com/archives/2017/11/solving-dead-locks-two.html</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 23:44:29</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/03/f7/3a493bec.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>老杨同志</span>
 </div><div class=_2_QraFYR_0>愉快的做一下思考题<br>begin;<br>select * from t where c=5 for update;<br>commit;<br>历史知识的结论是，innodb先锁全表的所有行，返回server层，判断c是否等于5，然后释放c！=5的行锁。<br>验证方法：<br>事务A执行 锁住一行c！=5的记录 比如id =3 c=3<br> select * from t where id = 3 for update 或者 update t set c=4 where id =3<br>然后启动新事务B执行上面的语句select * from t where c=5 for update; 看看有没有被阻塞。<br>用于判断事务B的语句会不会试图锁不满足条件的记录。<br>然后把事务A和事务B的执行顺序对调一下，也就是先执行B在执行A。看看有没有阻塞，<br>判断在事务B加锁成功的情况下会不会释放不满足查询条件记录的行锁。<br></div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 👍🏿 思路清晰<br><br><br>隔离级别再愉快地改成RR试试😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 11:08:05</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/10/c6/41/b868f086.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>小确幸</span>
 </div><div class=_2_QraFYR_0>问一下：索引扫描与全表扫描，有什么异同点？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 一般说全表扫描默认是值“扫瞄主键索引”</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 11:06:03</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/67/f4/9a1feb59.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>钱</span>
 </div><div class=_2_QraFYR_0>课前思考<br>1：为啥只查一行的语句，也执行这么慢？<br>查的慢，基本上就是索引使用的问题，和查一行还是N行(N不是巨大)，没有必然联系。查一行慢，猜测没有走索引查询，且数据量比较大。<br>课后思考<br>1：阅后发现自己的无知，只查询一行的语句，也比较慢，原因从大到小可分为三种情况？<br>第一MySQL数据库本身被堵住了，比如：系统或网络资源不够<br>第二SQL语句被堵住了，比如：表锁，行锁等，导致存储引擎不执行对应的SQL语句<br>第三确实是索引使用不当，没有走索引<br>第四是表中数据的特点导致的，走了索引，但回表次数庞大<br>感谢老师的分享，真是醍醐灌顶呀😄</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-07-31 08:19:25</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/23/98/bd96932f.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>xm</span>
 </div><div class=_2_QraFYR_0>@Elvis<br>Elvis<br><br>0<br>老师，最近项目mysql遇到一个难题， 表数据每天230万，一条语句的查询条件有1—40个，最坏情况下40，请问老师有没有好的建议，非常感谢<br>2018-12-27<br> 作者回复<br>这个是索引最头大的问题之一了… 如果有明显的某类组合查询是最多的还好，否则确实很麻烦。<br><br>我觉得应对这种大数据量的多条件的查询的话换种思路，将mysql复杂的组合查询条件导入到es中作为key，主键id作为value，复杂的查询经过es后得到主键id，之后走mysql会好很多，目前公司是这样做的，老师觉得怎么样？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 嗯，这个是一种思路，见过这么干的😄</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 15:29:42</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e7/7b/71da8283.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>似水流年</span>
 </div><div class=_2_QraFYR_0>请问老师，为什么select blocking_pid from sys.schema_table_lock_waits;查不到mdl锁的进程id，显示为空。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 10:11:05</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/48/bd/6c7d4230.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>Tony Du</span>
 </div><div class=_2_QraFYR_0>对于课后问题，select * from t where c=5 for update，<br>当级别为RR时，因为字段c上没有索引，会扫主键索引，这时会把表中的记录都加上X锁。同时，因为对于innodb来说，当级别为RR时，是可以解决幻读的，此时对于每条记录的间隙还要加上GAP锁。也就是说，表上每一条记录和每一个间隙都锁上了。<br>当级别为RC时，因为字段c上没有索引，会扫主键索引，这时会把表中的记录都加上X锁。<br><br>另外，之前看过相关文章，MySQL在实际实现中有些优化措施，比如当RC时，在MySQL server过滤条件，发现不满足后，会把不满足条件的记录释放锁（这里就是把 c!=5的记录释放锁），这里会违背两阶段的约束。当然，之前每条记录的加锁操作还是不能省略的。<br>还有，对于semi consistent read开启的情况下，也会提前释放锁。<br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-27 12:53:54</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/12/71/97/f1a3d398.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>张永志</span>
 </div><div class=_2_QraFYR_0>RC隔离级别下，对非索引字段更新，有个锁全表记录的过程，不符合条件的会及时释放行锁，不必等事务结束时释放；而直接用索引列更新，只会锁索引查找值和行。<br><br><br></div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-27 08:20:09</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/cd/1e/692c3313.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>复兴</span>
 </div><div class=_2_QraFYR_0>lock table t1 write这个写锁跟mdl写锁，本质上是不是一个东西？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 在5.5及以后的版本中，lock table t1 write 就是通过加mdl写锁，来阻止其他线程访问的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-05-28 16:37:25</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/14/3b/ad/31193b83.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>孙志强</span>
 </div><div class=_2_QraFYR_0>亲爱的老师,我这里有一个问题?困惑好久<br>一致性读为啥还要处理别的事务回滚日志?一致性读不是直接返回视图里的值吗?undo log在没有事务使用的时候会清除掉?</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 你再看下08篇哈<br>简单说，一致性视图只是一个数组+一个高水位，是要靠undo log来获取老版本的数据的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-22 11:09:48</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/e3/2e/77ad18f4.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>滔滔</span>
 </div><div class=_2_QraFYR_0>老师，我有个问题问，在讲隔离级别的时候讲过可重复读级别下，默认读操作(select查询，不是当前读)读到的是某条数据的某个历史版本，而所有这些历史版本数据都是以undo log的形式存在的对吗？需要找某个历史版本数据就直接执行对应undo log，而不是事先把历史版本的数据保存下来，是这样的吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 是的</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 10:06:32</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/0f/5e/de/4e7ec66d.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>蠢蠢欲动的腹肌</span>
 </div><div class=_2_QraFYR_0>老师，您好<br> 我的mysql版本5.7.24，尝试的时候发现了如下问题<br> 锁住了表T<br> mysql> lock table T write;<br> Query OK, 0 rows affected (0.00 sec)<br> 另一个terminal查询时被阻塞，但是查不到blocking_pid ，这是什么情况呢<br> mysql> select blocking_pid from sys.schema_table_lock_waits;<br> Empty set (0.00 sec)<br> ps:发现查询schema_table_lock_waits表与lock table的语句不能放在一个terminal执行，否则会报<br>Table 'schema_table_lock_waits' was not locked with LOCK TABLES<br>自行尝试的同学要注意下，老师有空的话也可以帮看看为什么。。。</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-28 14:26:36</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/15/38/69/7b11b341.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>浩涛</span>
 </div><div class=_2_QraFYR_0>老师，我们公司今年打算迁数据库，也就是oracle迁到mysql，目前要决定选用哪个版本和分支，不知道要怎么分析，您有什么好的建议吗？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 目前5.7是比较主流的，就用最新GA版本吧，记得做全量回归测试</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-03-11 13:37:47</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/11/85/9b/fc33c974.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>陈旭</span>
 </div><div class=_2_QraFYR_0>老师，最近遇到了一个问题，看您有什么建议。<br>业务场景是这样的：<br>1.开启事务<br>2.在表a插入一条记录<br>3.在表b更新一条记录<br>4.在表c更新一条记录<br>5.提交事务<br>看程序日志所有sql都没问题（没看数据库日志），但是结果是2的那条插入了，3和4都没更新，这个问题有哪几种情况？</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 这是被别的并发事务又改回去了吗😓<br>要么是update的值跟原值相同<br>要么是update条件没有匹配到行<br>额，最好给一下每个语句执行后的affacted rows , 还有binlog里的日志内容，才好分析</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 09:26:18</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/07/1e/bdbe93f4.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>尘封</span>
 </div><div class=_2_QraFYR_0>课后问题：d这一列不存在，但是还是要加MDL锁，释放时间应该是事务提交时。</div><div class=_10o3OAxT_0>
 <p class=_3KxQPN3V_0>作者回复: 抱歉，是要写成where c=5 , 发起堪误了</p></div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2018-12-26 08:11:40</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=http://thirdwx.qlogo.cn/mmopen/vi_32/q2HwchogzNiavKhIB4GfAxH6B88NhSoC7B7keVEUqiaP6JPokDUNJLYehocOyqYqrhA3iaxywyRXLYkYJjDUQESZw/132 class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>残天噬魂</span>
 </div><div class=_2_QraFYR_0>为啥我开启了性能监控，按照案例1执行加锁，select * from sys.schema_table_lock_waits;这个没有结果啊</div><div class=_10o3OAxT_0>
 </div><div class=_3klNVc4Z_0>
 <div class=_3Hkula0k_0>2019-07-09 16:17:47</div></div></div></div></li><li>
-<div class=_2sjJGcOH_0><img src=https://static001.geekbang.org/account/avatar/00/13/f8/70/f3a33a14.jpg class=_3FLYR4bF_0>
 <div class=_36ChpWj4_0>
 <div class=_2zFoi7sd_0><span>某、人</span>
 </div><div class=_2_QraFYR_0>老师我请教一个问题:<br>flush tables中close table的意思是说的把open_tables里的表全部关闭掉?下次如果有关于某张表的操作<br>又把frm file缓存进Open_table_definitions,把表名缓存到open_tables,还是open_table只是一个计数?<br>不是特别明白flush table和打开表是个什么流程</div><div class=_10o3OAxT_0>
@@ -430,16 +410,16 @@ KEY <code>b</code> (<code>b</code>)
 <a class="nav nav-prev" href=/1/18/ title=18_为什么这些SQL语句逻辑相同，性能却差异巨大？> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/1/20/ title=20_幻读是什么，幻读有什么问题？ style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.min.js?1646789669></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646789669></script>
-<script src=/js/jquery.sticky.js?1646789669></script>
-<script src=/js/featherlight.min.js?1646789669></script>
-<script src=/js/highlight.pack.js?1646789669></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.min.js?1646794261></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646794261></script>
+<script src=/js/jquery.sticky.js?1646794261></script>
+<script src=/js/featherlight.min.js?1646794261></script>
+<script src=/js/highlight.pack.js?1646794261></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646789669></script>
-<script src=/js/learn.js?1646789669></script>
-<script src=/js/hugo-learn.js?1646789669></script>
-<script src=/mermaid/mermaid.js?1646789669></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646794261></script>
+<script src=/js/learn.js?1646794261></script>
+<script src=/js/hugo-learn.js?1646794261></script>
+<script src=/mermaid/mermaid.js?1646794261></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>
