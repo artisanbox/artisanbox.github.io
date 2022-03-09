@@ -5,18 +5,18 @@
 <meta name=generator content="Hugo 0.93.3">
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
-<title>54_算法实战（三）：剖析高性能队列Disruptor背后的数据结构和算法 :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646808187 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1646808187 rel=stylesheet>
-<link href=/css/hybrid.css?1646808187 rel=stylesheet>
-<link href=/css/featherlight.min.css?1646808187 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1646808187 rel=stylesheet>
-<link href=/css/auto-complete.css?1646808187 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1646808187 rel=stylesheet>
-<link href=/css/theme.css?1646808187 rel=stylesheet>
-<link href=/css/tabs.css?1646808187 rel=stylesheet>
-<link href=/css/hugo-theme.css?1646808187 rel=stylesheet>
-<link href=/css/theme-green.css?1646808187 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1646808187></script>
+<title>54_算法实战（三）：剖析高性能队列Disruptor背后的数据结构和算法 :: Gen 的学习笔记</title><link href=/css/nucleus.css?1646808665 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1646808665 rel=stylesheet>
+<link href=/css/hybrid.css?1646808665 rel=stylesheet>
+<link href=/css/featherlight.min.css?1646808665 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1646808665 rel=stylesheet>
+<link href=/css/auto-complete.css?1646808665 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1646808665 rel=stylesheet>
+<link href=/css/theme.css?1646808665 rel=stylesheet>
+<link href=/css/tabs.css?1646808665 rel=stylesheet>
+<link href=/css/hugo-theme.css?1646808665 rel=stylesheet>
+<link href=/css/theme-green.css?1646808665 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1646808665></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style></head><body data-url=/2/55/>
 <nav id=sidebar>
 <div id=header-wrapper>
@@ -27,10 +27,10 @@
 <label for=search-by><i class="fas fa-search"></i></label>
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
-</div><script type=text/javascript src=/js/lunr.min.js?1646808187></script>
-<script type=text/javascript src=/js/auto-complete.js?1646808187></script>
+</div><script type=text/javascript src=/js/lunr.min.js?1646808665></script>
+<script type=text/javascript src=/js/auto-complete.js?1646808665></script>
 <script type=text/javascript>var baseurl="https://artisanbox.github.io"</script>
-<script type=text/javascript src=/js/search.js?1646808187></script>
+<script type=text/javascript src=/js/search.js?1646808665></script>
 </div><section id=homelinks>
 <ul>
 <li>
@@ -237,6 +237,207 @@ MySQL实战45讲
 </li><li data-nav-id=/1/49/ title=结课测试｜这些MySQL知识你都掌握了吗？ class=dd-item>
 <a href=/1/49/>
 结课测试｜这些MySQL知识你都掌握了吗？
+</a>
+</li></ul></li><li data-nav-id=/3/ title=手把手带你写一门编程语言 class=dd-item>
+<a href=/3/>
+手把手带你写一门编程语言
+</a>
+<ul>
+<li data-nav-id=/3/3/ title=01｜实现一门超简单的语言最快需要多久？ class=dd-item>
+<a href=/3/3/>
+01｜实现一门超简单的语言最快需要多久？
+</a>
+</li><li data-nav-id=/3/4/ title=02｜词法分析：识别Token也可以很简单吗？ class=dd-item>
+<a href=/3/4/>
+02｜词法分析：识别Token也可以很简单吗？
+</a>
+</li><li data-nav-id=/3/5/ title=03｜支持表达式：解析表达式和解析语句有什么不同？ class=dd-item>
+<a href=/3/5/>
+03｜支持表达式：解析表达式和解析语句有什么不同？
+</a>
+</li><li data-nav-id=/3/6/ title=04｜如何让我们的语言支持变量和类型？ class=dd-item>
+<a href=/3/6/>
+04｜如何让我们的语言支持变量和类型？
+</a>
+</li><li data-nav-id=/3/7/ title=05｜函数实现：是时候让我们的语言支持函数和返回值了 class=dd-item>
+<a href=/3/7/>
+05｜函数实现：是时候让我们的语言支持函数和返回值了
+</a>
+</li><li data-nav-id=/3/8/ title=06｜怎么支持条件语句和循环语句？ class=dd-item>
+<a href=/3/8/>
+06｜怎么支持条件语句和循环语句？
+</a>
+</li><li data-nav-id=/3/9/ title=07｜怎么设计属于我们自己的虚拟机和字节码？ class=dd-item>
+<a href=/3/9/>
+07｜怎么设计属于我们自己的虚拟机和字节码？
+</a>
+</li><li data-nav-id=/3/10/ title=08｜基于TypeScript的虚拟机（一）：实现一个简单的栈机 class=dd-item>
+<a href=/3/10/>
+08｜基于TypeScript的虚拟机（一）：实现一个简单的栈机
+</a>
+</li><li data-nav-id=/3/11/ title=09｜基于TypeScript的虚拟机（二）：丰富特性，支持跳转语句 class=dd-item>
+<a href=/3/11/>
+09｜基于TypeScript的虚拟机（二）：丰富特性，支持跳转语句
+</a>
+</li><li data-nav-id=/3/12/ title=10｜基于C语言的虚拟机（一）：实现一个简单的栈机 class=dd-item>
+<a href=/3/12/>
+10｜基于C语言的虚拟机（一）：实现一个简单的栈机
+</a>
+</li><li data-nav-id=/3/13/ title=11｜基于C语言的虚拟机（二）：性能增长10倍的秘密 class=dd-item>
+<a href=/3/13/>
+11｜基于C语言的虚拟机（二）：性能增长10倍的秘密
+</a>
+</li><li data-nav-id=/3/14/ title=12｜物理机上程序运行的硬件环境是怎么样的？ class=dd-item>
+<a href=/3/14/>
+12｜物理机上程序运行的硬件环境是怎么样的？
+</a>
+</li><li data-nav-id=/3/15/ title=13｜物理机上程序运行的软件环境是怎么样的？ class=dd-item>
+<a href=/3/15/>
+13｜物理机上程序运行的软件环境是怎么样的？
+</a>
+</li><li data-nav-id=/3/16/ title=14｜汇编代码学习（一）：熟悉CPU架构和指令集 class=dd-item>
+<a href=/3/16/>
+14｜汇编代码学习（一）：熟悉CPU架构和指令集
+</a>
+</li><li data-nav-id=/3/17/ title=15｜汇编语言学习（二）：熟悉X86汇编代码 class=dd-item>
+<a href=/3/17/>
+15｜汇编语言学习（二）：熟悉X86汇编代码
+</a>
+</li><li data-nav-id=/3/18/ title=16｜生成本地代码第1关：先把基础搭好 class=dd-item>
+<a href=/3/18/>
+16｜生成本地代码第1关：先把基础搭好
+</a>
+</li><li data-nav-id=/3/19/ title=17｜生成本地代码第2关：变量存储、函数调用和栈帧维护 class=dd-item>
+<a href=/3/19/>
+17｜生成本地代码第2关：变量存储、函数调用和栈帧维护
+</a>
+</li><li data-nav-id=/3/20/ title=18｜生成本地代码第3关：实现完整的功能 class=dd-item>
+<a href=/3/20/>
+18｜生成本地代码第3关：实现完整的功能
+</a>
+</li><li data-nav-id=/3/21/ title=19｜怎么实现一个更好的寄存器分配算法：原理篇 class=dd-item>
+<a href=/3/21/>
+19｜怎么实现一个更好的寄存器分配算法：原理篇
+</a>
+</li><li data-nav-id=/3/22/ title=20｜怎么实现一个更好的寄存器分配算法：实现篇 class=dd-item>
+<a href=/3/22/>
+20｜怎么实现一个更好的寄存器分配算法：实现篇
+</a>
+</li><li data-nav-id=/3/23/ title=21｜加深对栈的理解：实现尾递归和尾调用优化 class=dd-item>
+<a href=/3/23/>
+21｜加深对栈的理解：实现尾递归和尾调用优化
+</a>
+</li><li data-nav-id=/3/24/ title=22｜增强编译器前端功能第1步：再识数据流分析技术 class=dd-item>
+<a href=/3/24/>
+22｜增强编译器前端功能第1步：再识数据流分析技术
+</a>
+</li><li data-nav-id=/3/25/ title=23｜增强编译器前端功能第2步：增强类型体系 class=dd-item>
+<a href=/3/25/>
+23｜增强编译器前端功能第2步：增强类型体系
+</a>
+</li><li data-nav-id=/3/26/ title=24｜增强编译器前端功能第3步：全面的集合运算 class=dd-item>
+<a href=/3/26/>
+24｜增强编译器前端功能第3步：全面的集合运算
+</a>
+</li><li data-nav-id=/3/27/ title=25｜增强编译器前端功能第4步：综合运用多种语义分析技术 class=dd-item>
+<a href=/3/27/>
+25｜增强编译器前端功能第4步：综合运用多种语义分析技术
+</a>
+</li><li data-nav-id=/3/28/ title=26｜增强更丰富的类型第1步：如何支持浮点数？ class=dd-item>
+<a href=/3/28/>
+26｜增强更丰富的类型第1步：如何支持浮点数？
+</a>
+</li><li data-nav-id=/3/29/ title=27｜增加更丰富的类型第2步：如何支持字符串？ class=dd-item>
+<a href=/3/29/>
+27｜增加更丰富的类型第2步：如何支持字符串？
+</a>
+</li><li data-nav-id=/3/30/ title=28｜增加更丰富的类型第3步：支持数组 class=dd-item>
+<a href=/3/30/>
+28｜增加更丰富的类型第3步：支持数组
+</a>
+</li><li data-nav-id=/3/31/ title=29｜面向对象编程第1步：先把基础搭好 class=dd-item>
+<a href=/3/31/>
+29｜面向对象编程第1步：先把基础搭好
+</a>
+</li><li data-nav-id=/3/32/ title=30｜面向对象编程第2步：剖析一些技术细节 class=dd-item>
+<a href=/3/32/>
+30｜面向对象编程第2步：剖析一些技术细节
+</a>
+</li><li data-nav-id=/3/33/ title=31｜面向对象编程第3步：支持继承和多态 class=dd-item>
+<a href=/3/33/>
+31｜面向对象编程第3步：支持继承和多态
+</a>
+</li><li data-nav-id=/3/34/ title=32｜函数式编程第1关：实现高阶函数 class=dd-item>
+<a href=/3/34/>
+32｜函数式编程第1关：实现高阶函数
+</a>
+</li><li data-nav-id=/3/35/ title=33｜函数式编程第2关：实现闭包特性 class=dd-item>
+<a href=/3/35/>
+33｜函数式编程第2关：实现闭包特性
+</a>
+</li><li data-nav-id=/3/36/ title=34｜内存管理第1关：Arena技术和元数据 class=dd-item>
+<a href=/3/36/>
+34｜内存管理第1关：Arena技术和元数据
+</a>
+</li><li data-nav-id=/3/37/ title=35｜内存管理第2关：实现垃圾回收 class=dd-item>
+<a href=/3/37/>
+35｜内存管理第2关：实现垃圾回收
+</a>
+</li><li data-nav-id=/3/38/ title=36｜节点之海：怎么生成基于图的IR？ class=dd-item>
+<a href=/3/38/>
+36｜节点之海：怎么生成基于图的IR？
+</a>
+</li><li data-nav-id=/3/39/ title=37_从AST到IR：体会数据流和控制流思维 class=dd-item>
+<a href=/3/39/>
+37_从AST到IR：体会数据流和控制流思维
+</a>
+</li><li data-nav-id=/3/40/ title=38｜中端优化第1关：实现多种本地优化 class=dd-item>
+<a href=/3/40/>
+38｜中端优化第1关：实现多种本地优化
+</a>
+</li><li data-nav-id=/3/41/ title=39｜中端优化第2关：全局优化要怎么搞？ class=dd-item>
+<a href=/3/41/>
+39｜中端优化第2关：全局优化要怎么搞？
+</a>
+</li><li data-nav-id=/3/42/ title=40｜中端优化第3关：一起来挑战过程间优化 class=dd-item>
+<a href=/3/42/>
+40｜中端优化第3关：一起来挑战过程间优化
+</a>
+</li><li data-nav-id=/3/43/ title=41｜后端优化：生成LIR和指令选择 class=dd-item>
+<a href=/3/43/>
+41｜后端优化：生成LIR和指令选择
+</a>
+</li><li data-nav-id=/3/44/ title=42｜到这里，我们的收获和未尽的工作有哪些？ class=dd-item>
+<a href=/3/44/>
+42｜到这里，我们的收获和未尽的工作有哪些？
+</a>
+</li><li data-nav-id=/3/1/ title=“他山之石”｜Sugar：这门课你可以试试这么学 class=dd-item>
+<a href=/3/1/>
+“他山之石”｜Sugar：这门课你可以试试这么学
+</a>
+</li><li data-nav-id=/3/2/ title=“屠龙之秘”｜实现计算机语言这样的技术能用在哪里？（一） class=dd-item>
+<a href=/3/2/>
+“屠龙之秘”｜实现计算机语言这样的技术能用在哪里？（一）
+</a>
+</li><li data-nav-id=/3/46/ title=开篇词｜让我们来写一门计算机语言吧 class=dd-item>
+<a href=/3/46/>
+开篇词｜让我们来写一门计算机语言吧
+</a>
+</li><li data-nav-id=/3/49/ title=期中测试｜快来检验你在起步篇的学习成果吧 class=dd-item>
+<a href=/3/49/>
+期中测试｜快来检验你在起步篇的学习成果吧
+</a>
+</li><li data-nav-id=/3/48/ title=期末考试｜实现编程语言这些核心知识点，你掌握得咋样了？ class=dd-item>
+<a href=/3/48/>
+期末考试｜实现编程语言这些核心知识点，你掌握得咋样了？
+</a>
+</li><li data-nav-id=/3/45/ title=结束语｜等待你大展身手的那些领域 class=dd-item>
+<a href=/3/45/>
+结束语｜等待你大展身手的那些领域
+</a>
+</li><li data-nav-id=/3/47/ title=课前热身｜开始学习之前我们要准备什么？ class=dd-item>
+<a href=/3/47/>
+课前热身｜开始学习之前我们要准备什么？
 </a>
 </li></ul></li><li data-nav-id=/2/ title=数据结构与算法之美 class="dd-item
 parent">
@@ -568,6 +769,468 @@ parent">
 <a href=/2/78/>
 课程迭代｜全新交付71讲音频
 </a>
+</li></ul></li><li data-nav-id=/4/ title=深入浅出计算机组成原理 class=dd-item>
+<a href=/4/>
+深入浅出计算机组成原理
+</a>
+<ul>
+<li data-nav-id=/4/1/ title=01_冯·诺依曼体系结构：计算机组成的金字塔 class=dd-item>
+<a href=/4/1/>
+01_冯·诺依曼体系结构：计算机组成的金字塔
+</a>
+</li><li data-nav-id=/4/2/ title=02_给你一张知识地图，计算机组成原理应该这么学 class=dd-item>
+<a href=/4/2/>
+02_给你一张知识地图，计算机组成原理应该这么学
+</a>
+</li><li data-nav-id=/4/3/ title=03_通过你的CPU主频，我们来谈谈“性能”究竟是什么？ class=dd-item>
+<a href=/4/3/>
+03_通过你的CPU主频，我们来谈谈“性能”究竟是什么？
+</a>
+</li><li data-nav-id=/4/4/ title=04_穿越功耗墙，我们该从哪些方面提升“性能”？ class=dd-item>
+<a href=/4/4/>
+04_穿越功耗墙，我们该从哪些方面提升“性能”？
+</a>
+</li><li data-nav-id=/4/5/ title=05_计算机指令：让我们试试用纸带编程 class=dd-item>
+<a href=/4/5/>
+05_计算机指令：让我们试试用纸带编程
+</a>
+</li><li data-nav-id=/4/6/ title=06_指令跳转：原来if...else就是goto class=dd-item>
+<a href=/4/6/>
+06_指令跳转：原来if...else就是goto
+</a>
+</li><li data-nav-id=/4/7/ title=07_函数调用：为什么会发生stackoverflow？ class=dd-item>
+<a href=/4/7/>
+07_函数调用：为什么会发生stackoverflow？
+</a>
+</li><li data-nav-id=/4/8/ title=08_ELF和静态链接：为什么程序无法同时在Linux和Windows下运行？ class=dd-item>
+<a href=/4/8/>
+08_ELF和静态链接：为什么程序无法同时在Linux和Windows下运行？
+</a>
+</li><li data-nav-id=/4/9/ title=09_程序装载：“640K内存”真的不够用么？ class=dd-item>
+<a href=/4/9/>
+09_程序装载：“640K内存”真的不够用么？
+</a>
+</li><li data-nav-id=/4/10/ title=10_动态链接：程序内部的“共享单车” class=dd-item>
+<a href=/4/10/>
+10_动态链接：程序内部的“共享单车”
+</a>
+</li><li data-nav-id=/4/11/ title=11_二进制编码：“手持两把锟斤拷，口中疾呼烫烫烫”？ class=dd-item>
+<a href=/4/11/>
+11_二进制编码：“手持两把锟斤拷，口中疾呼烫烫烫”？
+</a>
+</li><li data-nav-id=/4/12/ title=12_理解电路：从电报机到门电路，我们如何做到“千里传信”？ class=dd-item>
+<a href=/4/12/>
+12_理解电路：从电报机到门电路，我们如何做到“千里传信”？
+</a>
+</li><li data-nav-id=/4/13/ title=13_加法器：如何像搭乐高一样搭电路（上）？ class=dd-item>
+<a href=/4/13/>
+13_加法器：如何像搭乐高一样搭电路（上）？
+</a>
+</li><li data-nav-id=/4/14/ title=14_乘法器：如何像搭乐高一样搭电路（下）？ class=dd-item>
+<a href=/4/14/>
+14_乘法器：如何像搭乐高一样搭电路（下）？
+</a>
+</li><li data-nav-id=/4/15/ title=15_浮点数和定点数（上）：怎么用有限的Bit表示尽可能多的信息？ class=dd-item>
+<a href=/4/15/>
+15_浮点数和定点数（上）：怎么用有限的Bit表示尽可能多的信息？
+</a>
+</li><li data-nav-id=/4/16/ title=16_浮点数和定点数（下）：深入理解浮点数到底有什么用？ class=dd-item>
+<a href=/4/16/>
+16_浮点数和定点数（下）：深入理解浮点数到底有什么用？
+</a>
+</li><li data-nav-id=/4/17/ title="17_建立数据通路（上）：指令+运算=CPU" class=dd-item>
+<a href=/4/17/>
+17_建立数据通路（上）：指令+运算=CPU
+</a>
+</li><li data-nav-id=/4/18/ title="18_建立数据通路（中）：指令+运算=CPU" class=dd-item>
+<a href=/4/18/>
+18_建立数据通路（中）：指令+运算=CPU
+</a>
+</li><li data-nav-id=/4/19/ title="19_建立数据通路（下）：指令+运算=CPU" class=dd-item>
+<a href=/4/19/>
+19_建立数据通路（下）：指令+运算=CPU
+</a>
+</li><li data-nav-id=/4/20/ title=20_面向流水线的指令设计（上）：一心多用的现代CPU class=dd-item>
+<a href=/4/20/>
+20_面向流水线的指令设计（上）：一心多用的现代CPU
+</a>
+</li><li data-nav-id=/4/21/ title=21_面向流水线的指令设计（下）：奔腾4是怎么失败的？ class=dd-item>
+<a href=/4/21/>
+21_面向流水线的指令设计（下）：奔腾4是怎么失败的？
+</a>
+</li><li data-nav-id=/4/22/ title=22_冒险和预测（一）：hazard是“危”也是“机” class=dd-item>
+<a href=/4/22/>
+22_冒险和预测（一）：hazard是“危”也是“机”
+</a>
+</li><li data-nav-id=/4/23/ title=23_冒险和预测（二）：流水线里的接力赛 class=dd-item>
+<a href=/4/23/>
+23_冒险和预测（二）：流水线里的接力赛
+</a>
+</li><li data-nav-id=/4/24/ title=24_冒险和预测（三）：CPU里的“线程池” class=dd-item>
+<a href=/4/24/>
+24_冒险和预测（三）：CPU里的“线程池”
+</a>
+</li><li data-nav-id=/4/25/ title=25_冒险和预测（四）：今天下雨了，明天还会下雨么？ class=dd-item>
+<a href=/4/25/>
+25_冒险和预测（四）：今天下雨了，明天还会下雨么？
+</a>
+</li><li data-nav-id=/4/26/ title=26_Superscalar和VLIW：如何让CPU的吞吐率超过1？ class=dd-item>
+<a href=/4/26/>
+26_Superscalar和VLIW：如何让CPU的吞吐率超过1？
+</a>
+</li><li data-nav-id=/4/27/ title=27_SIMD：如何加速矩阵乘法？ class=dd-item>
+<a href=/4/27/>
+27_SIMD：如何加速矩阵乘法？
+</a>
+</li><li data-nav-id=/4/28/ title=28_异常和中断：程序出错了怎么办？ class=dd-item>
+<a href=/4/28/>
+28_异常和中断：程序出错了怎么办？
+</a>
+</li><li data-nav-id=/4/29/ title=29_CISC和RISC：为什么手机芯片都是ARM？ class=dd-item>
+<a href=/4/29/>
+29_CISC和RISC：为什么手机芯片都是ARM？
+</a>
+</li><li data-nav-id=/4/30/ title=30_GPU（上）：为什么玩游戏需要使用GPU？ class=dd-item>
+<a href=/4/30/>
+30_GPU（上）：为什么玩游戏需要使用GPU？
+</a>
+</li><li data-nav-id=/4/31/ title=31_GPU（下）：为什么深度学习需要使用GPU？ class=dd-item>
+<a href=/4/31/>
+31_GPU（下）：为什么深度学习需要使用GPU？
+</a>
+</li><li data-nav-id=/4/32/ title=32_FPGA和ASIC：计算机体系结构的黄金时代 class=dd-item>
+<a href=/4/32/>
+32_FPGA和ASIC：计算机体系结构的黄金时代
+</a>
+</li><li data-nav-id=/4/33/ title=33_解读TPU：设计和拆解一块ASIC芯片 class=dd-item>
+<a href=/4/33/>
+33_解读TPU：设计和拆解一块ASIC芯片
+</a>
+</li><li data-nav-id=/4/34/ title=34_理解虚拟机：你在云上拿到的计算机是什么样的？ class=dd-item>
+<a href=/4/34/>
+34_理解虚拟机：你在云上拿到的计算机是什么样的？
+</a>
+</li><li data-nav-id=/4/35/ title=35_存储器层次结构全景：数据存储的大金字塔长什么样？ class=dd-item>
+<a href=/4/35/>
+35_存储器层次结构全景：数据存储的大金字塔长什么样？
+</a>
+</li><li data-nav-id=/4/36/ title=36_局部性原理：数据库性能跟不上，加个缓存就好了？ class=dd-item>
+<a href=/4/36/>
+36_局部性原理：数据库性能跟不上，加个缓存就好了？
+</a>
+</li><li data-nav-id=/4/37/ title=37_高速缓存（上）：“4毫秒”究竟值多少钱？ class=dd-item>
+<a href=/4/37/>
+37_高速缓存（上）：“4毫秒”究竟值多少钱？
+</a>
+</li><li data-nav-id=/4/38/ title=38_高速缓存（下）：你确定你的数据更新了么？ class=dd-item>
+<a href=/4/38/>
+38_高速缓存（下）：你确定你的数据更新了么？
+</a>
+</li><li data-nav-id=/4/39/ title=39_MESI协议：如何让多核CPU的高速缓存保持一致？ class=dd-item>
+<a href=/4/39/>
+39_MESI协议：如何让多核CPU的高速缓存保持一致？
+</a>
+</li><li data-nav-id=/4/40/ title=40_理解内存（上）：虚拟内存和内存保护是什么？ class=dd-item>
+<a href=/4/40/>
+40_理解内存（上）：虚拟内存和内存保护是什么？
+</a>
+</li><li data-nav-id=/4/41/ title=41_理解内存（下）：解析TLB和内存保护 class=dd-item>
+<a href=/4/41/>
+41_理解内存（下）：解析TLB和内存保护
+</a>
+</li><li data-nav-id=/4/42/ title=42_总线：计算机内部的高速公路 class=dd-item>
+<a href=/4/42/>
+42_总线：计算机内部的高速公路
+</a>
+</li><li data-nav-id=/4/43/ title=43_输入输出设备：我们并不是只能用灯泡显示“0”和“1” class=dd-item>
+<a href=/4/43/>
+43_输入输出设备：我们并不是只能用灯泡显示“0”和“1”
+</a>
+</li><li data-nav-id=/4/44/ title=44_理解IO_WAIT：IO性能到底是怎么回事儿？ class=dd-item>
+<a href=/4/44/>
+44_理解IO_WAIT：IO性能到底是怎么回事儿？
+</a>
+</li><li data-nav-id=/4/45/ title=45_机械硬盘：Google早期用过的“黑科技” class=dd-item>
+<a href=/4/45/>
+45_机械硬盘：Google早期用过的“黑科技”
+</a>
+</li><li data-nav-id=/4/46/ title=46_SSD硬盘（上）：如何完成性能优化的KPI？ class=dd-item>
+<a href=/4/46/>
+46_SSD硬盘（上）：如何完成性能优化的KPI？
+</a>
+</li><li data-nav-id=/4/47/ title=47_SSD硬盘（下）：如何完成性能优化的KPI？ class=dd-item>
+<a href=/4/47/>
+47_SSD硬盘（下）：如何完成性能优化的KPI？
+</a>
+</li><li data-nav-id=/4/48/ title=48_DMA：为什么Kafka这么快？ class=dd-item>
+<a href=/4/48/>
+48_DMA：为什么Kafka这么快？
+</a>
+</li><li data-nav-id=/4/49/ title=49_数据完整性（上）：硬件坏了怎么办？ class=dd-item>
+<a href=/4/49/>
+49_数据完整性（上）：硬件坏了怎么办？
+</a>
+</li><li data-nav-id=/4/50/ title=50_数据完整性（下）：如何还原犯罪现场？ class=dd-item>
+<a href=/4/50/>
+50_数据完整性（下）：如何还原犯罪现场？
+</a>
+</li><li data-nav-id=/4/51/ title=51_分布式计算：如果所有人的大脑都联网会怎样？ class=dd-item>
+<a href=/4/51/>
+51_分布式计算：如果所有人的大脑都联网会怎样？
+</a>
+</li><li data-nav-id=/4/52/ title=52_设计大型DMP系统（上）：MongoDB并不是什么灵丹妙药 class=dd-item>
+<a href=/4/52/>
+52_设计大型DMP系统（上）：MongoDB并不是什么灵丹妙药
+</a>
+</li><li data-nav-id=/4/53/ title=53_设计大型DMP系统（下）：SSD拯救了所有的DBA class=dd-item>
+<a href=/4/53/>
+53_设计大型DMP系统（下）：SSD拯救了所有的DBA
+</a>
+</li><li data-nav-id=/4/54/ title=54_理解Disruptor（上）：带你体会CPU高速缓存的风驰电掣 class=dd-item>
+<a href=/4/54/>
+54_理解Disruptor（上）：带你体会CPU高速缓存的风驰电掣
+</a>
+</li><li data-nav-id=/4/55/ title=55_理解Disruptor（下）：不需要换挡和踩刹车的CPU，有多快？ class=dd-item>
+<a href=/4/55/>
+55_理解Disruptor（下）：不需要换挡和踩刹车的CPU，有多快？
+</a>
+</li><li data-nav-id=/4/57/ title=FAQ第一期_学与不学，知识就在那里，不如就先学好了 class=dd-item>
+<a href=/4/57/>
+FAQ第一期_学与不学，知识就在那里，不如就先学好了
+</a>
+</li><li data-nav-id=/4/56/ title=FAQ第二期_世界上第一个编程语言是怎么来的？ class=dd-item>
+<a href=/4/56/>
+FAQ第二期_世界上第一个编程语言是怎么来的？
+</a>
+</li><li data-nav-id=/4/59/ title=开篇词_为什么你需要学习计算机组成原理？ class=dd-item>
+<a href=/4/59/>
+开篇词_为什么你需要学习计算机组成原理？
+</a>
+</li><li data-nav-id=/4/61/ title=特别加餐_我在2019年F8大会的两日见闻录 class=dd-item>
+<a href=/4/61/>
+特别加餐_我在2019年F8大会的两日见闻录
+</a>
+</li><li data-nav-id=/4/60/ title=特别加餐_我的一天怎么过？ class=dd-item>
+<a href=/4/60/>
+特别加餐_我的一天怎么过？
+</a>
+</li><li data-nav-id=/4/62/ title=用户故事_赵文海：怕什么真理无穷，进一寸有一寸的欢喜 class=dd-item>
+<a href=/4/62/>
+用户故事_赵文海：怕什么真理无穷，进一寸有一寸的欢喜
+</a>
+</li><li data-nav-id=/4/58/ title=结束语_知也无涯，愿你也享受发现的乐趣 class=dd-item>
+<a href=/4/58/>
+结束语_知也无涯，愿你也享受发现的乐趣
+</a>
+</li></ul></li><li data-nav-id=/5/ title=趣谈网络协议 class=dd-item>
+<a href=/5/>
+趣谈网络协议
+</a>
+<ul>
+<li data-nav-id=/5/42/ title=加餐1_创作故事：我是如何创作“趣谈网络协议”专栏的？ class=dd-item>
+<a href=/5/42/>
+加餐1_创作故事：我是如何创作“趣谈网络协议”专栏的？
+</a>
+</li><li data-nav-id=/5/43/ title=加餐2_“趣谈网络协议”专栏食用指南 class=dd-item>
+<a href=/5/43/>
+加餐2_“趣谈网络协议”专栏食用指南
+</a>
+</li><li data-nav-id=/5/51/ title=协议专栏特别福利_答疑解惑第一期 class=dd-item>
+<a href=/5/51/>
+协议专栏特别福利_答疑解惑第一期
+</a>
+</li><li data-nav-id=/5/48/ title=协议专栏特别福利_答疑解惑第三期 class=dd-item>
+<a href=/5/48/>
+协议专栏特别福利_答疑解惑第三期
+</a>
+</li><li data-nav-id=/5/47/ title=协议专栏特别福利_答疑解惑第二期 class=dd-item>
+<a href=/5/47/>
+协议专栏特别福利_答疑解惑第二期
+</a>
+</li><li data-nav-id=/5/50/ title=协议专栏特别福利_答疑解惑第五期 class=dd-item>
+<a href=/5/50/>
+协议专栏特别福利_答疑解惑第五期
+</a>
+</li><li data-nav-id=/5/49/ title=协议专栏特别福利_答疑解惑第四期 class=dd-item>
+<a href=/5/49/>
+协议专栏特别福利_答疑解惑第四期
+</a>
+</li><li data-nav-id=/5/46/ title=开篇词_想成为技术牛人？先搞定网络协议！ class=dd-item>
+<a href=/5/46/>
+开篇词_想成为技术牛人？先搞定网络协议！
+</a>
+</li><li data-nav-id=/5/1/ title=第10讲_UDP协议：因性善而简单，难免碰到“城会玩” class=dd-item>
+<a href=/5/1/>
+第10讲_UDP协议：因性善而简单，难免碰到“城会玩”
+</a>
+</li><li data-nav-id=/5/2/ title=第11讲_TCP协议（上）：因性恶而复杂，先恶后善反轻松 class=dd-item>
+<a href=/5/2/>
+第11讲_TCP协议（上）：因性恶而复杂，先恶后善反轻松
+</a>
+</li><li data-nav-id=/5/3/ title=第12讲_TCP协议（下）：西行必定多妖孽，恒心智慧消磨难 class=dd-item>
+<a href=/5/3/>
+第12讲_TCP协议（下）：西行必定多妖孽，恒心智慧消磨难
+</a>
+</li><li data-nav-id=/5/4/ title=第13讲_套接字Socket：Talkischeap,showmethecode class=dd-item>
+<a href=/5/4/>
+第13讲_套接字Socket：Talkischeap,showmethecode
+</a>
+</li><li data-nav-id=/5/5/ title=第14讲_HTTP协议：看个新闻原来这么麻烦 class=dd-item>
+<a href=/5/5/>
+第14讲_HTTP协议：看个新闻原来这么麻烦
+</a>
+</li><li data-nav-id=/5/6/ title=第15讲_HTTPS协议：点外卖的过程原来这么复杂 class=dd-item>
+<a href=/5/6/>
+第15讲_HTTPS协议：点外卖的过程原来这么复杂
+</a>
+</li><li data-nav-id=/5/7/ title=第16讲_流媒体协议：如何在直播里看到美女帅哥？ class=dd-item>
+<a href=/5/7/>
+第16讲_流媒体协议：如何在直播里看到美女帅哥？
+</a>
+</li><li data-nav-id=/5/8/ title=第17讲_P2P协议：我下小电影，99%急死你 class=dd-item>
+<a href=/5/8/>
+第17讲_P2P协议：我下小电影，99%急死你
+</a>
+</li><li data-nav-id=/5/9/ title=第18讲_DNS协议：网络世界的地址簿 class=dd-item>
+<a href=/5/9/>
+第18讲_DNS协议：网络世界的地址簿
+</a>
+</li><li data-nav-id=/5/10/ title=第19讲_HttpDNS：网络世界的地址簿也会指错路 class=dd-item>
+<a href=/5/10/>
+第19讲_HttpDNS：网络世界的地址簿也会指错路
+</a>
+</li><li data-nav-id=/5/11/ title=第1讲_为什么要学习网络协议？ class=dd-item>
+<a href=/5/11/>
+第1讲_为什么要学习网络协议？
+</a>
+</li><li data-nav-id=/5/12/ title=第20讲_CDN：你去小卖部取过快递么？ class=dd-item>
+<a href=/5/12/>
+第20讲_CDN：你去小卖部取过快递么？
+</a>
+</li><li data-nav-id=/5/13/ title=第21讲_数据中心：我是开发商，自己拿地盖别墅 class=dd-item>
+<a href=/5/13/>
+第21讲_数据中心：我是开发商，自己拿地盖别墅
+</a>
+</li><li data-nav-id=/5/14/ title=第22讲_VPN：朝中有人好做官 class=dd-item>
+<a href=/5/14/>
+第22讲_VPN：朝中有人好做官
+</a>
+</li><li data-nav-id=/5/15/ title=第23讲_移动网络：去巴塞罗那，手机也上不了脸书 class=dd-item>
+<a href=/5/15/>
+第23讲_移动网络：去巴塞罗那，手机也上不了脸书
+</a>
+</li><li data-nav-id=/5/16/ title=第24讲_云中网络：自己拿地成本高，购买公寓更灵活 class=dd-item>
+<a href=/5/16/>
+第24讲_云中网络：自己拿地成本高，购买公寓更灵活
+</a>
+</li><li data-nav-id=/5/17/ title=第25讲_软件定义网络：共享基础设施的小区物业管理办法 class=dd-item>
+<a href=/5/17/>
+第25讲_软件定义网络：共享基础设施的小区物业管理办法
+</a>
+</li><li data-nav-id=/5/18/ title=第26讲_云中的网络安全：虽然不是土豪，也需要基本安全和保障 class=dd-item>
+<a href=/5/18/>
+第26讲_云中的网络安全：虽然不是土豪，也需要基本安全和保障
+</a>
+</li><li data-nav-id=/5/19/ title=第27讲_云中的网络QoS：邻居疯狂下电影，我该怎么办？ class=dd-item>
+<a href=/5/19/>
+第27讲_云中的网络QoS：邻居疯狂下电影，我该怎么办？
+</a>
+</li><li data-nav-id=/5/20/ title=第28讲_云中网络的隔离GRE、VXLAN：虽然住一个小区，也要保护隐私 class=dd-item>
+<a href=/5/20/>
+第28讲_云中网络的隔离GRE、VXLAN：虽然住一个小区，也要保护隐私
+</a>
+</li><li data-nav-id=/5/21/ title=第29讲_容器网络：来去自由的日子，不买公寓去合租 class=dd-item>
+<a href=/5/21/>
+第29讲_容器网络：来去自由的日子，不买公寓去合租
+</a>
+</li><li data-nav-id=/5/22/ title=第2季回归_这次我们来“趣谈Linux操作系统” class=dd-item>
+<a href=/5/22/>
+第2季回归_这次我们来“趣谈Linux操作系统”
+</a>
+</li><li data-nav-id=/5/23/ title=第2讲_网络分层的真实含义是什么？ class=dd-item>
+<a href=/5/23/>
+第2讲_网络分层的真实含义是什么？
+</a>
+</li><li data-nav-id=/5/24/ title=第30讲_容器网络之Flannel：每人一亩三分地 class=dd-item>
+<a href=/5/24/>
+第30讲_容器网络之Flannel：每人一亩三分地
+</a>
+</li><li data-nav-id=/5/25/ title=第31讲_容器网络之Calico：为高效说出善意的谎言 class=dd-item>
+<a href=/5/25/>
+第31讲_容器网络之Calico：为高效说出善意的谎言
+</a>
+</li><li data-nav-id=/5/26/ title=第32讲_RPC协议综述：远在天边，近在眼前 class=dd-item>
+<a href=/5/26/>
+第32讲_RPC协议综述：远在天边，近在眼前
+</a>
+</li><li data-nav-id=/5/27/ title=第33讲_基于XML的SOAP协议：不要说NBA，请说美国职业篮球联赛 class=dd-item>
+<a href=/5/27/>
+第33讲_基于XML的SOAP协议：不要说NBA，请说美国职业篮球联赛
+</a>
+</li><li data-nav-id=/5/28/ title=第34讲_基于JSON的RESTful接口协议：我不关心过程，请给我结果 class=dd-item>
+<a href=/5/28/>
+第34讲_基于JSON的RESTful接口协议：我不关心过程，请给我结果
+</a>
+</li><li data-nav-id=/5/29/ title=第35讲_二进制类RPC协议：还是叫NBA吧，总说全称多费劲 class=dd-item>
+<a href=/5/29/>
+第35讲_二进制类RPC协议：还是叫NBA吧，总说全称多费劲
+</a>
+</li><li data-nav-id=/5/30/ title=第36讲_跨语言类RPC协议：交流之前，双方先来个专业术语表 class=dd-item>
+<a href=/5/30/>
+第36讲_跨语言类RPC协议：交流之前，双方先来个专业术语表
+</a>
+</li><li data-nav-id=/5/31/ title=第37讲_知识串讲：用双十一的故事串起碎片的网络协议（上） class=dd-item>
+<a href=/5/31/>
+第37讲_知识串讲：用双十一的故事串起碎片的网络协议（上）
+</a>
+</li><li data-nav-id=/5/32/ title=第38讲_知识串讲：用双十一的故事串起碎片的网络协议（中） class=dd-item>
+<a href=/5/32/>
+第38讲_知识串讲：用双十一的故事串起碎片的网络协议（中）
+</a>
+</li><li data-nav-id=/5/33/ title=第39讲_知识串讲：用双十一的故事串起碎片的网络协议（下） class=dd-item>
+<a href=/5/33/>
+第39讲_知识串讲：用双十一的故事串起碎片的网络协议（下）
+</a>
+</li><li data-nav-id=/5/34/ title=第3讲_ifconfig：最熟悉又陌生的命令行 class=dd-item>
+<a href=/5/34/>
+第3讲_ifconfig：最熟悉又陌生的命令行
+</a>
+</li><li data-nav-id=/5/35/ title=第40讲_搭建一个网络实验环境：授人以鱼不如授人以渔 class=dd-item>
+<a href=/5/35/>
+第40讲_搭建一个网络实验环境：授人以鱼不如授人以渔
+</a>
+</li><li data-nav-id=/5/36/ title=第4讲_DHCP与PXE：IP是怎么来的，又是怎么没的？ class=dd-item>
+<a href=/5/36/>
+第4讲_DHCP与PXE：IP是怎么来的，又是怎么没的？
+</a>
+</li><li data-nav-id=/5/37/ title=第5讲_从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？ class=dd-item>
+<a href=/5/37/>
+第5讲_从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？
+</a>
+</li><li data-nav-id=/5/38/ title=第6讲_交换机与VLAN：办公室太复杂，我要回学校 class=dd-item>
+<a href=/5/38/>
+第6讲_交换机与VLAN：办公室太复杂，我要回学校
+</a>
+</li><li data-nav-id=/5/39/ title=第7讲_ICMP与ping：投石问路的侦察兵 class=dd-item>
+<a href=/5/39/>
+第7讲_ICMP与ping：投石问路的侦察兵
+</a>
+</li><li data-nav-id=/5/40/ title=第8讲_世界这么大，我想出网关：欧洲十国游与玄奘西行 class=dd-item>
+<a href=/5/40/>
+第8讲_世界这么大，我想出网关：欧洲十国游与玄奘西行
+</a>
+</li><li data-nav-id=/5/41/ title=第9讲_路由协议：西出网关无故人，敢问路在何方 class=dd-item>
+<a href=/5/41/>
+第9讲_路由协议：西出网关无故人，敢问路在何方
+</a>
+</li><li data-nav-id=/5/45/ title=结束语_放弃完美主义，执行力就是限时限量认真完成 class=dd-item>
+<a href=/5/45/>
+结束语_放弃完美主义，执行力就是限时限量认真完成
+</a>
+</li><li data-nav-id=/5/44/ title=结课测试_这些网络协议你都掌握了吗？ class=dd-item>
+<a href=/5/44/>
+结课测试_这些网络协议你都掌握了吗？
+</a>
 </li></ul></li></ul><section id=footer>
 <p>Built with <a href=https://github.com/matcornic/hugo-theme-learn><i class="fas fa-heart"></i></a> from <a href=https://getgrav.org>Grav</a> and <a href=https://gohugo.io/>Hugo</a></p></section></div></nav><section id=body>
 <div id=overlay></div><div class="padding highlightable">
@@ -769,16 +1432,16 @@ Thread.sleep(100);
 <a class="nav nav-prev" href=/2/54/ title=53_算法实战（二）：剖析搜索引擎背后的经典数据结构和算法> <i class="fa fa-chevron-left"></i></a>
 <a class="nav nav-next" href=/2/56/ title=55_算法实战（四）：剖析微服务接口鉴权限流背后的数据结构和算法 style=margin-right:0><i class="fa fa-chevron-right"></i></a>
 </div></section><div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
-<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646808187></script>
-<script src=/js/perfect-scrollbar.min.js?1646808187></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1646808187></script>
-<script src=/js/jquery.sticky.js?1646808187></script>
-<script src=/js/featherlight.min.js?1646808187></script>
-<script src=/js/highlight.pack.js?1646808187></script>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div></div><script src=/js/clipboard.min.js?1646808665></script>
+<script src=/js/perfect-scrollbar.min.js?1646808665></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1646808665></script>
+<script src=/js/jquery.sticky.js?1646808665></script>
+<script src=/js/featherlight.min.js?1646808665></script>
+<script src=/js/highlight.pack.js?1646808665></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1646808187></script>
-<script src=/js/learn.js?1646808187></script>
-<script src=/js/hugo-learn.js?1646808187></script>
-<script src=/mermaid/mermaid.js?1646808187></script>
+<script src=/js/modernizr.custom-3.6.0.js?1646808665></script>
+<script src=/js/learn.js?1646808665></script>
+<script src=/js/hugo-learn.js?1646808665></script>
+<script src=/mermaid/mermaid.js?1646808665></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body></html>
